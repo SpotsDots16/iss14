@@ -41,6 +41,15 @@ ui-options-admin-sounds = Play Admin Sounds
 ui-options-bwoink-sound = Play AHelp Notification Sound
 ui-options-volume-label = Volume
 
+ui-options-voice-label = Voice Chat
+ui-options-voice-enabled = Enable Proximity Voice Chat
+ui-options-voice-volume = Voice volume:
+ui-options-voice-input-volume = Microphone volume:
+ui-options-voice-input-device = Microphone:
+ui-options-audio-device-label = Audio Device
+ui-options-audio-output-device = Output device (restart to apply):
+ui-options-audio-device-default = Default
+
 ## Graphics menu
 
 ui-options-display-label = Display
@@ -134,6 +143,10 @@ ui-options-header-text-cursor-select = Text selecting
 ui-options-header-text-edit = Text editing
 ui-options-header-text-chat = Chat
 ui-options-header-text-other = Text input other
+ui-options-header-voicechat = Proximity Voice Chat
+
+ui-options-function-push-to-talk = Talk (push-to-talk)
+ui-options-function-push-to-whisper = Whisper (push-to-talk)
 
 ui-options-hotkey-keymap = Use US QWERTY Keys
 ui-options-hotkey-toggle-walk = Toggle Walk

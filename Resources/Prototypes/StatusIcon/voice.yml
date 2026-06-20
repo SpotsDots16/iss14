@@ -1,0 +1,7 @@
+- type: voiceIcon
+  id: VoiceMutedIcon
+  icon:
+    sprite: /Textures/Interface/Actions/changeling2.rsi
+    state: mute_sting
+  locationPreference: Left
+  priority: 2

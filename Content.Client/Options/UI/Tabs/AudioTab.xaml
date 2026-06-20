@@ -20,6 +20,15 @@
                 <CheckBox Name="EventMusicCheckBox" Text="{Loc 'ui-options-event-music'}" />
                 <CheckBox Name="AdminSoundsCheckBox" Text="{Loc 'ui-options-admin-sounds'}" />
                 <CheckBox Name="BwoinkSoundCheckBox" Text="{Loc 'ui-options-bwoink-sound'}" />
+
+                <Label Text="{Loc 'ui-options-voice-label'}" StyleClasses="LabelKeyText" Margin="0 8 0 0" />
+                <CheckBox Name="VoiceEnabledCheckBox" Text="{Loc 'ui-options-voice-enabled'}" />
+                <ui:OptionSlider Name="SliderVolumeVoice" Title="{Loc 'ui-options-voice-volume'}" />
+                <ui:OptionSlider Name="SliderVolumeVoiceInput" Title="{Loc 'ui-options-voice-input-volume'}" />
+                <ui:OptionDropDown Name="VoiceInputDeviceDropDown" Title="{Loc 'ui-options-voice-input-device'}" />
+
+                <Label Text="{Loc 'ui-options-audio-device-label'}" StyleClasses="LabelKeyText" Margin="0 8 0 0" />
+                <ui:OptionDropDown Name="AudioOutputDeviceDropDown" Title="{Loc 'ui-options-audio-output-device'}" />
             </BoxContainer>
         </BoxContainer>
         <ui:OptionsTabControlRow Name="Control" Access="Public" />
