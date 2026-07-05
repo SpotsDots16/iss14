@@ -9,14 +9,8 @@
   - type: Sprite
     sprite: Structures/Wallmounts/mirror.rsi
     state: mirror
-  - type: MagicMirror
-    organs:
-    - Head
-    layers:
-    - Hair
-    - FacialHair
+  - type: MagicMirror # iss14: organ/layer/modifyTime fields removed with the visual-nubody rollback
     changeHairSound: null
-    modifyTime: 0
   - type: ActivatableUI
     key: enum.MagicMirrorUiKey.Key
     singleUser: true

@@ -46,7 +46,7 @@
         - ReagentId: UncookedAnimalProteins
           Quantity: 5
   - type: Stomach
-  - type: Metabolizer
+  - type: Metabolizer # iss14: converted to metabolism stages (stages inherited from OrganHumanStomach)
     # mm very yummy
-    maxPoisonsProcessable: 5
+    maxReagents: 5
     metabolizerTypes: [Dwarf]

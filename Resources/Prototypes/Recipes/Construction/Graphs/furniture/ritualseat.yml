@@ -42,7 +42,7 @@
         - to: chairRitual
           completed:
             - !type:SpawnPrototype
-              prototype: OrganSkeletonPersonHead
+              prototype: HeadSkeleton # iss14: nubody organ id replaced with the part-based head
               amount: 1
           steps:
             - tool: Prying

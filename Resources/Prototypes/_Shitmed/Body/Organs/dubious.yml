@@ -36,12 +36,19 @@
       - Critical
       damageCap: 150
       damage:
-        groups:
-          Brute: -0.14
-          Burn: -0.14
-          Airloss: -0.14
-          Toxin: -0.14
-          Genetic: -0.14
+        types: # iss14: groups split into member types
+          Blunt: -0.047
+          Slash: -0.047
+          Piercing: -0.047
+          Heat: -0.035
+          Shock: -0.035
+          Cold: -0.035
+          Caustic: -0.035
+          Asphyxiation: -0.07
+          Bloodloss: -0.07
+          Poison: -0.07
+          Radiation: -0.07
+          Cellular: -0.14
 
 - type: entity
   id: OrganDubiousAA
@@ -224,36 +231,8 @@
       statusEffects:
         ExpelGas: ExpelGas
 
-- type: entity
-  id: OrganDubiousSteptriggerImmune
-  parent: OrganDubiousBase
-  components:
-  - type: Sprite
-    state: viral
-  - type: Organ
-    onAdd:
-    - type: StepTriggerImmune
-      whitelist:
-        types:
-        - Shard
-        - Landmine
-        - Mousetrap
-        - Lava
-        - Chasm
-        - SlipTile
-        - SlipEntity
-        - ContrabandDetector
-          
-- type: entity
-  id: OrganDubiousVentcrawler
-  parent: OrganDubiousBase
-  components:
-  - type: Sprite
-    state: viral
-  - type: Organ
-    onAdd:
-    - type: VentCrawler
-      allowInventory: false
+# iss14: OrganDubiousSteptriggerImmune and OrganDubiousVentcrawler removed,
+# StepTriggerImmune and VentCrawler are Goob features that are not ported.
 
 - type: entity
   id: OrganDubiousRepairable

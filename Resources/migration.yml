@@ -782,7 +782,7 @@ OrganSkeletonPersonLegLeft: LeftLegSkeleton
 OrganHumanArmRight: RightArmHuman
 OrganSkeletonPersonHandRight: RightHandSkeleton
 OrganHumanLegRight: RightLegHuman
-OrganSkeletonPersonTorso: TorsoSkeleton
+OrganSkeletonPersonTorso: ChestSkeleton
 OrganSkeletonPersonArmRight: RightArmSkeleton
 
 # 2026-01-19
@@ -837,3 +837,6 @@ FoodMeatSnail: MobSnail
 CratePartsT3: null
 CratePartsT3T4: null
 CratePartsT4: null
+
+# 2026-07-05 Shitmed port: smokable Blunt renamed (id taken by wound entity)
+Blunt: BluntCigar

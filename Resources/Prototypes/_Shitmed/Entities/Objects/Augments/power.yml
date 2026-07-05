@@ -115,9 +115,7 @@
   components:
   - type: Sprite
     state: apc
-  - type: Organ
-    onAdd:
-    - type: BatteryDrinker
+  # iss14: BatteryDrinker onAdd removed, Goob battery drinking is not ported
   - type: Construction
     graph: AugmentRecharger
     node: apc

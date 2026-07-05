@@ -44,9 +44,7 @@
       Male: UnisexDwarf
       Female: FemaleDwarf
       Unsexed: UnisexDwarf
-  - type: ReplacementAccent
-    accent: dwarf
-  - type: Speech
+  - type: Speech # iss14: Goob dwarf word-replacement accent not ported
     speechSounds: Bass
   - type: HumanoidAppearance
     species: Dwarf

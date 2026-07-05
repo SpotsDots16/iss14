@@ -35,10 +35,7 @@
         reagents:
         - ReagentId: UncookedAnimalProteins
           Quantity: 5
-  - type: Metabolizer
-    maxPoisonsProcessable: 3
+  - type: Metabolizer # iss14: converted to metabolism stages
+    maxReagents: 3
     metabolizerTypes: [ Moth ]
-    removeEmpty: true
-    groups:
-      - id: Food
-      - id: Drink
+    stages: [ Digestion ]

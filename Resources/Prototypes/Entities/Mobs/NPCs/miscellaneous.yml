@@ -144,7 +144,7 @@
   - type: NPCImprintingOnSpawnBehaviour
     whitelist:
       components:
-      - HumanoidAppearance # Shitmed: HumanoidProfile no longer exists
+      - HumanoidAppearance # Shitmed: HumanoidAppearance no longer exists
   - type: Sprite
     sprite: Mobs/Demons/tomatokiller.rsi
     noRot: true

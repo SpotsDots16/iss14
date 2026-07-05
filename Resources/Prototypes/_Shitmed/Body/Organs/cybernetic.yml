@@ -121,19 +121,11 @@
       Damaged: 9
       Destroyed: 0
     slotId: heart
-    onAdd:
-    - type: StaminaModifier
-      modifier: 1.35
-  - type: Metabolizer
-    maxPoisonsProcessable: 2
+    # iss14: StaminaModifier onAdd removed, Goob stamina feature is not ported
+  - type: Metabolizer # iss14: converted to metabolism stages (per-group rate modifiers dropped)
+    maxReagents: 2
     metabolizerTypes: [ Cybernetic ]
-    groups:
-    - id: Medicine
-      rateModifier: 0.7
-    - id: Poison
-      rateModifier: 1.4
-    - id: Narcotic
-      rateModifier: 1.2
+    stages: [ Bloodstream ]
   - type: Tag
     tags:
     - Organ
@@ -158,19 +150,11 @@
       Damaged: 9
       Destroyed: 0
     slotId: heart
-    onAdd:
-    - type: StaminaModifier
-      modifier: 1.7
-  - type: Metabolizer
-    maxPoisonsProcessable: 2
+    # iss14: StaminaModifier onAdd removed, Goob stamina feature is not ported
+  - type: Metabolizer # iss14: converted to metabolism stages (per-group rate modifiers dropped)
+    maxReagents: 2
     metabolizerTypes: [ Cybernetic ]
-    groups:
-    - id: Medicine
-      rateModifier: 0.4
-    - id: Poison
-      rateModifier: 2.8
-    - id: Narcotic
-      rateModifier: 1.6
+    stages: [ Bloodstream ]
 
 # Liver
 
@@ -194,12 +178,10 @@
   - type: Item
     size: Small
     heldPrefix: liver
-  - type: Metabolizer
-    maxPoisonsProcessable: 1
+  - type: Metabolizer # iss14: converted to metabolism stages
+    maxReagents: 1
     metabolizerTypes: [ Cybernetic ]
-    groups:
-    - id: Alcohol
-      rateModifier: 0.1
+    stages: [ Metabolites ]
   - type: Tag
     tags:
     - Organ
@@ -229,14 +211,9 @@
     size: Small
     heldPrefix: lungs
   - type: Lung
-  - type: Metabolizer
-    removeEmpty: true
-    solutionOnBody: false
-    solution: "Lung"
+  - type: Metabolizer # iss14: converted to metabolism stages
     metabolizerTypes: [ Cybernetic ]
-    groups:
-    - id: Gas
-      rateModifier: 100.0
+    stages: [ Respiration ]
   - type: SolutionContainerManager
     solutions:
       Lung:
@@ -265,6 +242,4 @@
       Damaged: 9
       Destroyed: 0
     slotId: lungs
-    onAdd:
-    - type: StaminaRegeneration
-      regenerationRate: -3.0
+    # iss14: StaminaRegeneration onAdd removed, Goob stamina feature is not ported

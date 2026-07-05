@@ -123,9 +123,7 @@
     tags:
     - MindTransferTarget
     - Head
-  - type: Construction # Goobstation - Wraith
-    graph: SpiritCandle
-    node: start
+  # iss14: SpiritCandle construction removed - Goob Wraith antag not ported
 
 - type: entity
   parent: [ PartSkeletonBase, BaseLeftArm ]

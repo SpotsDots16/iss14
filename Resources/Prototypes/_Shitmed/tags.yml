@@ -37,8 +37,37 @@
 - type: Tag
   id: AugmentStrengthCasing
 
+# iss14: generic organ tags used by organ prototypes (borg module whitelists, surgery)
+- type: Tag
+  id: Organ
+
+- type: Tag
+  id: Stomach
+
 - type: Tag
   id: CantInteract
 
 - type: Tag
   id: ShowWires
+
+# iss14: organ type tags referenced by Goob organ prototypes
+- type: Tag
+  id: Eyes
+
+- type: Tag
+  id: Tongue
+
+- type: Tag
+  id: Lungs
+
+- type: Tag
+  id: Heart
+
+- type: Tag
+  id: Liver
+
+- type: Tag
+  id: Kidneys
+
+- type: Tag
+  id: Debug

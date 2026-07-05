@@ -43,3 +43,9 @@
 - type: statusEffect
   id: ActivateArtifactEffect
   alwaysAllowed: true
+# iss14: ported from Goob _Goobstation/Entities/StatusEffects/movement.yml
+# (referenced by TraumaSystem for organ-damage slowdown)
+- type: entity
+  parent: StatusEffectSlowdown
+  id: OrgansDamagedSlowdownEffect
+  name: organ damage slowdown

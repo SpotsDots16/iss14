@@ -236,7 +236,12 @@
         {
             "name": "base-stripes-inhand-right",
             "directions": 4
+        },
+        {
+            "name": "icon-surgery"
+        },
+        {
+            "name": "icon-advanced-surgery"
         }
     ]
-
 }

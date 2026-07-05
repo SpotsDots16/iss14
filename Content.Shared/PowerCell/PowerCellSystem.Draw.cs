@@ -23,6 +23,22 @@ public sealed partial class PowerCellSystem
 
 
     /// <summary>
+    /// Goobstation: Sets the power cell draw rate, refreshing the battery charge rate if it changed.
+    /// </summary>
+    [PublicAPI]
+    public void SetDrawRate(Entity<PowerCellDrawComponent?> ent, float rate)
+    {
+        if (!Resolve(ent, ref ent.Comp, false) || ent.Comp.DrawRate.Equals(rate))
+            return;
+
+        ent.Comp.DrawRate = rate;
+        Dirty(ent, ent.Comp);
+
+        if (TryGetBatteryFromSlot(ent.Owner, out var battery))
+            _battery.RefreshChargeRate(battery.Value.AsNullable());
+    }
+
+    /// <summary>
     /// Returns whether the entity has a slotted battery and <see cref="PowerCellDrawComponent.UseCharge"/> charge.
     /// </summary>
     /// <param name="ent">The device with the power cell slot.</param>

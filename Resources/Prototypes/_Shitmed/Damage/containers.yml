@@ -12,3 +12,13 @@
   supportedGroups:
   - Brute
   - Burn
+# iss14: ported from Goob _Goobstation/Damage/containers.yml for cybernetic organs
+# (Electronic group not in iss14 - expressed via supportedTypes instead)
+- type: damageContainer
+  id: SiliconRadiation
+  supportedGroups:
+    - Brute
+  supportedTypes:
+    - Heat
+    - Shock
+    - Radiation

@@ -6,3 +6,7 @@
 - type: metabolizerType
   id: Cybernetic
   name: metabolizer-type-cybernetic
+
+- type: metabolizerType
+  id: XenobioSlime
+  name: metabolizer-type-xenobio-slime

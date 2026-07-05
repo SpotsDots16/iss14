@@ -454,8 +454,10 @@
     state: hemostat
   - type: SurgeryTendWoundsEffect
     damage:
-      groups:
-        Brute: -15
+      types: # iss14: Brute -15 split
+        Blunt: -5
+        Slash: -5
+        Piercing: -5
   - type: SurgeryRepeatableStep
 
 - type: entity
@@ -473,8 +475,11 @@
   - type: SurgeryTendWoundsEffect
     mainGroup: Burn
     damage:
-      groups:
-        Burn: -20
+      types: # iss14: Burn -20 split
+        Heat: -5
+        Shock: -5
+        Cold: -5
+        Caustic: -5
   - type: SurgeryRepeatableStep
 
 - type: entity
@@ -802,7 +807,6 @@
     - type: Drill
     addOrganOnAdd:
       brain:
-      - type: OhioAccent
       - type: RatvarianLanguage
       - type: Clumsy
     duration: 5
@@ -827,7 +831,6 @@
     duration: 4
     removeOrganOnAdd:
       brain:
-      - type: OhioAccent
       - type: RatvarianLanguage
       - type: Clumsy
   - type: Sprite

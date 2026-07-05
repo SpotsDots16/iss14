@@ -1,0 +1,12 @@
+<ui:RadialMenu xmlns="https://spacestation14.io"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="using:Content.Client.UserInterface.Controls"
+        x:Class="Content.Goobstation.Client.Augments.AugmentToolPanelMenu"
+        BackButtonStyleClass="RadialMenuBackButton"
+        CloseButtonStyleClass="RadialMenuCloseButton"
+        VerticalExpand="True"
+        HorizontalExpand="True"
+        MinSize="450 450">
+
+    <ui:RadialContainer Name="Main" VerticalExpand="True" HorizontalExpand="True" InitialRadius="100" ReserveSpaceForHiddenChildren="False"/>
+</ui:RadialMenu>

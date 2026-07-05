@@ -40,7 +40,7 @@
       Normal: 24
       Damaged: 15
       Destroyed: 0
-  - type: Food
+  - type: Edible # iss14: Ingestion rework renamed Food
   - type: Extractable
     grindableSolutionName: organ
   - type: SolutionContainerManager
@@ -79,8 +79,7 @@
   name: brain
   description: "The central hub of a diona's pseudo-neurological activity, its root-like tendrils search for its former body."
   components:
-  - type: MindContainer
-    showExamineInfo: true
+  - type: MindContainer # iss14: showExamineInfo field does not exist here
   - type: Speech
     enabled: false
   - type: TypingIndicator
@@ -177,18 +176,10 @@
       Destroyed: 0
     slotId: stomach
   - type: Stomach
-  - type: Metabolizer
-    maxPoisonsProcessable: 6
+  - type: Metabolizer # iss14: converted to metabolism stages
+    maxReagents: 6
     metabolizerTypes: [ Plant ]
-    removeEmpty: true
-    groups:
-      - id: Food
-      - id: Drink
-      - id: Medicine
-      - id: Poison
-      - id: Narcotic
-      - id: Alcohol
-        rateModifier: 0.1
+    stages: [ Digestion, Bloodstream, Metabolites ]
   - type: Tag # goob edit
     tags:
     - Meat
@@ -218,14 +209,9 @@
     size: Small
     heldPrefix: lungs
   - type: Lung
-  - type: Metabolizer
-    removeEmpty: true
-    solutionOnBody: false
-    solution: "Lung"
+  - type: Metabolizer # iss14: converted to metabolism stages
     metabolizerTypes: [ Plant ]
-    groups:
-    - id: Gas
-      rateModifier: 100.0
+    stages: [ Respiration ]
   - type: SolutionContainerManager
     solutions:
       organ:
@@ -303,7 +289,6 @@
   - type: IsDeadIC
   - type: Body
     prototype: AnimalNymphBrain
-  - type: VentCrawler # goob
 
 - type: entity
   id: OrganDionaNymphStomach
@@ -316,7 +301,6 @@
   - type: IsDeadIC
   - type: Body
     prototype: AnimalNymphStomach
-  - type: VentCrawler # goob
 
 - type: entity
   id: OrganDionaNymphLungs
@@ -329,4 +313,3 @@
   - type: IsDeadIC
   - type: Body
     prototype: AnimalNymphLungs
-  - type: VentCrawler # goob

@@ -3,6 +3,11 @@
   typingState: default0
   idleState: default3
 
+- type: typingIndicator # iss14: ported from Goob-Station, used by disembodied brains
+  id: empty
+  typingState: empty0
+  idleState: empty0
+
 - type: typingIndicator
   id: robot
   typingState: robot0

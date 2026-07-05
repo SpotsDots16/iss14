@@ -22,8 +22,6 @@
       - id: OrganDubiousSpaceAdaptation
       - id: OrganDubiousScrambleDna
       - id: OrganDubiousArtifact
-      - id: OrganDubiousVentcrawler
-      - id: OrganDubiousSteptriggerImmune
       - id: OrganDubiousRepairable
       
     # Annoying/Disruptive Organs Group - 35% chance

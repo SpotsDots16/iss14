@@ -130,8 +130,10 @@
     damageContainers:
       - Biological
     damage:
-      groups:
-        Brute: -30 # was 5 (-15 Brute) for each, Buffed due to limb damage changes (Goobstation)
+      types: # iss14: Brute -30 split; DamageSpecifier has no yaml groups support
+        Blunt: -10
+        Slash: -10
+        Piercing: -10 # was 5 (-15 Brute) for each, Buffed due to limb damage changes (Goobstation)
     healingBeginSound:
       path: "/Audio/Items/Medical/brutepack_begin.ogg"
       params:
@@ -176,8 +178,10 @@
     damageContainers:
       - Biological
     damage:
-      groups:
-        Brute: -45 # was 10 for each, Buffed due to Limb Damage Changes (Goobstation)
+      types: # iss14: Brute -45 split
+        Blunt: -15
+        Slash: -15
+        Piercing: -15 # was 10 for each, Buffed due to Limb Damage Changes (Goobstation)
     bloodlossModifier: -10 # a suture should stop ongoing bleeding
     healingBeginSound:
       path: "/Audio/Items/Medical/brutepack_begin.ogg"

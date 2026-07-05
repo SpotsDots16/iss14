@@ -141,7 +141,7 @@
   - type: Devourer
     foodPreferenceWhitelist:
       components:
-      - HumanoidAppearance # Shitmed: HumanoidProfile no longer exists
+      - HumanoidAppearance # Shitmed: HumanoidAppearance no longer exists
     stomachStorageWhitelist:
       components:
       - MobState

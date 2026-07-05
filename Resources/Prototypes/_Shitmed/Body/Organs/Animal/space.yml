@@ -65,11 +65,10 @@
   components:
   - type: Organ
     onAdd:
-    - type: HitscanBatteryAmmoProvider
+    - type: BatteryAmmoProvider # iss14: unified provider
       proto: RedLightLaser
       fireCost: 50
-    - type: BatterySelfRecharger
-      autoRecharge: true
+    - type: BatterySelfRecharger # iss14: autoRecharge field removed upstream (always on)
       autoRechargeRate: 25
     - type: Battery
       maxCharge: 100

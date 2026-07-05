@@ -45,18 +45,10 @@
         Damaged: 27
         Destroyed: 0
       slotId: core
-    - type: Metabolizer
-      maxPoisonsProcessable: 2 # Shitmed
+    - type: Metabolizer # iss14: converted to metabolism stages
+      maxReagents: 2 # Shitmed
       metabolizerTypes: [ Slime ]
-      removeEmpty: true
-      groups:
-        - id: Food
-        - id: Drink
-        - id: Medicine
-        - id: Poison
-        - id: Narcotic
-        - id: Alcohol
-          rateModifier: 0.25
+      stages: [ Digestion, Bloodstream, Metabolites ]
     - type: SolutionContainerManager
       solutions:
         stomach:
@@ -100,14 +92,9 @@
     slotId: lungs
   - type: Lung
     alert: LowNitrogen
-  - type: Metabolizer
-    removeEmpty: true
-    solutionOnBody: false
-    solution: "Lung"
+  - type: Metabolizer # iss14: converted to metabolism stages
     metabolizerTypes: [ Slime ]
-    groups:
-    - id: Gas
-      rateModifier: 100.0
+    stages: [ Respiration ]
   - type: SolutionContainerManager
     solutions:
       organ:

@@ -172,7 +172,6 @@
     tags:
     - Meat
     - Organ
-  - type: HumanOrgan # Goobstation
 
 - type: entity
   id: BaseHumanOrgan
@@ -190,8 +189,7 @@
   name: brain
   description: "The source of incredible, unending intelligence. Honk."
   components:
-  - type: MindContainer
-    showExamineInfo: true
+  - type: MindContainer # iss14: showExamineInfo field does not exist here
   - type: Speech
     enabled: false
   - type: TypingIndicator
@@ -328,14 +326,9 @@
     size: Small
     heldPrefix: lungs
   - type: Lung
-  - type: Metabolizer
-    removeEmpty: true
-    solutionOnBody: false
-    solution: "Lung"
+  - type: Metabolizer # iss14: converted to metabolism stages
     metabolizerTypes: [ Human ]
-    groups:
-    - id: Gas
-      rateModifier: 100.0
+    stages: [ Respiration ]
   - type: SolutionContainerManager
     solutions:
       organ:
@@ -376,13 +369,10 @@
   # The heart 'metabolizes' medicines and poisons that aren't filtered out by other organs.
   # This is done because these chemicals need to have some effect even if they aren't being filtered out of your body.
   # You're technically 'immune to poison' without a heart, but.. uhh, you'll have bigger problems on your hands.
-  - type: Metabolizer
-    maxPoisonsProcessable: 2
+  - type: Metabolizer # iss14: converted to metabolism stages
+    maxReagents: 2
     metabolizerTypes: [Human]
-    groups:
-    - id: Medicine
-    - id: Poison
-    - id: Narcotic
+    stages: [ Bloodstream ]
   - type: Tag # goob edit
     tags:
     - Meat
@@ -424,13 +414,11 @@
   # The stomach metabolizes stuff like foods and drinks.
   # TODO: Have it work off of the ent's solution container, and move this
   # to intestines instead.
-  - type: Metabolizer
+  - type: Metabolizer # iss14: converted to metabolism stages
     # mm yummy
-    maxPoisonsProcessable: 3
+    maxReagents: 3
     metabolizerTypes: [Human]
-    groups:
-    - id: Food
-    - id: Drink
+    stages: [ Digestion ]
   - type: Tag # goob edit
     tags:
     - Meat
@@ -457,12 +445,10 @@
   - type: Item
     size: Small
     heldPrefix: liver
-  - type: Metabolizer # The liver metabolizes certain chemicals only, like alcohol.
-    maxPoisonsProcessable: 1
+  - type: Metabolizer # iss14: converted to metabolism stages
+    maxReagents: 1
     metabolizerTypes: [Human]
-    groups:
-    - id: Alcohol
-      rateModifier: 0.1 # removes alcohol very slowly along with the stomach removing it as a drink
+    stages: [ Metabolites ]
   - type: Tag # goob edit
     tags:
     - Meat
@@ -491,10 +477,9 @@
     size: Small
     heldPrefix: kidneys
   # The kidneys just remove anything that doesn't currently have any metabolisms, as a stopgap.
-  - type: Metabolizer
-    maxPoisonsProcessable: 5
+  - type: Metabolizer # iss14: converted to metabolism stages (kidneys act on all stages' leftovers)
+    maxReagents: 5
     metabolizerTypes: [Human]
-    removeEmpty: true
   - type: Tag # goob edit
     tags:
     - Meat

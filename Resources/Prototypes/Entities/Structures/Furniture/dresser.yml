@@ -283,7 +283,7 @@
       weight: 0.0008
     - id: ClothingOuterDogi
       weight: 0.00001
-    - id: OrganHumanHead
+    - id: HeadHuman # iss14: nubody organ id replaced with the part-based head
       weight: 0.00001
     - id: OrganHumanKidneys
       weight: 0.00001

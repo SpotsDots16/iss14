@@ -14,10 +14,7 @@
   abstract: true
   id: SurgeryBase
   components:
-  - type: SurgeryPartComponentCondition
-    inverse: true # regular surgeries can't be done on xenos (xeno surgeries are more complex, damage the user and have unique flavour text)
-    components:
-    - type: XenoBodyPart
+  # iss14: xenomorphs are not ported, removed the XenoBodyPart part condition
   - type: Surgery
 
 - type: entity
@@ -852,9 +849,7 @@
     - SurgeryStepOpenOrganSlot
   - type: SurgeryOrganSlotCondition
     inverse: true
-  - type: SurgeryBodyCondition
-    accepted: [ IPC ]
-    inverse: true
+  # iss14: IPC body-exclusion condition removed - IPC species not ported
 
 - type: entity
   abstract: true
@@ -1025,7 +1020,6 @@
   - type: SurgeryOrganOnAddCondition
     components:
       brain:
-      - type: OhioAccent
       - type: RatvarianLanguage
       - type: Clumsy
     inverse: true
@@ -1049,7 +1043,6 @@
   - type: SurgeryOrganOnAddCondition
     components:
       brain:
-      - type: OhioAccent
       - type: RatvarianLanguage
       - type: Clumsy
   - type: SurgeryPartCondition

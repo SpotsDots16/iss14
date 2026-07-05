@@ -23,18 +23,10 @@
         Destroyed: 0
       slotId: core
     - type: Stomach
-    - type: Metabolizer
-      maxPoisonsProcessable: 3
+    - type: Metabolizer # iss14: converted to metabolism stages
+      maxReagents: 3
       metabolizerTypes: [ Slime ]
-      removeEmpty: true
-      groups:
-        - id: Food
-        - id: Drink
-        - id: Medicine
-        - id: Poison
-        - id: Narcotic
-        - id: Alcohol
-          rateModifier: 0.2
+      stages: [ Digestion, Bloodstream, Metabolites ]
     - type: SolutionContainerManager
       solutions:
         stomach:
@@ -50,18 +42,10 @@
       solutions:
         stomach:
           maxVol: 50.0 # 2.5u added per sec when slime latched, 20 sec metabolize time, 2.5 * 20 = 50u
-    - type: Metabolizer
-      maxPoisonsProcessable: 3
+    - type: Metabolizer # iss14: converted to metabolism stages
+      maxReagents: 3
       metabolizerTypes: [ Slime, XenobioSlime ]
-      removeEmpty: true
-      groups:
-        - id: Food
-        - id: Drink
-        - id: Medicine
-        - id: Poison
-        - id: Narcotic
-        - id: Alcohol
-          rateModifier: 0.2
+      stages: [ Digestion, Bloodstream, Metabolites ]
 
 - type: entity
   id: OrganSlimesLungs
@@ -83,14 +67,9 @@
         Destroyed: 0
     - type: Lung
       alert: LowNitrogen
-    - type: Metabolizer
-      removeEmpty: true
-      solutionOnBody: false
-      solution: "Lung"
+    - type: Metabolizer # iss14: converted to metabolism stages
       metabolizerTypes: [ Slime ]
-      groups:
-      - id: Gas
-        rateModifier: 100.0
+      stages: [ Respiration ]
     - type: SolutionContainerManager
       solutions:
         organ:

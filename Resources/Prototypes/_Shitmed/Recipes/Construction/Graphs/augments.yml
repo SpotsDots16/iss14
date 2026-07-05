@@ -168,7 +168,7 @@
       - material: Steel
         amount: 12
         doAfter: 2
-      - tool: Hammering
+      - tool: Anchoring # iss14: Hammering tool quality is Goob-only (provided by unported MeleeHammer/crushers)
         doAfter: 3
       - tool: Welding
         doAfter: 2
