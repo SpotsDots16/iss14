@@ -1,4 +1,6 @@
-﻿using Content.Shared.Damage;
+﻿using Content.Shared._Shitmed.Damage; // Shitmed Change
+using Content.Shared._Shitmed.Targeting; // Shitmed Change
+using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.Damage.Systems;
@@ -23,11 +25,16 @@ public sealed partial class HealthChangeEntityEffectSystem : EntityEffectSystem<
 
         damageSpec *= args.Scale;
 
-        _damageable.TryChangeDamage(
+        // Shitmed Change: chems affect all organic parts, matching Goob's HealthChange
+        // (default routing would pick one random vital part - heals would never reach limbs)
+        _damageable.ChangeDamage(
                 entity.AsNullable(),
                 damageSpec,
                 args.Effect.IgnoreResistances,
-                interruptsDoAfters: false);
+                interruptsDoAfters: false,
+                targetPart: TargetBodyPart.All,
+                splitDamage: SplitDamageBehavior.SplitEnsureAllOrganic,
+                ignoreBlockers: true);
     }
 }
 

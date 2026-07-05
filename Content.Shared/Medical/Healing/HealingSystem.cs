@@ -121,10 +121,14 @@ public sealed partial class HealingSystem : EntitySystem
         if (healing.ModifyBloodLevel != 0 && bloodstream != null)
             _bloodstreamSystem.TryModifyBloodLevel((target.Owner, bloodstream), healing.ModifyBloodLevel);
 
-        if (!_damageable.TryChangeDamage(target.Owner, healing.Damage * _damageable.UniversalTopicalsHealModifier, out var healed, true, origin: args.Args.User) && healing.BloodlossModifier != 0)
+        // iss14: use the nullable overload - null means "no damageable at all" (Goob's early-return
+        // condition). The bool overload also returns false when there is simply nothing left to heal,
+        // which skipped stack consumption and made bleed-stopping free.
+        var healed = _damageable.TryChangeDamage((EntityUid?) target.Owner, healing.Damage * _damageable.UniversalTopicalsHealModifier, true, origin: args.Args.User, canMiss: false);
+        if (healed == null && healing.BloodlossModifier != 0)
             return;
 
-        var total = healed.GetTotal();
+        var total = healed?.GetTotal() ?? FixedPoint2.Zero;
 
         // Re-verify that we can heal the damage.
         var dontRepeat = false;

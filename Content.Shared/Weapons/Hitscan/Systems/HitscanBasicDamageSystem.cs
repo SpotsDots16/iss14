@@ -22,7 +22,9 @@ public sealed partial class HitscanBasicDamageSystem : EntitySystem
 
         var dmg = ent.Comp.Damage * _damage.UniversalHitscanDamageModifier;
 
-        if(!_damage.TryChangeDamage(args.Data.HitEntity.Value, dmg, out var damageDealt, origin: args.Data.Gun))
+        // Shitmed Change: origin must be the shooter so damage routes to their targeted body part
+        // (the gun has no TargetingComponent - the targeting doll did nothing for hitscan weapons)
+        if(!_damage.TryChangeDamage(args.Data.HitEntity.Value, dmg, out var damageDealt, origin: args.Data.Shooter ?? args.Data.Gun))
             return;
 
         var damageEvent = new HitscanDamageDealtEvent

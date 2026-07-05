@@ -133,7 +133,12 @@ public sealed partial class DamageableSystem
         bool ignoreResistances = false,
         bool interruptsDoAfters = true,
         EntityUid? origin = null,
-        bool ignoreGlobalModifiers = false
+        bool ignoreGlobalModifiers = false,
+        // iss14: exposed so aggregate-damage callers (HealEvenly/HealDistributed, chem effects)
+        // can split across all organic parts instead of hitting one random vital part.
+        TargetBodyPart? targetPart = null,
+        SplitDamageBehavior splitDamage = SplitDamageBehavior.Split,
+        bool ignoreBlockers = false
     )
     {
         // Shitmed Change Start - route everything through the body-aware damage path so damage
@@ -144,6 +149,9 @@ public sealed partial class DamageableSystem
             interruptsDoAfters,
             ent.Comp,
             origin,
+            targetPart: targetPart,
+            splitDamage: splitDamage,
+            ignoreBlockers: ignoreBlockers,
             ignoreGlobalModifiers: ignoreGlobalModifiers) ?? new DamageSpecifier();
         // Shitmed Change End
     }
@@ -817,7 +825,7 @@ public sealed partial class DamageableSystem
 
         // Get our total damage, or heal if we're below a certain amount.
         if (!TryGetDamageGreaterThan((ent, ent.Comp), -amount, out var damage, group))
-            return ChangeDamage(ent, -damage, true, false, origin);
+            return ChangeDamage(ent, -damage, true, false, origin, targetPart: TargetBodyPart.All, splitDamage: SplitDamageBehavior.SplitEnsureAllOrganic, ignoreBlockers: true); // iss14: split heals across organic parts (Goob semantics)
 
         // make sure damageChange has the same damage types as damage
         damageChange.DamageDict.EnsureCapacity(damage.DamageDict.Count);
@@ -863,7 +871,7 @@ public sealed partial class DamageableSystem
             }
         }
 
-        return ChangeDamage(ent, damageChange, true, false, origin);
+        return ChangeDamage(ent, damageChange, true, false, origin, targetPart: TargetBodyPart.All, splitDamage: SplitDamageBehavior.SplitEnsureAllOrganic, ignoreBlockers: true); // iss14: split heals across organic parts (Goob semantics)
     }
 
     /// <summary>
@@ -888,7 +896,7 @@ public sealed partial class DamageableSystem
 
         // Get our total damage, or heal if we're below a certain amount.
         if (!TryGetDamageGreaterThan((ent, ent.Comp), -amount, out var damage, group))
-            return ChangeDamage(ent, -damage, true, false, origin);
+            return ChangeDamage(ent, -damage, true, false, origin, targetPart: TargetBodyPart.All, splitDamage: SplitDamageBehavior.SplitEnsureAllOrganic, ignoreBlockers: true); // iss14: split heals across organic parts (Goob semantics)
 
         // make sure damageChange has the same damage types as damageEntity
         damageChange.DamageDict.EnsureCapacity(damage.DamageDict.Count);
@@ -900,7 +908,7 @@ public sealed partial class DamageableSystem
             damageChange.DamageDict.Add(type, value / total * amount);
         }
 
-        return ChangeDamage(ent, damageChange, true, false, origin);
+        return ChangeDamage(ent, damageChange, true, false, origin, targetPart: TargetBodyPart.All, splitDamage: SplitDamageBehavior.SplitEnsureAllOrganic, ignoreBlockers: true); // iss14: split heals across organic parts (Goob semantics)
     }
 
     /// <summary>
