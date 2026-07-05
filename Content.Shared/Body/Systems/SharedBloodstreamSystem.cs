@@ -222,6 +222,16 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
     {
         ent.Comp.NextUpdate = _timing.CurTime + ent.Comp.AdjustedUpdateInterval;
         DirtyField(ent, ent.Comp, nameof(BloodstreamComponent.NextUpdate));
+
+        OnBloodstreamMapInitServer(ent); // iss14: server solution setup hook (avoids duplicate MapInit subscription)
+    }
+
+    /// <summary>
+    /// iss14: overridden by the server system to create the blood/chemical solutions
+    /// (EnsureSolution is only legal during MapInit).
+    /// </summary>
+    protected virtual void OnBloodstreamMapInitServer(Entity<BloodstreamComponent> ent)
+    {
     }
 
     // prevent the infamous UdderSystem debug assert, see https://github.com/space-wizards/space-station-14/pull/35314

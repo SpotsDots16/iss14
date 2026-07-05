@@ -423,7 +423,7 @@
   name: pill canister
   parent: PillCanister
   id: PillCanisterDexalin
-  suffix: Dexalin 20u, 15 # Goobstation
+  suffix: Dexalin 20u, 10 # iss14: canister holds 10 (Goob capacity bump not ported)
   components:
   - type: Label
     currentLabel: dexalin 20u
@@ -431,7 +431,7 @@
     containers:
       storagebase:
         id: PillDexalin
-        amount: 15 # Goobstation
+        amount: 10 # iss14: canister capacity
 
 - type: entity
   name: pill
@@ -455,7 +455,7 @@
   name: pill canister
   parent: PillCanister
   id: PillCanisterDylovene
-  suffix: Dylovene 20u, 15 # Goobstation
+  suffix: Dylovene 20u, 10 # iss14: canister holds 10 (Goob capacity bump not ported)
   components:
   - type: Label
     currentLabel: dylovene 20u
@@ -463,7 +463,7 @@
     containers:
       storagebase:
         id: PillDylovene
-        amount: 15 # Goobstation
+        amount: 10 # iss14: canister capacity
 
 - type: entity
   name: pill
@@ -487,7 +487,7 @@
   name: pill canister
   parent: PillCanister
   id: PillCanisterHyronalin
-  suffix: Hyronalin 20u, 15 # Goobstation
+  suffix: Hyronalin 20u, 10 # iss14: canister holds 10 (Goob capacity bump not ported)
   components:
   - type: Label
     currentLabel: hyronalin 20u
@@ -495,7 +495,7 @@
     containers:
       storagebase:
         id: PillHyronalin
-        amount: 15 # Goobstation
+        amount: 10 # iss14: canister capacity
 
 - type: entity
   name: pill
@@ -519,7 +519,7 @@
   name: pill canister
   parent: PillCanister
   id: PillCanisterPotassiumIodide
-  suffix: Potassium iodide 20u, 15 # Goobstation
+  suffix: Potassium iodide 20u, 10 # iss14: canister holds 10 (Goob capacity bump not ported)
   components:
   - type: Label
     currentLabel: potassium iodide 20u
@@ -527,7 +527,7 @@
     containers:
       storagebase:
         id: PillPotassiumIodide
-        amount: 15 # Goobstation
+        amount: 10 # iss14: canister capacity
 
 - type: entity
   name: pill
@@ -569,7 +569,7 @@
   name: pill canister
   parent: PillCanister
   id: PillCanisterIron
-  suffix: Iron 20u, 15 # Goobstation
+  suffix: Iron 20u, 10 # iss14: canister holds 10 (Goob capacity bump not ported)
   components:
   - type: Label
     currentLabel: iron 20u
@@ -577,13 +577,13 @@
     containers:
       storagebase:
         id: PillIron
-        amount: 15 # Goobstation
+        amount: 10 # iss14: canister capacity
 
 - type: entity
   name: pill canister
   parent: PillCanister
   id: PillCanisterCopper
-  suffix: Copper 20u, 15 # Goobstation
+  suffix: Copper 20u, 10 # iss14: canister holds 10 (Goob capacity bump not ported)
   components:
   - type: Label
     currentLabel: copper 20u
@@ -591,7 +591,7 @@
     containers:
       storagebase:
         id: PillCopper
-        amount: 15 # Goobstation
+        amount: 10 # iss14: canister capacity
 
 - type: entity
   name: pill
@@ -615,7 +615,7 @@
   name: pill canister
   parent: PillCanister
   id: PillCanisterKelotane
-  suffix: Kelotane 20u, 15 # Goobstation
+  suffix: Kelotane 20u, 10 # iss14: canister holds 10 (Goob capacity bump not ported)
   components:
   - type: Label
     currentLabel: kelotane 20u
@@ -623,7 +623,7 @@
     containers:
       storagebase:
         id: PillKelotane
-        amount: 15 # Goobstation
+        amount: 10 # iss14: canister capacity
 
 - type: entity
   name: pill
@@ -647,7 +647,7 @@
   name: pill canister
   parent: PillCanister
   id: PillCanisterDermaline
-  suffix: Dermaline 20u, 15 # Goobstation
+  suffix: Dermaline 20u, 10 # iss14: canister holds 10 (Goob capacity bump not ported)
   components:
   - type: Label
     currentLabel: dermaline 20u
@@ -655,7 +655,7 @@
     containers:
       storagebase:
         id: PillDermaline
-        amount: 15 # Goobstation
+        amount: 10 # iss14: canister capacity
 
 - type: entity
   name: space mirage
@@ -690,7 +690,7 @@
   name: pill canister
   parent: PillCanister
   id: PillCanisterTricordrazine
-  suffix: Tricordrazine 20u, 15 # Goobstation
+  suffix: Tricordrazine 20u, 10 # iss14: canister holds 10 (Goob capacity bump not ported)
   components:
   - type: Label
     currentLabel: tricordrazine 20u
@@ -698,7 +698,7 @@
     containers:
       storagebase:
         id: PillTricordrazine
-        amount: 15 # Goobstation
+        amount: 10 # iss14: canister capacity
 
 - type: entity
   name: pill
@@ -722,7 +722,7 @@
   name: pill canister
   parent: PillCanister
   id: PillCanisterBicaridine
-  suffix: Bicaridine 20u, 15 # Goobstation
+  suffix: Bicaridine 20u, 10 # iss14: canister holds 10 (Goob capacity bump not ported)
   components:
   - type: Label
     currentLabel: bicaridine 20u
@@ -730,7 +730,7 @@
     containers:
       storagebase:
         id: PillBicaridine
-        amount: 15 # Goobstation
+        amount: 10 # iss14: canister capacity
 
 - type: entity
   name: pill
@@ -754,7 +754,7 @@
   name: pill canister
   parent: PillCanister
   id: PillCanisterCharcoal
-  suffix: Charcoal 20u, 15 # Goobstation
+  suffix: Charcoal 20u, 10 # iss14: canister holds 10 (Goob capacity bump not ported)
   components:
   - type: Label
     currentLabel: charcoal 20u
@@ -762,7 +762,7 @@
     containers:
       storagebase:
         id: PillCharcoal
-        amount: 15 # Goobstation
+        amount: 10 # iss14: canister capacity
 
 - type: entity
   name: romerol pill

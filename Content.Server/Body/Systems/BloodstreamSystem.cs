@@ -141,14 +141,15 @@ public sealed class BloodstreamSystem : SharedBloodstreamSystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<BloodstreamComponent, ComponentInit>(OnComponentInit);
         SubscribeLocalEvent<BloodstreamComponent, GenerateDnaEvent>(OnDnaGenerated);
     }
 
     // not sure if we can move this to shared or not
     // it would certainly help if SolutionContainer was documented
     // but since we usually don't add the component dynamically to entities we can keep this unpredicted for now
-    private void OnComponentInit(Entity<BloodstreamComponent> entity, ref ComponentInit args)
+    // iss14: called from the shared MapInit handler (EnsureSolution requires MapInit stage;
+    // a second MapInitEvent subscription in the same system chain is a duplicate).
+    protected override void OnBloodstreamMapInitServer(Entity<BloodstreamComponent> entity)
     {
         if (!SolutionContainer.EnsureSolution(entity.Owner,
                 entity.Comp.ChemicalSolutionName,
