@@ -2,7 +2,6 @@ using Content.Server.Antag;
 using Content.Server.GameTicking.Rules.Components;
 using Content.Server.Humanoid;
 using Content.Server.Preferences.Managers;
-using Content.Shared.Body;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.Preferences;
@@ -12,9 +11,8 @@ namespace Content.Server.GameTicking.Rules;
 
 public sealed partial class AntagLoadProfileRuleSystem : GameRuleSystem<AntagLoadProfileRuleComponent>
 {
-    [Dependency] private HumanoidProfileSystem _humanoidProfile = default!;
+    [Dependency] private HumanoidAppearanceSystem _humanoid = default!;
     [Dependency] private IServerPreferencesManager _prefs = default!;
-    [Dependency] private SharedVisualBodySystem _visualBody = default!;
 
     public override void Initialize()
     {
@@ -48,10 +46,6 @@ public sealed partial class AntagLoadProfileRuleSystem : GameRuleSystem<AntagLoa
             species = Proto.Index(ent.Comp.SpeciesHardOverride.Value); // Shitmed - Starlight Abductors
 
         args.Entity = Spawn(species.Prototype, args.Coords);
-        if (profile?.WithSpecies(species.ID) is { } humanoidProfile)
-        {
-            _visualBody.ApplyProfileTo(args.Entity.Value, humanoidProfile);
-            _humanoidProfile.ApplyProfileTo(args.Entity.Value, humanoidProfile);
-        }
+        _humanoid.LoadProfile(args.Entity.Value, profile?.WithSpecies(species.ID));
     }
 }

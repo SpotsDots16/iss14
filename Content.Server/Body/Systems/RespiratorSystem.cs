@@ -84,8 +84,9 @@ using Content.Server.Administration.Logs;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Body.Components;
 using Content.Server.Chat.Systems;
-using Content.Shared.EntityEffects.EffectConditions;
-using Content.Shared.EntityEffects.Effects;
+using Content.Shared.EntityConditions;
+using Content.Shared.EntityConditions.Conditions.Body;
+using Content.Shared.EntityEffects;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Alert;
 using Content.Shared.Atmos;
@@ -94,11 +95,13 @@ using Content.Shared.Body.Events;
 using Content.Shared.Body.Prototypes;
 using Content.Shared.Chat; // Einstein Engines - Language
 using Content.Shared.Chemistry.Components;
-using Content.Shared.EntityEffects;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Database;
+using Content.Shared.EntityEffects.Effects.Body; // iss14: Oxygenate moved
+using Content.Shared.EntityEffects.Effects.Damage; // iss14: HealthChange moved
+using Content.Shared.Metabolism; // iss14: MetabolizerSystem + MetabolismStagePrototype
 using Content.Server.EntityEffects;
 using Content.Shared.Mobs.Systems;
 using JetBrains.Annotations;
@@ -128,10 +131,10 @@ public sealed class RespiratorSystem : EntitySystem
     [Dependency] private IPrototypeManager _protoMan = default!;
     [Dependency] private SharedSolutionContainerSystem _solutionContainerSystem = default!;
     [Dependency] private ChatSystem _chat = default!;
-    [Dependency] private EntityEffectSystem _entityEffect = default!;
+    [Dependency] private SharedEntityConditionsSystem _entityConditions = default!; // iss14: new conditions API
     [Dependency] private ConsciousnessSystem _consciousness = default!; // Shitmed Change
 
-    private static readonly ProtoId<MetabolismGroupPrototype> GasId = new("Gas");
+    private static readonly ProtoId<MetabolismStagePrototype> RespirationStage = new("Respiration"); // iss14: metabolism rework uses stages
 
     public override void Initialize()
     {
@@ -433,7 +436,7 @@ public sealed class RespiratorSystem : EntitySystem
         if (!Resolve(lung, ref lung.Comp))
             return 0;
 
-        if (lung.Comp.MetabolismGroups == null)
+        if (lung.Comp.Stages == null) // iss14: metabolism-stages component
             return 0;
 
         float saturation = 0;
@@ -443,7 +446,7 @@ public sealed class RespiratorSystem : EntitySystem
             if (reagent.Metabolisms == null)
                 continue;
 
-            if (!reagent.Metabolisms.TryGetValue(GasId, out var entry))
+            if (!reagent.Metabolisms.Metabolisms.TryGetValue(RespirationStage, out var entry)) // iss14: metabolism rework
                 continue;
 
             foreach (var effect in entry.Effects)
@@ -463,9 +466,10 @@ public sealed class RespiratorSystem : EntitySystem
             if (effect.Conditions == null)
                 return true;
 
+            // iss14: adapted to the new EntityConditions API (upstream metabolism rework)
             foreach (var cond in effect.Conditions)
             {
-                if (cond is OrganType organ && !_entityEffect.OrganCondition(organ, lung))
+                if (cond is MetabolizerTypeCondition organ && !_entityConditions.TryCondition(lung, organ))
                     return false;
             }
 
@@ -530,7 +534,7 @@ public sealed class RespiratorSystem : EntitySystem
         var organs = _bodySystem.GetBodyOrganEntityComps<LungComponent>((ent, null));
         foreach (var entity in organs)
         {
-            _alertsSystem.ShowAlert(ent, entity.Comp1.Alert);
+            _alertsSystem.ShowAlert(ent.Owner, entity.Comp1.Alert);
         }
     }
 
@@ -540,7 +544,7 @@ public sealed class RespiratorSystem : EntitySystem
         var organs = _bodySystem.GetBodyOrganEntityComps<LungComponent>((ent, null));
         foreach (var entity in organs)
         {
-            _alertsSystem.ClearAlert(ent, entity.Comp1.Alert);
+            _alertsSystem.ClearAlert(ent.Owner, entity.Comp1.Alert);
         }
 
         if (!TryComp<RespiratorComponent>(ent.Owner, out var respirator))

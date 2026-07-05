@@ -1,13 +1,13 @@
-﻿using Content.Shared.GameTicking;
+﻿using Content.Shared.Body.Systems;
+using Content.Shared.GameTicking;
 using Content.Shared.Gibbing.Components;
 using Content.Shared.Mind;
 using Content.Shared.Objectives.Systems;
-using Content.Shared.Gibbing;
 
 namespace Content.Server.Gibbing.Systems;
 public sealed partial class GibOnRoundEndSystem : EntitySystem
 {
-    [Dependency] private GibbingSystem _gibbing = default!;
+    [Dependency] private SharedBodySystem _body = default!;
     [Dependency] private SharedMindSystem _mind = default!;
     [Dependency] private SharedObjectivesSystem _objectives = default!;
 
@@ -49,7 +49,7 @@ public sealed partial class GibOnRoundEndSystem : EntitySystem
             if (gibComp.SpawnProto != null)
                 SpawnAtPosition(gibComp.SpawnProto, Transform(uid).Coordinates);
 
-            _gibbing.Gib(uid);
+            _body.GibBody(uid, true);
         }
     }
 }

@@ -208,7 +208,13 @@ namespace Content.Server.Database
         {
             profile ??= new Profile();
             var appearance = humanoid.Appearance;
-            var dataNode = _serialization.WriteValue(appearance.Markings, alwaysWrite: true, notNullableOverride: true);
+
+            // Shitmed Change: part-based body rollback - markings are a flat list again, stored in the legacy column
+            List<string> markingStrings = new();
+            foreach (var marking in appearance.Markings)
+            {
+                markingStrings.Add(marking.ToString());
+            }
 
             profile.CharacterName = humanoid.Name;
             profile.FlavorText = humanoid.FlavorText;
@@ -220,24 +226,12 @@ namespace Content.Server.Database
             profile.SkinColor = appearance.SkinColor.ToHex();
             profile.SpawnPriority = (int) humanoid.SpawnPriority;
             profile.BarkVoice = humanoid.BarkVoice; // Barks
-            profile.OrganMarkings = JsonSerializer.SerializeToDocument(dataNode.ToJsonNode());
-
-            // support for downgrades - at some point this should be removed
-            var legacyMarkings = appearance.Markings
-                .SelectMany(organ => organ.Value.Values)
-                .SelectMany(i => i)
-                .Select(marking => marking.ToLegacyDbString())
-                .ToList();
-            var flattenedMarkings = appearance.Markings.SelectMany(it => it.Value)
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            var hairMarking = flattenedMarkings.FirstOrNull(kvp => kvp.Key == HumanoidVisualLayers.Hair)?.Value.FirstOrNull();
-            var facialHairMarking = flattenedMarkings.FirstOrNull(kvp => kvp.Key == HumanoidVisualLayers.FacialHair)?.Value.FirstOrNull();
-            profile.Markings =
-                JsonSerializer.SerializeToDocument(legacyMarkings.Select(marking => marking.ToString()).ToList());
-            profile.HairName = hairMarking?.MarkingId ?? HairStyles.DefaultHairStyle;
-            profile.FacialHairName = facialHairMarking?.MarkingId ?? HairStyles.DefaultFacialHairStyle;
-            profile.HairColor = (hairMarking?.MarkingColors[0] ?? Color.Black).ToHex();
-            profile.FacialHairColor = (facialHairMarking?.MarkingColors[0] ?? Color.Black).ToHex();
+            profile.OrganMarkings = null; // Shitmed Change: organ-scoped markings no longer exist
+            profile.Markings = JsonSerializer.SerializeToDocument(markingStrings);
+            profile.HairName = appearance.HairStyleId;
+            profile.HairColor = appearance.HairColor.ToHex();
+            profile.FacialHairName = appearance.FacialHairStyleId;
+            profile.FacialHairColor = appearance.FacialHairColor.ToHex();
 
             profile.Slot = slot;
             profile.PreferenceUnavailable = (DbPreferenceUnavailableMode) humanoid.PreferenceUnavailable;

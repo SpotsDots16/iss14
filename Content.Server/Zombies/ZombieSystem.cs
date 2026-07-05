@@ -313,10 +313,22 @@ namespace Content.Server.Zombies
             if (!Resolve(source, ref zombiecomp))
                 return false;
 
-            _visualBody.ApplyProfiles(target, zombiecomp.BeforeZombifiedProfiles);
-            _visualBody.ApplyMarkings(target, zombiecomp.BeforeZombifiedMarkings);
+            foreach (var (layer, info) in zombiecomp.BeforeZombifiedCustomBaseLayers)
+            {
+                _humanoidAppearance.SetBaseLayerColor(target, layer, info.Color);
+                _humanoidAppearance.SetBaseLayerId(target, layer, info.Id?.Id);
+            }
 
-            _bloodstream.ChangeBloodReagents(target, zombiecomp.BeforeZombifiedBloodReagents);
+            if (TryComp<HumanoidAppearanceComponent>(target, out var appcomp))
+            {
+                appcomp.EyeColor = zombiecomp.BeforeZombifiedEyeColor;
+            }
+
+            _humanoidAppearance.SetSkinColor(target, zombiecomp.BeforeZombifiedSkinColor, verify: false);
+
+            // iss14: bloodstream rollback - blood is a single reagent again, restore the primary stored reagent
+            if (zombiecomp.BeforeZombifiedBloodReagents.Contents.Count > 0)
+                _bloodstream.ChangeBloodReagent(target, zombiecomp.BeforeZombifiedBloodReagents.Contents[0].Reagent.Prototype);
 
             return true;
         }

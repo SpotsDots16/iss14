@@ -187,7 +187,7 @@ public sealed partial class TTSSystem : EntitySystem
         if (!Exists(ent))
             return def;
 
-        if (!TryComp<HumanoidProfileComponent>(ent, out var profile))
+        if (!TryComp<HumanoidAppearanceComponent>(ent, out var profile))
             return def;
 
         // Seed by the character's name so a given character always gets the same voice (and two

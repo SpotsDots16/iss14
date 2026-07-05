@@ -35,11 +35,11 @@ namespace Content.Client.Humanoid;
 
 public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
 {
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
-    [Dependency] private readonly MarkingManager _markingManager = default!;
-    [Dependency] private readonly IConfigurationManager _configurationManager = default!;
-    [Dependency] private readonly DisplacementMapSystem _displacement = default!;
-    [Dependency] private readonly SpriteSystem _sprite = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
+    [Dependency] private MarkingManager _markingManager = default!;
+    [Dependency] private IConfigurationManager _configurationManager = default!;
+    [Dependency] private DisplacementMapSystem _displacement = default!;
+    [Dependency] private SpriteSystem _sprite = default!;
 
     public override void Initialize()
     {
@@ -260,8 +260,7 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
         humanoid.Species = profile.Species;
         humanoid.SkinColor = profile.Appearance.SkinColor;
         humanoid.EyeColor = profile.Appearance.EyeColor;
-        humanoid.Height = profile.Height; // Goobstation: port EE height/width sliders
-        humanoid.Width = profile.Width; // Goobstation: port EE height/width sliders
+        // Goobstation: port EE height/width sliders - iss14 profiles have no Height/Width, component defaults (1f) apply
 
         UpdateSprite((uid, humanoid, Comp<SpriteComponent>(uid)));
     }

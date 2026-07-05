@@ -41,6 +41,7 @@ using Content.Shared.Inventory.Events;
 using Content.Shared.Inventory;
 using Content.Server.Power.EntitySystems;
 using Robust.Server.Containers;
+using Robust.Shared.Containers;
 using BreathToolComponent = Content.Shared.Atmos.Components.BreathToolComponent;
 using InternalsComponent = Content.Shared.Body.Components.InternalsComponent;
 
@@ -50,6 +51,7 @@ public sealed class LungSystem : EntitySystem
 {
     [Dependency] private AtmosphereSystem _atmos = default!;
     [Dependency] private InventorySystem _inventory = default!; // Goobstaiton
+    [Dependency] private SharedContainerSystem _containers = default!; // Goobstation
     [Dependency] private InternalsSystem _internals = default!;
     [Dependency] private SharedSolutionContainerSystem _solutionContainerSystem = default!;
 
@@ -76,10 +78,10 @@ public sealed class LungSystem : EntitySystem
             return;
         }
 
-        if (TryComp(args.Equipee, out InternalsComponent? internals))
+        if (TryComp(args.EquipTarget, out InternalsComponent? internals)) // iss14: Equipee renamed to EquipTarget
         {
-            ent.Comp.ConnectedInternalsEntity = args.Equipee;
-            _internals.ConnectBreathTool((args.Equipee, internals), ent);
+            ent.Comp.ConnectedInternalsEntity = args.EquipTarget;
+            _internals.ConnectBreathTool((args.EquipTarget, internals), ent);
         }
     }
 
@@ -87,8 +89,9 @@ public sealed class LungSystem : EntitySystem
     {
         if (_solutionContainerSystem.EnsureSolution(entity.Owner, entity.Comp.SolutionName, out var solution))
         {
-            solution.MaxVolume = 100.0f;
-            solution.CanReact = false; // No dexalin lungs
+            // iss14: newer Wizden solution API - mutate via SharedSolutionContainerSystem
+            _solutionContainerSystem.SetCapacity(solution, 100.0f);
+            _solutionContainerSystem.SetCanReact(solution, false); // No dexalin lungs
         }
     }
 
@@ -97,8 +100,12 @@ public sealed class LungSystem : EntitySystem
     {
         var comp = ent.Comp;
 
-        if (!_inventory.TryGetContainingEntity(ent.Owner, out var parent) || !_inventory.TryGetContainingSlot(ent.Owner, out var slot))
+        // iss14: InventorySystem.TryGetContainingEntity is gone - resolve the wearer via the containing container
+        if (!_containers.TryGetContainingContainer((ent.Owner, null, null), out var container)
+            || !_inventory.TryGetContainingSlot(ent.Owner, out var slot))
             return;
+
+        var parent = container.Owner;
 
         if ((slot.SlotFlags & comp.AllowedSlots) == 0)
             return;
@@ -106,7 +113,7 @@ public sealed class LungSystem : EntitySystem
         if (TryComp(parent, out InternalsComponent? internals))
         {
             ent.Comp.ConnectedInternalsEntity = parent;
-            _internals.ConnectBreathTool((parent.Value, internals), ent);
+            _internals.ConnectBreathTool((parent, internals), ent);
         }
     }
 

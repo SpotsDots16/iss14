@@ -106,41 +106,23 @@ namespace Content.Server.Preferences.Managers
                 gender = genderVal;
 
 
-            var markings =
-                new Dictionary<ProtoId<OrganCategoryPrototype>, Dictionary<HumanoidVisualLayers, List<Marking>>>();
+            // Shitmed Change: part-based body rollback - markings are a flat list again, read from the legacy column
+            List<Marking> markings = new();
 
             var species = profile.Species;
             if (!_prototypeManager.HasIndex<SpeciesPrototype>(species))
                 species = HumanoidCharacterProfile.DefaultSpecies;
 
-            if (profile.OrganMarkings?.RootElement is { } element)
+            if (profile.Markings is { } profileMarkings && TryDeserialize<List<string>>(profileMarkings) is { } markingsRaw)
             {
-                var data = element.ToDataNode();
-                markings = _serialization
-                    .Read<Dictionary<ProtoId<OrganCategoryPrototype>, Dictionary<HumanoidVisualLayers, List<Marking>>>>(
-                        data,
-                        notNullableOverride: true);
-            }
-            else if (profile.Markings is { } profileMarkings && TryDeserialize<List<string>>(profileMarkings) is { } markingsRaw)
-            {
-                List<Marking> markingsList = new();
-
                 foreach (var marking in markingsRaw)
                 {
                     var parsed = Marking.ParseFromDbString(marking);
 
                     if (parsed is null) continue;
 
-                    markingsList.Add(parsed.Value);
+                    markings.Add(parsed);
                 }
-
-                if (Marking.ParseFromDbString($"{profile.HairName}@{profile.HairColor}") is { } facialMarking)
-                    markingsList.Add(facialMarking);
-
-                if (Marking.ParseFromDbString($"{profile.HairName}@{profile.HairColor}") is { } hairMarking)
-                    markingsList.Add(hairMarking);
-
-                markings = _marking.ConvertMarkings(markingsList, species);
             }
 
             var loadouts = new Dictionary<string, RoleLoadout>();
@@ -176,6 +158,10 @@ namespace Content.Server.Preferences.Managers
                 gender,
                 new HumanoidCharacterAppearance
                 (
+                    profile.HairName,
+                    Color.FromHex(profile.HairColor),
+                    profile.FacialHairName,
+                    Color.FromHex(profile.FacialHairColor),
                     Color.FromHex(profile.EyeColor),
                     Color.FromHex(profile.SkinColor),
                     markings

@@ -3,6 +3,7 @@
   id: BaseKnife
   abstract: true
   components:
+  - type: Sharp # Shitmed Change - improvised surgery tools
   - type: Tag
     tags:
     - Knife

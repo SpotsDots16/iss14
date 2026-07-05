@@ -161,13 +161,17 @@ public sealed class BloodstreamSystem : SharedBloodstreamSystem
                 out var tempSolution))
             return;
 
-        chemicalSolution.MaxVolume = entity.Comp.ChemicalMaxVolume;
-        bloodSolution.MaxVolume = entity.Comp.BloodMaxVolume;
-        tempSolution.MaxVolume = entity.Comp.BleedPuddleThreshold * 4; // give some leeway, for chemstream as well
+        // iss14: newer Wizden solution API - EnsureSolution returns Entity<SolutionComponent>, mutate via SolutionContainer
+        SolutionContainer.SetCapacity(chemicalSolution, entity.Comp.ChemicalMaxVolume);
+        SolutionContainer.SetCapacity(bloodSolution, entity.Comp.BloodMaxVolume);
+        SolutionContainer.SetCapacity(tempSolution, entity.Comp.BleedPuddleThreshold * 4); // give some leeway, for chemstream as well
 
         // Fill blood solution with BLOOD
         // The DNA string might not be initialized yet, but the reagent data gets updated in the GenerateDnaEvent subscription
-        bloodSolution.AddReagent(new ReagentId(entity.Comp.BloodReagent, GetEntityBloodData(entity.Owner)), entity.Comp.BloodMaxVolume - bloodSolution.Volume);
+        SolutionContainer.TryAddReagent(bloodSolution,
+            new ReagentId(entity.Comp.BloodReagent, GetEntityBloodData(entity.Owner)),
+            entity.Comp.BloodMaxVolume - bloodSolution.Comp.Solution.Volume,
+            out _);
     }
 
     // forensics is not predicted yet

@@ -499,9 +499,17 @@ namespace Content.Client.HealthAnalyzer.UI
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             foreach (var (ent, data) in solutions)
             {
+                // Shitmed Change - iss14 newer Wizden: solution names live on the networked SolutionComponent, not the Solution itself.
+                string? solutionName = null;
+                if (_entityManager.TryGetEntity(ent, out var solutionUid) &&
+                    _entityManager.TryGetComponent(solutionUid, out SolutionComponent? solutionComp))
+                {
+                    solutionName = solutionComp.Id;
+                }
+
                 var groupTitleText = $"{Loc.GetString(
                     "group-solution-name",
-                    ("solution", data.Name ?? Loc.GetString("group-solution-unknown"))
+                    ("solution", solutionName ?? Loc.GetString("group-solution-unknown"))
                 )}";
 
                 var groupContainer = new BoxContainer

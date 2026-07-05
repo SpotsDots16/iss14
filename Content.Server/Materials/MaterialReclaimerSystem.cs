@@ -7,8 +7,8 @@ using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Database;
 using Content.Shared.Destructible;
+using Content.Shared.Body.Systems;
 using Content.Shared.Emag.Components;
-using Content.Shared.Gibbing;
 using Content.Shared.Humanoid;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Interaction.Events;
@@ -33,7 +33,7 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
     [Dependency] private MaterialStorageSystem _materialStorage = default!;
     [Dependency] private PopupSystem _popup = default!;
     [Dependency] private SharedSolutionContainerSystem _solutionContainer = default!;
-    [Dependency] private GibbingSystem _gibbing = default!;
+    [Dependency] private SharedBodySystem _body = default!; //bobby
     [Dependency] private PuddleSystem _puddle = default!;
     [Dependency] private StackSystem _stack = default!;
     [Dependency] private SharedMindSystem _mind = default!;
@@ -81,7 +81,7 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
             Filter.PvsExcept(victim, entityManager: EntityManager),
             true);
 
-        _gibbing.Gib(victim);
+        _body.GibBody(victim, true);
         _appearance.SetData(entity.Owner, RecyclerVisuals.Bloody, true);
         args.Handled = true;
     }
@@ -158,11 +158,11 @@ public sealed partial class MaterialReclaimerSystem : SharedMaterialReclaimerSys
 
         if (CanGib(uid, item, component))
         {
-            var logImpact = HasComp<HumanoidProfileComponent>(item) ? LogImpact.Extreme : LogImpact.Medium;
+            var logImpact = HasComp<HumanoidAppearanceComponent>(item) ? LogImpact.Extreme : LogImpact.Medium;
             _adminLogger.Add(LogType.Gib, logImpact, $"{ToPrettyString(item):victim} was gibbed by {ToPrettyString(uid):entity} ");
             if (component.ReclaimSolutions)
                 SpawnChemicalsFromComposition(uid, item, completion, false, component, xform);
-            _gibbing.Gib(item);
+            _body.GibBody(item, true);
             _appearance.SetData(uid, RecyclerVisuals.Bloody, true);
         }
         else

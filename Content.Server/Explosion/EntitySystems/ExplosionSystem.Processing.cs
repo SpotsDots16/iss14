@@ -555,6 +555,9 @@ public sealed partial class ExplosionSystem
             || body.BodyType == Shared._Shitmed.Body.BodyType.Simple)
             return false;
 
+        // iss14: DamageableComponent.Damage is access-restricted, go through the DamageableSystem API
+        var allDamage = _damageableSystem.GetAllDamage((uid, damageable));
+
         foreach (var threshold in destructible.Thresholds)
         {
             // Skip if already triggered and triggers only once
@@ -566,7 +569,7 @@ public sealed partial class ExplosionSystem
                 continue;
 
             // Get current damage for this damage type
-            var currentDamage = damageable.Damage.DamageDict.TryGetValue(damageTypeTrigger.DamageType, out var current)
+            var currentDamage = allDamage.DamageDict.TryGetValue(damageTypeTrigger.DamageType, out var current)
                 ? current
                 : FixedPoint2.Zero;
 

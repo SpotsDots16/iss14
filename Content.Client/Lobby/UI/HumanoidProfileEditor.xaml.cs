@@ -1,3 +1,4 @@
+using System.Linq;
 using Content.Client.Humanoid;
 using Content.Client.Message;
 using Content.Client.Players.PlayTimeTracking;
@@ -75,8 +76,6 @@ namespace Content.Client.Lobby.UI
 
         private ISawmill _sawmill;
 
-        private MarkingsViewModel _markingsModel = new();
-
         public HumanoidProfileEditor(
             IClientPreferencesManager preferencesManager,
             IConfigurationManager configurationManager,
@@ -105,8 +104,6 @@ namespace Content.Client.Lobby.UI
 
             _maxNameLength = _cfgManager.GetCVar(CCVars.MaxNameLength);
             _allowFlavorText = _cfgManager.GetCVar(CCVars.FlavorText);
-
-            Markings.SetModel(_markingsModel);
 
             ImportButton.OnPressed += args =>
             {
@@ -197,6 +194,7 @@ namespace Content.Client.Lobby.UI
             {
                 SpeciesButton.SelectId(args.Id);
                 SetSpecies(_species[args.Id].ID);
+                UpdateHairPickers();
                 OnSkinColorOnValueChanged();
             };
 
@@ -215,6 +213,112 @@ namespace Content.Client.Lobby.UI
             };
 
             #endregion
+
+            #region Hair
+
+            HairStylePicker.OnMarkingSelect += newStyle =>
+            {
+                if (Profile is null)
+                    return;
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithHairStyleName(newStyle.id));
+                ReloadPreview();
+            };
+
+            HairStylePicker.OnColorChanged += newColor =>
+            {
+                if (Profile is null)
+                    return;
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithHairColor(newColor.marking.MarkingColors[0]));
+                UpdateCMarkingsHair();
+                ReloadPreview();
+            };
+
+            FacialHairPicker.OnMarkingSelect += newStyle =>
+            {
+                if (Profile is null)
+                    return;
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithFacialHairStyleName(newStyle.id));
+                ReloadPreview();
+            };
+
+            FacialHairPicker.OnColorChanged += newColor =>
+            {
+                if (Profile is null)
+                    return;
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithFacialHairColor(newColor.marking.MarkingColors[0]));
+                UpdateCMarkingsFacialHair();
+                ReloadPreview();
+            };
+
+            HairStylePicker.OnSlotRemove += _ =>
+            {
+                if (Profile is null)
+                    return;
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithHairStyleName(HairStyles.DefaultHairStyle)
+                );
+                UpdateHairPickers();
+                UpdateCMarkingsHair();
+                ReloadPreview();
+            };
+
+            FacialHairPicker.OnSlotRemove += _ =>
+            {
+                if (Profile is null)
+                    return;
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithFacialHairStyleName(HairStyles.DefaultFacialHairStyle)
+                );
+                UpdateHairPickers();
+                UpdateCMarkingsFacialHair();
+                ReloadPreview();
+            };
+
+            HairStylePicker.OnSlotAdd += delegate()
+            {
+                if (Profile is null)
+                    return;
+
+                var hair = _markingManager.MarkingsByCategoryAndSpecies(MarkingCategories.Hair, Profile.Species).Keys
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(hair))
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithHairStyleName(hair)
+                );
+
+                UpdateHairPickers();
+                UpdateCMarkingsHair();
+                ReloadPreview();
+            };
+
+            FacialHairPicker.OnSlotAdd += delegate()
+            {
+                if (Profile is null)
+                    return;
+
+                var hair = _markingManager.MarkingsByCategoryAndSpecies(MarkingCategories.FacialHair, Profile.Species).Keys
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(hair))
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithFacialHairStyleName(hair)
+                );
+
+                UpdateHairPickers();
+                UpdateCMarkingsFacialHair();
+                ReloadPreview();
+            };
+
+            #endregion Hair
 
             #region SpawnPriority
 
@@ -249,7 +353,7 @@ namespace Content.Client.Lobby.UI
                     return;
                 Profile = Profile.WithCharacterAppearance(
                     Profile.Appearance.WithEyeColor(newColor));
-                _markingsModel.SetOrganEyeColor(Profile.Appearance.EyeColor);
+                Markings.CurrentEyeColor = Profile.Appearance.EyeColor;
                 ReloadProfilePreview();
             };
 
@@ -291,8 +395,10 @@ namespace Content.Client.Lobby.UI
 
             TabContainer.SetTabTitle(4, Loc.GetString("humanoid-profile-editor-markings-tab"));
 
-            _markingsModel.MarkingsChanged += (_, _) => OnMarkingChange();
-            _markingsModel.MarkingsReset += OnMarkingChange;
+            Markings.OnMarkingAdded += OnMarkingChange;
+            Markings.OnMarkingRemoved += OnMarkingChange;
+            Markings.OnMarkingColorChange += OnMarkingChange;
+            Markings.OnMarkingRankChange += OnMarkingChange;
 
             #endregion Markings
 
@@ -388,6 +494,9 @@ namespace Content.Client.Lobby.UI
             UpdateEyePickers();
             UpdateSaveButton();
             UpdateMarkings();
+            UpdateHairPickers();
+            UpdateCMarkingsHair();
+            UpdateCMarkingsFacialHair();
 
             RefreshAntags();
             RefreshJobs();

@@ -5,6 +5,7 @@ using Content.Server.Atmos.EntitySystems;
 using Content.Server.Construction;
 using Content.Server.Destructible.Thresholds;
 using Content.Server.Destructible.Thresholds.Behaviors;
+using Content.Server.Body.Systems;
 using Content.Server.Explosion.EntitySystems;
 using Content.Server.Fluids.EntitySystems;
 using Content.Server.Stack;
@@ -14,7 +15,6 @@ using Content.Shared.Database;
 using Content.Shared.Destructible;
 using Content.Shared.Destructible.Thresholds.Triggers;
 using Content.Shared.FixedPoint;
-using Content.Shared.Gibbing;
 using Content.Shared.Humanoid;
 using Content.Shared.Trigger.Systems;
 using JetBrains.Annotations;
@@ -33,9 +33,9 @@ public sealed partial class DestructibleSystem : SharedDestructibleSystem
     public new IEntityManager EntityManager => base.EntityManager;
 
     [Dependency] public AtmosphereSystem AtmosphereSystem = default!;
+    [Dependency] public BodySystem BodySystem = default!; // Shitmed Change - GibPartBehavior
     [Dependency] public ConstructionSystem ConstructionSystem = default!;
     [Dependency] public ExplosionSystem ExplosionSystem = default!;
-    [Dependency] public GibbingSystem Gibbing = default!;
     [Dependency] public PuddleSystem PuddleSystem = default!;
     [Dependency] public SharedContainerSystem ContainerSystem = default!;
     [Dependency] public SharedSolutionContainerSystem SolutionContainerSystem = default!;
@@ -98,7 +98,7 @@ public sealed partial class DestructibleSystem : SharedDestructibleSystem
                 }));
 
                 // If it doesn't have a humanoid component, it's probably not particularly notable?
-                if (logImpact > LogImpact.Medium && !HasComp<HumanoidProfileComponent>(uid))
+                if (logImpact > LogImpact.Medium && !HasComp<HumanoidAppearanceComponent>(uid))
                     logImpact = LogImpact.Medium;
 
                 if (args.Origin != null)

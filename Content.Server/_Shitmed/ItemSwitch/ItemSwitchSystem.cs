@@ -10,8 +10,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
+using Content.Shared.Power.Components; // iss14: BatteryComponent moved to shared
 using Content.Shared._Shitmed.ItemSwitch;
 using Content.Shared._Shitmed.ItemSwitch.Components;
 using Content.Shared.Damage.Systems;
@@ -53,7 +53,7 @@ public sealed class ItemSwitchSystem : SharedItemSwitchSystem
         if (ent.Comp.State == ent.Comp.DefaultState)
             return;
 
-        var count = (int) (battery.CurrentCharge / state.EnergyPerUse);
+        var count = (int) (_battery.GetCharge((ent.Owner, battery)) / state.EnergyPerUse); // iss14: newer battery API
         args.PushMarkup(Loc.GetString("melee-battery-examine", ("color", "yellow"), ("count", count)));
     }
 
@@ -64,7 +64,7 @@ public sealed class ItemSwitchSystem : SharedItemSwitchSystem
             || !component.States.TryGetValue(component.State, out var state))
             return;
 
-        component.IsPowered = battery.CurrentCharge >= state.EnergyPerUse;
+        component.IsPowered = _battery.GetCharge((uid, battery)) >= state.EnergyPerUse; // iss14: newer battery API
 
         if (component is { IsPowered: false, DefaultState: { } defaultState } && component.State != defaultState)
             _itemSwitch.Switch((uid, component), defaultState);
@@ -77,7 +77,7 @@ public sealed class ItemSwitchSystem : SharedItemSwitchSystem
             || !ent.Comp.States.TryGetValue(ent.Comp.State, out var state))
             return;
 
-        _battery.TryUseCharge(ent, state.EnergyPerUse, battery);
+        _battery.TryUseCharge((ent.Owner, battery), state.EnergyPerUse); // iss14: newer battery API
     }
 
     private void OnAttemptMelee(EntityUid uid, ItemSwitchComponent component, ref AttemptMeleeEvent args)

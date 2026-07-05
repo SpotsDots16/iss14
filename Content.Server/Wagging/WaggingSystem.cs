@@ -1,12 +1,12 @@
-﻿using Content.Server.Actions;
-using Content.Shared.Body;
+using Content.Server.Actions;
+using Content.Server.Humanoid;
 using Content.Shared.Cloning.Events;
+using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.Mobs;
 using Content.Shared.Toggleable;
 using Content.Shared.Wagging;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Utility;
 
 namespace Content.Server.Wagging;
 
@@ -16,7 +16,7 @@ namespace Content.Server.Wagging;
 public sealed partial class WaggingSystem : EntitySystem
 {
     [Dependency] private ActionsSystem _actions = default!;
-    [Dependency] private SharedVisualBodySystem _visualBody = default!;
+    [Dependency] private HumanoidAppearanceSystem _humanoidAppearance = default!;
     [Dependency] private IPrototypeManager _prototype = default!;
 
     public override void Initialize()
@@ -39,7 +39,6 @@ public sealed partial class WaggingSystem : EntitySystem
         var cloneComp = Factory.GetComponent<WaggingComponent>();
         cloneComp.Action = ent.Comp.Action;
         cloneComp.Layer = ent.Comp.Layer;
-        cloneComp.Organ = ent.Comp.Organ;
         cloneComp.Suffix = ent.Comp.Suffix;
         AddComp(args.CloneUid, cloneComp, true);
     }
@@ -68,67 +67,51 @@ public sealed partial class WaggingSystem : EntitySystem
             TryToggleWagging(ent.AsNullable());
     }
 
-    private bool TryToggleWagging(Entity<WaggingComponent?> ent)
+    public bool TryToggleWagging(Entity<WaggingComponent?> ent, HumanoidAppearanceComponent? humanoid = null)
     {
-        if (!Resolve(ent, ref ent.Comp))
+        if (!Resolve(ent, ref ent.Comp) || !Resolve(ent, ref humanoid))
             return false;
 
-        if (!_visualBody.TryGatherMarkingsData(ent.Owner,
-                [ent.Comp.Layer],
-                out _,
-                out _,
-                out var applied))
-        {
+        if (!humanoid.MarkingSet.Markings.TryGetValue(MarkingCategories.Tail, out var markings))
             return false;
-        }
 
-        if (!applied.TryGetValue(ent.Comp.Organ, out var markingsSet))
+        if (markings.Count == 0)
             return false;
 
         ent.Comp.Wagging = !ent.Comp.Wagging;
 
-        markingsSet = markingsSet.ShallowClone();
-        foreach (var (layers, markings) in markingsSet)
+        for (var idx = 0; idx < markings.Count; idx++) // Animate all possible tails
         {
-            markingsSet[layers] = markingsSet[layers].ShallowClone();
-            var layerMarkings = markingsSet[layers];
+            var currentMarkingId = markings[idx].MarkingId;
+            string newMarkingId;
 
-            for (int i = 0; i < layerMarkings.Count; i++)
+            if (ent.Comp.Wagging)
             {
-                var currentMarkingId = layerMarkings[i].MarkingId;
-                string newMarkingId;
-
-                if (ent.Comp.Wagging)
+                newMarkingId = $"{currentMarkingId}{ent.Comp.Suffix}";
+            }
+            else
+            {
+                if (currentMarkingId.EndsWith(ent.Comp.Suffix))
                 {
-                    newMarkingId = $"{currentMarkingId}{ent.Comp.Suffix}";
+                    newMarkingId = currentMarkingId[..^ent.Comp.Suffix.Length];
                 }
                 else
                 {
-                    if (currentMarkingId.Id.EndsWith(ent.Comp.Suffix))
-                    {
-                        newMarkingId = currentMarkingId.Id[..^ent.Comp.Suffix.Length];
-                    }
-                    else
-                    {
-                        newMarkingId = currentMarkingId;
-                        Log.Warning($"Unable to revert wagging for {currentMarkingId}");
-                    }
+                    newMarkingId = currentMarkingId;
+                    Log.Warning($"Unable to revert wagging for {currentMarkingId}");
                 }
-
-                if (!_prototype.HasIndex<MarkingPrototype>(newMarkingId))
-                {
-                    Log.Warning($"{ToPrettyString(ent):ent} tried toggling wagging but {newMarkingId} marking doesn't exist");
-                    continue;
-                }
-
-                layerMarkings[i] = new Marking(newMarkingId, layerMarkings[i].MarkingColors);
             }
+
+            if (!_prototype.HasIndex<MarkingPrototype>(newMarkingId))
+            {
+                Log.Warning($"{ToPrettyString(ent):ent} tried toggling wagging but {newMarkingId} marking doesn't exist");
+                continue;
+            }
+
+            _humanoidAppearance.SetMarkingId(ent, MarkingCategories.Tail, idx, newMarkingId,
+                humanoid: humanoid);
         }
 
-        _visualBody.ApplyMarkings(ent, new()
-        {
-            [ent.Comp.Organ] = markingsSet
-        });
         return true;
     }
 }

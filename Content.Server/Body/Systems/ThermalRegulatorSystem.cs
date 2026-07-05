@@ -9,6 +9,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+using Content.Shared.Temperature.Components;
 using Content.Server.Body.Components;
 using Content.Server.Temperature.Components;
 using Content.Server.Temperature.Systems;

@@ -65,7 +65,7 @@ public sealed partial class ZombieSystem
     [Dependency] private NpcFactionSystem _faction = default!;
     [Dependency] private GhostSystem _ghost = default!;
     [Dependency] private SharedHandsSystem _hands = default!;
-    [Dependency] private SharedVisualBodySystem _visualBody = default!;
+    [Dependency] private HumanoidAppearanceSystem _humanoidAppearance = default!;
     [Dependency] private IdentitySystem _identity = default!;
     [Dependency] private ServerInventorySystem _inventory = default!;
     [Dependency] private MindSystem _mind = default!;
@@ -81,6 +81,11 @@ public sealed partial class ZombieSystem
     private static readonly string MindRoleZombie = "MindRoleZombie";
     private static readonly List<ProtoId<AntagPrototype>> BannableZombiePrototypes = ["Zombie"];
     internal static readonly HashSet<HumanoidVisualLayers> AdditionalZombieLayers = [HumanoidVisualLayers.Tail, HumanoidVisualLayers.HeadSide, HumanoidVisualLayers.HeadTop, HumanoidVisualLayers.Snout];
+
+    /// <summary>
+    /// The base layer to apply to any 'external' humanoid layers upon zombification.
+    /// </summary>
+    private const string ZombieBaseLayerExternal = "MobHumanoidMarkingMatchSkin";
 
     /// <summary>
     /// Handles an entity turning into a zombie when they die or go into crit
@@ -196,49 +201,29 @@ public sealed partial class ZombieSystem
             _autoEmote.AddEmote(target, "ZombieGroan");
         }
 
-        if (TryComp<BloodstreamComponent>(target, out var stream) && stream.BloodReferenceSolution is { } reagents)
-            zombiecomp.BeforeZombifiedBloodReagents = reagents.Clone();
-
-        if (_visualBody.TryGatherMarkingsData(target, null, out var profiles, out _, out var markings))
-        {
-            // TODO: My kingdom for ZombieSystem just using cloning system
-            zombiecomp.BeforeZombifiedProfiles = profiles;
-            zombiecomp.BeforeZombifiedMarkings = markings.ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value.ToDictionary(
-                    it => it.Key,
-                    it => it.Value.ShallowClone()));
-
-            var zombifiedProfiles = profiles.ToDictionary(pair => pair.Key,
-                pair => pair.Value with { EyeColor = zombiecomp.EyeColor, SkinColor = zombiecomp.SkinColor });
-            _visualBody.ApplyProfiles(target, zombifiedProfiles);
-
-            var newMarkings = markings.ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value.ToDictionary(
-                    it => it.Key,
-                    it => it.Value.ShallowClone()));
-
-            foreach (var markingSet in newMarkings.Values)
-            {
-                foreach (var (layer, layerMarkings) in markingSet)
-                {
-                    if (!AdditionalZombieLayers.Contains(layer))
-                        continue;
-
-                    for (var i = 0; i < layerMarkings.Count; i++)
-                    {
-                        layerMarkings[i] = layerMarkings[i].WithColor(zombiecomp.SkinColor);
-                    }
-                }
-            }
-
-            _visualBody.ApplyMarkings(target, newMarkings);
-        }
+        // iss14: bloodstream rollback - blood is a single reagent again, store it as a one-reagent solution
+        if (TryComp<BloodstreamComponent>(target, out var stream))
+            zombiecomp.BeforeZombifiedBloodReagents = new([new(stream.BloodReagent.Id, 1)]);
 
         //We have specific stuff for humanoid zombies because they matter more
-        if (HasComp<HumanoidProfileComponent>(target))
+        if (TryComp<HumanoidAppearanceComponent>(target, out var huApComp)) //huapcomp
         {
+            //store some values before changing them in case the humanoid get cloned later
+            zombiecomp.BeforeZombifiedSkinColor = huApComp.SkinColor;
+            zombiecomp.BeforeZombifiedEyeColor = huApComp.EyeColor;
+            zombiecomp.BeforeZombifiedCustomBaseLayers = new(huApComp.CustomBaseLayers);
+
+            _humanoidAppearance.SetSkinColor(target, zombiecomp.SkinColor, verify: false, humanoid: huApComp);
+
+            // Messing with the eye layer made it vanish upon cloning, and also it didn't even appear right
+            huApComp.EyeColor = zombiecomp.EyeColor;
+
+            // this might not resync on clone?
+            foreach (var layer in AdditionalZombieLayers)
+            {
+                _humanoidAppearance.SetBaseLayerId(target, layer, ZombieBaseLayerExternal, humanoid: huApComp);
+            }
+
             //This is done here because non-humanoids shouldn't get baller damage
             melee.Damage = zombiecomp.DamageOnBite;
 
@@ -260,7 +245,9 @@ public sealed partial class ZombieSystem
         //NOTE: they are supposed to bleed, just not take damage
         _bloodstream.SetBloodLossThreshold(target, 0f);
         //Give them zombie blood
-        _bloodstream.ChangeBloodReagents(target, zombiecomp.NewBloodReagents);
+        // iss14: bloodstream rollback - blood is a single reagent again, use the primary configured reagent
+        if (zombiecomp.NewBloodReagents.Contents.Count > 0)
+            _bloodstream.ChangeBloodReagent(target, zombiecomp.NewBloodReagents.Contents[0].Reagent.Prototype);
 
         //This is specifically here to combat insuls, because frying zombies on grilles is funny as shit.
         _inventory.TryUnequip(target, "gloves", true, true);

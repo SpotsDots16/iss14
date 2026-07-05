@@ -150,9 +150,9 @@ public sealed class InternalsSystem : SharedInternalsSystem
         if (AreInternalsWorking(ent))
         {
             var gasTank = Comp<GasTankComponent>(ent.Comp.GasTankEntity!.Value);
-            args.Gas = _gasTank.RemoveAirVolume((ent.Comp.GasTankEntity.Value, gasTank), args.Respirator.BreathVolume);
+            args.Gas = _gasTank.RemoveAirOutput((ent.Comp.GasTankEntity.Value, gasTank), args.Respirator.BreathVolume); // iss14: RemoveAirVolume renamed to RemoveAirOutput
             // TODO: Should listen to gas tank updates instead I guess?
-            _alerts.ShowAlert(ent, ent.Comp.InternalsAlert, GetSeverity(ent));
+            _alerts.ShowAlert(ent.Owner, ent.Comp.InternalsAlert, GetSeverity(ent));
         }
     }
 }

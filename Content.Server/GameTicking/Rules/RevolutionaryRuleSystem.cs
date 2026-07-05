@@ -141,7 +141,7 @@ public sealed partial class RevolutionaryRuleSystem : GameRuleSystem<Revolutiona
         if (!_mind.TryGetMind(ev.Target, out var mindId, out var mind) && !alwaysConvertible)
             return;
 
-        if (!HasComp<HumanoidProfileComponent>(ev.Target) &&
+        if (!HasComp<HumanoidAppearanceComponent>(ev.Target) &&
             !alwaysConvertible ||
             !_mobState.IsAlive(ev.Target) ||
             !HasComp<RevolutionaryConverterComponent>(ev.Used))

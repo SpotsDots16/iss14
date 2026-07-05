@@ -6,7 +6,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.Server.Emp;
+using Content.Shared.Emp;
 using Content.Shared._Shitmed.Body.Organ;
 using Content.Shared._Shitmed.Body.Events;
 using Content.Shared._Shitmed.Cybernetics;
@@ -14,6 +14,7 @@ using Content.Shared.Body.Part;
 using Content.Shared.Body.Organ;
 using Content.Shared.Body.Systems;
 using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Damage.Prototypes;
 using Robust.Shared.Prototypes;
@@ -28,7 +29,7 @@ internal sealed class CyberneticsSystem : EntitySystem
     public override void Initialize()
     {
         SubscribeLocalEvent<CyberneticsComponent, EmpPulseEvent>(OnEmpPulse);
-        SubscribeLocalEvent<CyberneticsComponent, EmpDisabledRemoved>(OnEmpDisabledRemoved);
+        SubscribeLocalEvent<CyberneticsComponent, EmpDisabledRemovedEvent>(OnEmpDisabledRemovedEvent);
     }
     private void OnEmpPulse(Entity<CyberneticsComponent> cyberEnt, ref EmpPulseEvent ev)
     {
@@ -60,7 +61,7 @@ internal sealed class CyberneticsSystem : EntitySystem
         }
     }
 
-    private void OnEmpDisabledRemoved(Entity<CyberneticsComponent> cyberEnt, ref EmpDisabledRemoved ev)
+    private void OnEmpDisabledRemovedEvent(Entity<CyberneticsComponent> cyberEnt, ref EmpDisabledRemovedEvent ev)
     {
         if (cyberEnt.Comp.Disabled)
         {

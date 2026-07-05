@@ -1,12 +1,12 @@
+using Content.Server.Body.Systems;
 using Content.Server.Destructible;
 using Content.Server.Polymorph.Components;
 using Content.Server.Popups;
 using Content.Shared.Administration.Logs;
-using Content.Shared.Body;
+using Content.Shared.Body.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Database;
 using Content.Shared.Examine;
-using Content.Shared.Gibbing;
 using Content.Shared.Popups;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
@@ -22,7 +22,7 @@ public sealed partial class ImmovableRodSystem : EntitySystem
 {
     [Dependency] private IRobustRandom _random = default!;
 
-    [Dependency] private GibbingSystem _gibbing = default!;
+    [Dependency] private BodySystem _bodySystem = default!;
     [Dependency] private PopupSystem _popup = default!;
     [Dependency] private SharedPhysicsSystem _physics = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
@@ -116,7 +116,7 @@ public sealed partial class ImmovableRodSystem : EntitySystem
         }
 
         // gib or damage em
-        if (HasComp<BodyComponent>(ent))
+        if (TryComp<BodyComponent>(ent, out var body))
         {
             component.MobCount++;
             _popup.PopupEntity(Loc.GetString("immovable-rod-penetrated-mob", ("rod", uid), ("mob", ent)), uid, PopupType.LargeCaution);
@@ -133,7 +133,7 @@ public sealed partial class ImmovableRodSystem : EntitySystem
             var coords = Transform(uid).Coordinates;
             _adminLogger.Add(LogType.Gib, LogImpact.Low, $"Entity {ToPrettyString(uid)} gibbed {ToPrettyString(ent)} at X:{coords.X} Y:{coords.Y}");
 
-            _gibbing.Gib(ent);
+            _bodySystem.GibBody(ent, body: body);
             return;
         }
 

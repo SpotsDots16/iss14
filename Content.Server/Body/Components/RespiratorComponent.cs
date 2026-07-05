@@ -77,6 +77,14 @@ namespace Content.Server.Body.Components
         public float Ratio = 1.0f;
 
         /// <summary>
+        /// Goob: Multiplier on saturation passively lost.
+        /// Higher values require more air, lower require less.
+        /// Multiplicative with a lung's <see cref="LungComponent.SaturationLoss"/>
+        /// </summary>
+        [DataField]
+        public float SaturationLoss = 1f;
+
+        /// <summary>
         ///     The next time that this body will inhale or exhale.
         /// </summary>
         [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoPausedField]

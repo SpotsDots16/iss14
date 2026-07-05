@@ -141,7 +141,8 @@ namespace Content.Server.Bible
             string othersMessage;
             string selfMessage;
 
-            if (_damageableSystem.TryChangeDamage(args.Target.Value, component.Damage, true, origin: uid, targetPart: TargetBodyPart.All, ignoreBlockers: true, splitDamage: SplitDamageBehavior.SplitEnsureAll)) // Shitmed Change
+            var healed = _damageableSystem.TryChangeDamage(args.Target.Value, component.Damage, true, origin: uid, targetPart: TargetBodyPart.All, ignoreBlockers: true, splitDamage: SplitDamageBehavior.SplitEnsureAll); // Shitmed Change
+            if (healed != null && !healed.Empty) // Shitmed Change - part-aware overload returns the applied damage
             {
                 othersMessage = Loc.GetString(component.LocPrefix + "-heal-success-others", ("user", userEnt), ("target", targetEnt), ("bible", uid));
                 selfMessage = Loc.GetString(component.LocPrefix + "-heal-success-self", ("target", targetEnt), ("bible", uid));
