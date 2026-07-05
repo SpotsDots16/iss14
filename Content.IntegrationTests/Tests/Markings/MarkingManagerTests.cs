@@ -1,10 +1,7 @@
 using System.Collections.Generic;
 using Content.IntegrationTests.Fixtures;
-using Content.Shared.Body;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Markings;
-using Robust.Shared.Maths;
-using Robust.Shared.Prototypes;
 
 namespace Content.IntegrationTests.Tests.Markings;
 
@@ -14,68 +11,29 @@ public sealed class MarkingManagerTests : GameTest
 {
     [TestPrototypes]
     private const string Prototypes = @"
-- type: markingsGroup
-  id: Testing
-
-- type: markingsGroup
-  id: TestingOther
-
-- type: markingsGroup
-  id: TestingOptionalEyes
-  limits:
-    enum.HumanoidVisualLayers.Eyes:
-      limit: 1
-      required: false
-
-- type: markingsGroup
-  id: TestingRequiredEyes
-  limits:
-    enum.HumanoidVisualLayers.Eyes:
-      limit: 1
-      required: true
-      default: [ EyesMarking ]
-
 - type: marking
-  id: SingleColorMarking
-  bodyPart: Eyes
-  sprites: [{ sprite: Mobs/Customization/human_hair.rsi, state: afro }]
-  coloring:
-    default:
-      type:
-        !type:EyeColoring
-
-- type: marking
-  id: MenOnlyMarking
-  bodyPart: Eyes
-  sexRestriction: Male
-  sprites: [{ sprite: Mobs/Customization/human_hair.rsi, state: afro }]
-
-- type: marking
-  id: TestingOnlyMarking
-  bodyPart: Eyes
-  groupWhitelist: [ Testing ]
-  sprites: [{ sprite: Mobs/Customization/human_hair.rsi, state: afro }]
-
-- type: marking
-  id: TestingMenOnlyMarking
-  bodyPart: Eyes
-  sexRestriction: Male
-  groupWhitelist: [ Testing ]
-  sprites: [{ sprite: Mobs/Customization/human_hair.rsi, state: afro }]
-
-- type: marking
-  id: EyesMarking
-  bodyPart: Eyes
-  sprites: [{ sprite: Mobs/Customization/human_hair.rsi, state: afro }]
-
-- type: marking
-  id: ChestMarking
+  id: TestChestMarking
   bodyPart: Chest
+  markingCategory: Chest
+  sprites: [{ sprite: Mobs/Customization/human_hair.rsi, state: afro }]
+
+- type: marking
+  id: TestMenOnlyMarking
+  bodyPart: Chest
+  markingCategory: Chest
+  sexRestriction: Male
+  sprites: [{ sprite: Mobs/Customization/human_hair.rsi, state: afro }]
+
+- type: marking
+  id: TestSpeciesRestrictedMarking
+  bodyPart: Chest
+  markingCategory: Chest
+  speciesRestriction: [ SomeOtherSpecies ]
   sprites: [{ sprite: Mobs/Customization/human_hair.rsi, state: afro }]
 ";
 
     [Test]
-    public async Task HairConvesion()
+    public async Task EnsureSexesFiltersRestricted()
     {
         var pair = Pair;
         var server = pair.Server;
@@ -86,110 +44,29 @@ public sealed class MarkingManagerTests : GameTest
         {
             var markingManager = server.ResolveDependency<MarkingManager>();
 
-            var markings = new List<Marking>() { new("HumanHairLongBedhead2", new List<Color>() { Color.Red }) };
-
-            var converted = markingManager.ConvertMarkings(markings, "Human");
-
-            Assert.That(converted, Does.ContainKey(new ProtoId<OrganCategoryPrototype>("Head")));
-            Assert.That(converted["Head"], Does.ContainKey(HumanoidVisualLayers.Hair));
-            var hairMarkings = converted["Head"][HumanoidVisualLayers.Hair];
-            Assert.That(hairMarkings, Has.Count.EqualTo(1));
-            Assert.That(hairMarkings[0].MarkingId, Is.EqualTo("HumanHairLongBedhead2"));
-            Assert.That(hairMarkings[0].MarkingColors[0], Is.EqualTo(Color.Red));
-        });
-    }
-
-    [Test]
-    public async Task LimitsFilling()
-    {
-        var pair = Pair;
-        var server = pair.Server;
-
-        await server.WaitIdleAsync();
-
-        await server.WaitAssertion(() =>
-        {
-            var markingManager = server.ResolveDependency<MarkingManager>();
-            var dict = new Dictionary<HumanoidVisualLayers, List<Marking>>();
-
-            markingManager.EnsureValidLimits(dict, "TestingRequiredEyes", new() { HumanoidVisualLayers.Eyes }, null, null);
-            Assert.That(dict, Does.ContainKey(HumanoidVisualLayers.Eyes));
-            Assert.That(dict[HumanoidVisualLayers.Eyes], Has.Count.EqualTo(1));
-            Assert.That(dict[HumanoidVisualLayers.Eyes][0].MarkingId, Is.EqualTo("EyesMarking"));
-        });
-    }
-
-    [Test]
-    public async Task LimitsTruncations()
-    {
-        var pair = Pair;
-        var server = pair.Server;
-
-        await server.WaitIdleAsync();
-
-        await server.WaitAssertion(() =>
-        {
-            var markingManager = server.ResolveDependency<MarkingManager>();
-            var dict = new Dictionary<HumanoidVisualLayers, List<Marking>>()
+            var markings = new List<Marking>
             {
-                [HumanoidVisualLayers.Eyes] = new()
-                {
-                    new("EyesMarking", 0),
-                    new("MenOnlyMarking", 0),
-                },
+                new("TestChestMarking", 1),
+                new("TestMenOnlyMarking", 1),
             };
 
-            markingManager.EnsureValidLimits(dict, "TestingOptionalEyes", new() { HumanoidVisualLayers.Eyes }, null, null);
-            Assert.That(dict[HumanoidVisualLayers.Eyes], Has.Count.EqualTo(1));
-            Assert.That(dict[HumanoidVisualLayers.Eyes][0].MarkingId, Is.EqualTo("MenOnlyMarking"));
+            var femaleSet = new MarkingSet(markings, markingManager);
+            femaleSet.EnsureSexes(Sex.Female, markingManager);
+
+            Assert.That(femaleSet.TryGetCategory(MarkingCategories.Chest, out var femaleMarkings));
+            Assert.That(femaleMarkings, Has.Count.EqualTo(1));
+            Assert.That(femaleMarkings![0].MarkingId, Is.EqualTo("TestChestMarking"));
+
+            var maleSet = new MarkingSet(markings, markingManager);
+            maleSet.EnsureSexes(Sex.Male, markingManager);
+
+            Assert.That(maleSet.TryGetCategory(MarkingCategories.Chest, out var maleMarkings));
+            Assert.That(maleMarkings, Has.Count.EqualTo(2));
         });
     }
 
     [Test]
-    public async Task EnsureValidGroupAndSex()
-    {
-        var pair = Pair;
-        var server = pair.Server;
-
-        await server.WaitIdleAsync();
-
-        await server.WaitAssertion(() =>
-        {
-            var markingManager = server.ResolveDependency<MarkingManager>();
-            var dictFactory = static () => new Dictionary<HumanoidVisualLayers, List<Marking>>()
-            {
-                [HumanoidVisualLayers.Eyes] = new()
-                {
-                    new("MenOnlyMarking", 0),
-                    new("TestingOnlyMarking", 0),
-                    new("TestingMenOnlyMarking", 0),
-                }
-            };
-
-            var menMarkings = dictFactory();
-            markingManager.EnsureValidGroupAndSex(menMarkings, "TestingOther", Sex.Male);
-
-            Assert.That(menMarkings[HumanoidVisualLayers.Eyes], Has.Count.EqualTo(1));
-            Assert.That(menMarkings[HumanoidVisualLayers.Eyes][0].MarkingId, Is.EqualTo("MenOnlyMarking"));
-
-            var testingMarkings = dictFactory();
-            markingManager.EnsureValidGroupAndSex(testingMarkings, "Testing", Sex.Female);
-
-            Assert.That(testingMarkings[HumanoidVisualLayers.Eyes], Has.Count.EqualTo(1));
-            Assert.That(testingMarkings[HumanoidVisualLayers.Eyes][0].MarkingId, Is.EqualTo("TestingOnlyMarking"));
-
-            var testingMenMarkings = dictFactory();
-            markingManager.EnsureValidGroupAndSex(testingMenMarkings, "Testing", Sex.Male);
-
-            Assert.That(testingMenMarkings[HumanoidVisualLayers.Eyes], Has.Count.EqualTo(3));
-            Assert.That(testingMenMarkings[HumanoidVisualLayers.Eyes][0].MarkingId, Is.EqualTo("MenOnlyMarking"));
-            Assert.That(testingMenMarkings[HumanoidVisualLayers.Eyes][1].MarkingId, Is.EqualTo("TestingOnlyMarking"));
-            Assert.That(testingMenMarkings[HumanoidVisualLayers.Eyes][2].MarkingId, Is.EqualTo("TestingMenOnlyMarking"));
-        });
-    }
-
-    [Test]
-    public async Task EnsureValidColors()
+    public async Task EnsureSpeciesFiltersRestricted()
     {
         var pair = Pair;
         var server = pair.Server;
@@ -200,30 +77,71 @@ public sealed class MarkingManagerTests : GameTest
         {
             var markingManager = server.ResolveDependency<MarkingManager>();
 
-            var dict = new Dictionary<HumanoidVisualLayers, List<Marking>>()
+            var set = new MarkingSet(new List<Marking>
             {
-                [HumanoidVisualLayers.Eyes] = new()
-                {
-                    new("SingleColorMarking", 0),
-                    new("SingleColorMarking", new List<Color>() { Color.Red }),
-                    new("SingleColorMarking", 2),
-                    new("SingleColorMarking", new List<Color>() { Color.Green }),
-                }
-            };
+                new("TestChestMarking", 1),
+                new("TestSpeciesRestrictedMarking", 1),
+            }, markingManager);
 
-            markingManager.EnsureValidColors(dict);
+            set.EnsureSpecies("Human", null, markingManager);
 
-            var eyeMarkings = dict[HumanoidVisualLayers.Eyes];
+            Assert.That(set.TryGetCategory(MarkingCategories.Chest, out var markings));
+            Assert.That(markings, Has.Count.EqualTo(1));
+            Assert.That(markings![0].MarkingId, Is.EqualTo("TestChestMarking"));
+        });
+    }
 
-            // ensure all colors are the correct length
-            Assert.That(eyeMarkings[0].MarkingColors, Has.Count.EqualTo(1));
-            Assert.That(eyeMarkings[1].MarkingColors, Has.Count.EqualTo(1));
-            Assert.That(eyeMarkings[2].MarkingColors, Has.Count.EqualTo(1));
-            Assert.That(eyeMarkings[3].MarkingColors, Has.Count.EqualTo(1));
+    [Test]
+    public async Task EnsureValidRemovesUnknownAndFixesColors()
+    {
+        var pair = Pair;
+        var server = pair.Server;
 
-            // and make sure we didn't shuffle our colors around
-            Assert.That(eyeMarkings[1].MarkingColors[0], Is.EqualTo(Color.Red));
-            Assert.That(eyeMarkings[3].MarkingColors[0], Is.EqualTo(Color.Green));
+        await server.WaitIdleAsync();
+
+        await server.WaitAssertion(() =>
+        {
+            var markingManager = server.ResolveDependency<MarkingManager>();
+
+            // Construct with too many colors for the marking's single sprite.
+            var set = new MarkingSet(new List<Marking>
+            {
+                new("TestChestMarking", 3),
+            }, markingManager);
+
+            // Sneak in a marking without a prototype, bypassing constructor validation.
+            set.Markings[MarkingCategories.Chest].Add(new Marking("ThisMarkingDoesNotExist", 1));
+
+            set.EnsureValid(markingManager);
+
+            Assert.That(set.TryGetCategory(MarkingCategories.Chest, out var markings));
+            Assert.That(markings, Has.Count.EqualTo(1), "EnsureValid did not remove the marking without a prototype");
+            Assert.That(markings![0].MarkingId, Is.EqualTo("TestChestMarking"));
+            Assert.That(markings[0].MarkingColors, Has.Count.EqualTo(1), "EnsureValid did not truncate the color list to the sprite count");
+        });
+    }
+
+    [Test]
+    public async Task ConstructorDropsUnknownMarkings()
+    {
+        var pair = Pair;
+        var server = pair.Server;
+
+        await server.WaitIdleAsync();
+
+        await server.WaitAssertion(() =>
+        {
+            var markingManager = server.ResolveDependency<MarkingManager>();
+
+            var set = new MarkingSet(new List<Marking>
+            {
+                new("TestChestMarking", 1),
+                new("ThisMarkingDoesNotExist", 1),
+            }, markingManager);
+
+            Assert.That(set.TryGetCategory(MarkingCategories.Chest, out var markings));
+            Assert.That(markings, Has.Count.EqualTo(1));
+            Assert.That(markings![0].MarkingId, Is.EqualTo("TestChestMarking"));
         });
     }
 }

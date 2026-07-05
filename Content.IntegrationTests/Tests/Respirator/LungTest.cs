@@ -1,5 +1,6 @@
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Body.Components;
+using Content.Server.Body.Systems;
 using Content.Shared.Body.Systems;
 using Robust.Shared;
 using Robust.Shared.Configuration;
@@ -25,11 +26,7 @@ public sealed class LungTest : GameTest
   components:
   - type: SolutionContainerManager
   - type: Body
-  - type: EntityTableContainerFill
-    containers:
-      body_organs: !type:AllSelector
-        children:
-        - id: OrganHumanLungs
+    prototype: Human
   - type: MobState
     allowedStates:
       - Alive
