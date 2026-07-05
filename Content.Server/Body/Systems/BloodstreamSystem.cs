@@ -191,8 +191,9 @@ public sealed class BloodstreamSystem : SharedBloodstreamSystem
                 reagentData.AddRange(GetEntityBloodData(entity.Owner));
             }
         }
-        else
-            Log.Error("Unable to set bloodstream DNA, solution entity could not be resolved");
+        // iss14: no else-error. DNA can generate before the bloodstream's MapInit has created the
+        // blood solution (event ordering during spawn); the MapInit fill then reads the already-set
+        // DnaComponent via GetEntityBloodData, so the end state is correct and this is not an error.
     }
 
     // iss14: GetEntityBloodData lives in SharedBloodstreamSystem (identical duplicate removed)

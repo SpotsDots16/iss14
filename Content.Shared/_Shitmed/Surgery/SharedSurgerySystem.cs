@@ -107,6 +107,11 @@ public abstract partial class SharedSurgerySystem : EntitySystem
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestartCleanup);
 
         SubscribeLocalEvent<SurgeryTargetComponent, MapInitEvent>(OnMapInit);
+        // iss14: SurgeryTargetComponent is EnsureComp'd DURING body MapInit; on this engine the
+        // component's MapInitEvent subscription does not fire for components added mid-dispatch,
+        // so the SurgeryBui was never registered ("scalpel does nothing"). ComponentStartup
+        // covers that path; SetUi is idempotent so both firing is harmless.
+        SubscribeLocalEvent<SurgeryTargetComponent, ComponentStartup>(OnTargetStartup);
         SubscribeLocalEvent<SurgeryTargetComponent, DoAfterAttemptEvent<SurgeryDoAfterEvent>>(OnBeforeTargetDoAfter);
         SubscribeLocalEvent<SurgeryTargetComponent, SurgeryDoAfterEvent>(OnTargetDoAfter);
         SubscribeLocalEvent<SurgeryCloseIncisionConditionComponent, SurgeryValidEvent>(OnCloseIncisionValid);
@@ -151,6 +156,17 @@ public abstract partial class SharedSurgerySystem : EntitySystem
     }
 
     private void OnMapInit(Entity<SurgeryTargetComponent> ent, ref MapInitEvent args)
+    {
+        RegisterSurgeryUi(ent);
+    }
+
+    // iss14: see Initialize - covers EnsureComp during body MapInit.
+    private void OnTargetStartup(Entity<SurgeryTargetComponent> ent, ref ComponentStartup args)
+    {
+        RegisterSurgeryUi(ent);
+    }
+
+    private void RegisterSurgeryUi(Entity<SurgeryTargetComponent> ent)
     {
         var data = new InterfaceData("SurgeryBui");
         _ui.SetUi(ent.Owner, SurgeryUIKey.Key, data);
