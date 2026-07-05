@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Content.Shared.Administration;
+using Prometheus;
 using Robust.Server.Player;
 using Robust.Shared.Network;
 using Robust.Shared.Timing;
@@ -31,6 +32,18 @@ public sealed partial class PerformanceMonitorSystem : EntitySystem
 
     /// <summary>Raised once per second after a new sample lands, so open EUIs can push state.</summary>
     public event Action? OnSample;
+
+    // Exported through the engine's Prometheus endpoint (metrics.enabled). Same numbers the
+    // serverperf panel shows; process CPU/memory/GC are already covered by prometheus-net's
+    // built-in collectors and the engine's robust_server_update_usage histograms.
+    private static readonly Gauge TicksPerSecondMetric = Metrics.CreateGauge(
+        "iss14_ticks_per_second", "Server ticks processed in the last second.");
+    private static readonly Gauge TickSpacingAvgMetric = Metrics.CreateGauge(
+        "iss14_tick_spacing_avg_ms", "Average wall-clock spacing between server ticks over the last second (ms).");
+    private static readonly Gauge TickSpacingMaxMetric = Metrics.CreateGauge(
+        "iss14_tick_spacing_max_ms", "Worst wall-clock spacing between server ticks over the last second (ms).");
+    private static readonly Gauge LateTicksMetric = Metrics.CreateGauge(
+        "iss14_late_ticks", "Ticks in the last second that ran more than 25% over the tick budget.");
 
     private readonly PerfSample[] _samples = new PerfSample[HistorySize];
     private int _sampleCount;
@@ -130,6 +143,11 @@ public sealed partial class PerformanceMonitorSystem : EntitySystem
         _sampleHead = (_sampleHead + 1) % HistorySize;
         if (_sampleCount < HistorySize)
             _sampleCount += 1;
+
+        TicksPerSecondMetric.Set(sample.Ticks);
+        TickSpacingAvgMetric.Set(sample.AvgTickMs);
+        TickSpacingMaxMetric.Set(sample.MaxTickMs);
+        LateTicksMetric.Set(sample.LateTicks);
 
         _windowStart = now;
         _windowTicks = 0;
