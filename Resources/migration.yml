@@ -840,3 +840,4 @@ CratePartsT4: null
 
 # 2026-07-05 Shitmed port: smokable Blunt renamed (id taken by wound entity)
 Blunt: BluntCigar
+TorsoSkeleton: ChestSkeleton
