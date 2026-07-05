@@ -14,3 +14,5 @@ admin-player-actions-window-tts-config = TTS Config
 admin-player-actions-window-player-records = Player Records
 admin-player-actions-window-migrations = User Migrations
 admin-player-actions-window-server-perf = Server Performance
+admin-player-actions-window-conn-quality = Connections
+admin-player-actions-window-entity-census = Entity Census

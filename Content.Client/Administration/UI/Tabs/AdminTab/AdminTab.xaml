@@ -23,6 +23,8 @@
             <cc:CommandButton Command="playerrecords" Text="{Loc admin-player-actions-window-player-records}"/>
             <cc:CommandButton Command="migrations" Text="{Loc admin-player-actions-window-migrations}"/>
             <cc:CommandButton Command="serverperf" Text="{Loc admin-player-actions-window-server-perf}"/>
+            <cc:CommandButton Command="connquality" Text="{Loc admin-player-actions-window-conn-quality}"/>
+            <cc:CommandButton Command="entitycensus" Text="{Loc admin-player-actions-window-entity-census}"/>
         </GridContainer>
     </BoxContainer>
 </Control>
