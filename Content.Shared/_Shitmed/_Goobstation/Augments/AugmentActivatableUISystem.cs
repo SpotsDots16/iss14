@@ -3,7 +3,7 @@ using Content.Shared.Body.Organ;
 
 namespace Content.Goobstation.Shared.Augments;
 
-public sealed class AugmentActivatableUISystem : EntitySystem
+public sealed partial class AugmentActivatableUISystem : EntitySystem
 {
     [Dependency] private AugmentSystem _augment = default!;
     [Dependency] private SharedUserInterfaceSystem _ui = default!;

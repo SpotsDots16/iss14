@@ -76,7 +76,6 @@
 
 using System.Numerics;
 using Content.Server.Body.Components;
-using System.Numerics;
 using Content.Server.Ghost;
 using Content.Server.Humanoid;
 using Content.Shared._Shitmed.Body.Part;
@@ -95,7 +94,6 @@ using Robust.Shared.Timing;
 
 // Shitmed Change
 using System.Linq;
-using Content.Shared.Body.Events;
 using Content.Shared.Gibbing.Events;
 
 namespace Content.Server.Body.Systems;

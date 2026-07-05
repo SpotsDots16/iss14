@@ -34,7 +34,7 @@ using System.Linq;
 
 namespace Content.Server._Shitmed.Medical.Surgery;
 
-public sealed class SurgerySystem : SharedSurgerySystem
+public sealed partial class SurgerySystem : SharedSurgerySystem
 {
     [Dependency] private BodySystem _body = default!;
     [Dependency] private ChatSystem _chat = default!;

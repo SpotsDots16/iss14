@@ -19,7 +19,7 @@ using Robust.Shared.Utility;
 
 namespace Content.Client.Body.Systems;
 
-public sealed class BodySystem : SharedBodySystem
+public sealed partial class BodySystem : SharedBodySystem
 {
     // Shitmed Change Start
     [Dependency] private MarkingManager _markingManager = default!;

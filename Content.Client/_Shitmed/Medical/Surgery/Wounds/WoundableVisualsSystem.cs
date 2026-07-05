@@ -27,7 +27,7 @@ namespace Content.Client._Shitmed.Medical.Surgery.Wounds;
 /// <summary>
 /// Handles visual representation of wounds and damage on body parts
 /// </summary>
-public sealed class WoundableVisualsSystem : VisualizerSystem<WoundableVisualsComponent>
+public sealed partial class WoundableVisualsSystem : VisualizerSystem<WoundableVisualsComponent>
 {
     #region Dependencies
     [Dependency] private SharedBodySystem _body = default!;

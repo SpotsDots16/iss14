@@ -21,11 +21,13 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server._Shitmed.Cybernetics;
 
-internal sealed class CyberneticsSystem : EntitySystem
+internal sealed partial class CyberneticsSystem : EntitySystem
 {
     [Dependency] private IPrototypeManager _prototypes = default!;
     [Dependency] private DamageableSystem _damageable = default!;
     [Dependency] private SharedBodySystem _body = default!;
+
+    private static readonly ProtoId<DamageTypePrototype> ShockDamageType = "Shock"; // iss14: analyzer forbids literal ids
     public override void Initialize()
     {
         SubscribeLocalEvent<CyberneticsComponent, EmpPulseEvent>(OnEmpPulse);
@@ -52,7 +54,7 @@ internal sealed class CyberneticsSystem : EntitySystem
                 if (TryComp(cyberEnt, out DamageableComponent? damageable)
                     && part.Body is not null)
                 {
-                    var shock = new DamageSpecifier(_prototypes.Index<DamageTypePrototype>("Shock"), 30);
+                    var shock = new DamageSpecifier(_prototypes.Index(ShockDamageType), 30);
                     var targetPart = _body.GetTargetBodyPart(part);
                     _damageable.TryChangeDamage(part.Body.Value, shock, ignoreResistances: true, targetPart: targetPart, damageable: damageable);
                     Dirty(cyberEnt, damageable);

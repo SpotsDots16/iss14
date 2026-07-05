@@ -17,7 +17,7 @@ using Content.Shared.Chat;
 
 namespace Content.Server._Shitmed.Autodoc.Systems;
 
-public sealed class AutodocSystem : SharedAutodocSystem
+public sealed partial class AutodocSystem : SharedAutodocSystem
 {
     [Dependency] private InternalsSystem _internals = default!;
     [Dependency] private ChatSystem _chat = default!;

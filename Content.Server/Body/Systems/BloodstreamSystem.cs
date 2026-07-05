@@ -159,13 +159,17 @@ public sealed class BloodstreamSystem : SharedBloodstreamSystem
                 out var bloodSolution) ||
             !SolutionContainer.EnsureSolution(entity.Owner,
                 entity.Comp.BloodTemporarySolutionName,
-                out var tempSolution))
+                out var tempSolution) ||
+            !SolutionContainer.EnsureSolution(entity.Owner,
+                BloodstreamComponent.DefaultMetabolitesSolutionName,
+                out var metabolitesSolution)) // iss14: metabolism-stages sink (liver reads it, heart transfers into it)
             return;
 
         // iss14: newer Wizden solution API - EnsureSolution returns Entity<SolutionComponent>, mutate via SolutionContainer
         SolutionContainer.SetCapacity(chemicalSolution, entity.Comp.ChemicalMaxVolume);
         SolutionContainer.SetCapacity(bloodSolution, entity.Comp.BloodMaxVolume);
         SolutionContainer.SetCapacity(tempSolution, entity.Comp.BleedPuddleThreshold * 4); // give some leeway, for chemstream as well
+        SolutionContainer.SetCapacity(metabolitesSolution, entity.Comp.BloodMaxVolume); // iss14: matches upstream metabolism-stages init
 
         // Fill blood solution with BLOOD
         // The DNA string might not be initialized yet, but the reagent data gets updated in the GenerateDnaEvent subscription
@@ -191,21 +195,5 @@ public sealed class BloodstreamSystem : SharedBloodstreamSystem
             Log.Error("Unable to set bloodstream DNA, solution entity could not be resolved");
     }
 
-    /// <summary>
-    /// Get the reagent data for blood that a specific entity should have.
-    /// </summary>
-    public List<ReagentData> GetEntityBloodData(EntityUid uid)
-    {
-        var bloodData = new List<ReagentData>();
-        var dnaData = new DnaData();
-
-        if (TryComp<DnaComponent>(uid, out var donorComp) && donorComp.DNA != null)
-            dnaData.DNA = donorComp.DNA;
-        else
-            dnaData.DNA = Loc.GetString("forensics-dna-unknown");
-
-        bloodData.Add(dnaData);
-
-        return bloodData;
-    }
+    // iss14: GetEntityBloodData lives in SharedBloodstreamSystem (identical duplicate removed)
 }

@@ -8,7 +8,7 @@ using Content.Shared.Toggleable;
 
 namespace Content.Goobstation.Shared.Augments;
 
-public sealed class AugmentActionSystem : EntitySystem
+public sealed partial class AugmentActionSystem : EntitySystem
 {
     [Dependency] private ActionContainerSystem _actionContainer = default!;
     [Dependency] private AugmentSystem _augment = default!;

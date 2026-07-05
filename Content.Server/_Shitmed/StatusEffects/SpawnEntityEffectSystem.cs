@@ -10,7 +10,7 @@ using Content.Shared._Shitmed.StatusEffects;
 
 namespace Content.Server._Shitmed.StatusEffects;
 
-public sealed class SpawnEntityEffectSystem : EntitySystem
+public sealed partial class SpawnEntityEffectSystem : EntitySystem
 {
     [Dependency] private SharedTransformSystem _xformSys = default!;
     [Dependency] private NpcFactionSystem _factionException = default!;

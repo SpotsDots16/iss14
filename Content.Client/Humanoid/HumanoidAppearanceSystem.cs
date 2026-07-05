@@ -33,11 +33,10 @@ using Robust.Shared.Utility;
 
 namespace Content.Client.Humanoid;
 
-public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
+public sealed partial class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
 {
     [Dependency] private IPrototypeManager _prototypeManager = default!;
     [Dependency] private MarkingManager _markingManager = default!;
-    [Dependency] private IConfigurationManager _configurationManager = default!;
     [Dependency] private DisplacementMapSystem _displacement = default!;
     [Dependency] private SpriteSystem _sprite = default!;
 
@@ -334,6 +333,12 @@ public sealed class HumanoidAppearanceSystem : SharedHumanoidAppearanceSystem
 
             _sprite.LayerMapRemove(spriteEnt.AsNullable(), layerId);
             _sprite.RemoveLayer(spriteEnt.AsNullable(), index);
+
+            // iss14: remove any displacement layer that referenced this marking layer, or the
+            // renderer falls over on orphaned CopyToShaderParameters keys (wizden #40135).
+            // The Vulps must be shaved.
+            if (prototype.CanBeDisplaced)
+                _displacement.EnsureDisplacementIsNotOnSprite(spriteEnt, layerId);
         }
     }
     private void ApplyMarking(MarkingPrototype markingPrototype,

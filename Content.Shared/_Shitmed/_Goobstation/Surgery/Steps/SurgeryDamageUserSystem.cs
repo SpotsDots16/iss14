@@ -5,7 +5,7 @@ using Content.Shared.Popups;
 
 namespace Content.Goobstation.Shared.Surgery.Steps;
 
-public sealed class SurgeryDamageUserSystem : EntitySystem
+public sealed partial class SurgeryDamageUserSystem : EntitySystem
 {
     [Dependency] private DamageableSystem _damage = default!;
     [Dependency] private SharedPopupSystem _popup = default!;

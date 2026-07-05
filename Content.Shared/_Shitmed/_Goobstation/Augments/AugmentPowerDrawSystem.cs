@@ -5,7 +5,7 @@ using Content.Shared.PowerCell;
 
 namespace Content.Goobstation.Shared.Augments;
 
-public sealed class AugmentPowerDrawSystem : EntitySystem
+public sealed partial class AugmentPowerDrawSystem : EntitySystem
 {
     [Dependency] private AugmentSystem _augment = default!;
     [Dependency] private ItemToggleSystem _toggle = default!;

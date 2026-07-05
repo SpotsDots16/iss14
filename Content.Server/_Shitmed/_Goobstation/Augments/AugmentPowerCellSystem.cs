@@ -10,7 +10,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Goobstation.Server.Augments;
 
-public sealed class AugmentPowerCellSystem : SharedAugmentPowerCellSystem
+public sealed partial class AugmentPowerCellSystem : SharedAugmentPowerCellSystem
 {
     [Dependency] private AlertsSystem _alerts = default!;
     [Dependency] private SharedBatterySystem _battery = default!;

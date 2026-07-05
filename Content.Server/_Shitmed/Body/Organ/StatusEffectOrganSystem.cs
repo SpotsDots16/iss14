@@ -10,7 +10,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Server._Shitmed.Body.Organ;
 
-public sealed class StatusEffectOrganSystem : EntitySystem
+public sealed partial class StatusEffectOrganSystem : EntitySystem
 {
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private StatusEffectsSystem _effects = default!;

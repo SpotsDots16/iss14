@@ -32,7 +32,7 @@ namespace Content.Server._Shitmed.Medical.Tourniquet;
 /// <summary>
 /// This handles tourniqueting people
 /// </summary>
-public sealed class TourniquetSystem : EntitySystem
+public sealed partial class TourniquetSystem : EntitySystem
 {
     [Dependency] private SharedBodySystem _body = default!;
     [Dependency] private WoundSystem _wound = default!;

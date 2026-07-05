@@ -28,9 +28,9 @@ namespace Content.Client._Shitmed.Autodoc;
 [GenerateTypedNameReferences]
 public sealed partial class AutodocWindow : FancyWindow
 {
-    [Dependency] private IEntityManager _entMan = default!;
+    private IEntityManager _entMan; // iss14: assigned in ctor, not injected (RA0025)
     [Dependency] private IFileDialogManager _dialogMan = default!;
-    [Dependency] private IPlayerManager _player = default!;
+    private IPlayerManager _player; // iss14: assigned in ctor, not injected (RA0025)
     [Dependency] private ISerializationManager _serMan = default!;
     [Dependency] private ILogManager _logMan = default!;
     private SharedAutodocSystem _autodoc;

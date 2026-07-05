@@ -47,7 +47,7 @@ using InternalsComponent = Content.Shared.Body.Components.InternalsComponent;
 
 namespace Content.Server.Body.Systems;
 
-public sealed class LungSystem : EntitySystem
+public sealed partial class LungSystem : EntitySystem
 {
     [Dependency] private AtmosphereSystem _atmos = default!;
     [Dependency] private InventorySystem _inventory = default!; // Goobstaiton

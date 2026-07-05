@@ -8,7 +8,7 @@ using Content.Shared.Storage.EntitySystems;
 
 namespace Content.Goobstation.Server.Augments;
 
-public sealed class AugmentToolPanelSystem : SharedAugmentToolPanelSystem
+public sealed partial class AugmentToolPanelSystem : SharedAugmentToolPanelSystem
 {
     [Dependency] private AugmentPowerCellSystem _augmentPowerCell = default!;
     [Dependency] private AugmentSystem _augment = default!;

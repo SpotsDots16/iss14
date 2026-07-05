@@ -10,7 +10,7 @@ using Content.Shared.Objectives.Components;
 
 namespace Content.Server._Shitmed.Objectives.Systems;
 
-public sealed class RoleplayObjectiveSystem : EntitySystem
+public sealed partial class RoleplayObjectiveSystem : EntitySystem
 {
     [Dependency] private SharedMindSystem _mind = default!;
 

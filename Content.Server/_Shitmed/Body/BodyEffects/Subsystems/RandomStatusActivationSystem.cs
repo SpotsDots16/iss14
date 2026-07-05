@@ -12,7 +12,7 @@ using Robust.Shared.Random;
 
 namespace Content.Server._Shitmed.BodyEffects.Subsystems;
 
-public sealed class RandomStatusActivationSystem : EntitySystem
+public sealed partial class RandomStatusActivationSystem : EntitySystem
 {
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private StatusEffectsSystem _effects = default!;

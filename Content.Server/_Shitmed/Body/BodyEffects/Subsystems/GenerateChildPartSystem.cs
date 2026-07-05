@@ -18,7 +18,7 @@ using System.Numerics;
 
 namespace Content.Server._Shitmed.BodyEffects.Subsystems;
 
-public sealed class GenerateChildPartSystem : EntitySystem
+public sealed partial class GenerateChildPartSystem : EntitySystem
 {
     [Dependency] private SharedBodySystem _bodySystem = default!;
     [Dependency] private SharedContainerSystem _container = default!;

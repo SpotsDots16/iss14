@@ -186,6 +186,9 @@ public sealed class BodyPrototypeSerializer : ITypeReader<BodyPrototype, Mapping
             slots.Add(slotId, slot);
         }
 
+        // iss14: custom serializers legitimately construct the prototype they deserialize
+#pragma warning disable RA0039
         return new BodyPrototype(id, name, root, slots);
+#pragma warning restore RA0039
     }
 }

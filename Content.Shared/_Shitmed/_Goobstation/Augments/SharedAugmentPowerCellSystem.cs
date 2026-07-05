@@ -5,7 +5,7 @@ using Content.Shared._Shitmed.Body.Organ;
 
 namespace Content.Goobstation.Shared.Augments;
 
-public abstract class SharedAugmentPowerCellSystem : EntitySystem
+public abstract partial class SharedAugmentPowerCellSystem : EntitySystem
 {
     [Dependency] protected AugmentSystem Augment = default!;
     [Dependency] private SharedBodySystem _body = default!;

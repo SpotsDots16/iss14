@@ -21,7 +21,7 @@ using Content.Shared.Forensics.Components;
 
 namespace Content.Server._Shitmed.StatusEffects;
 
-public sealed class ScrambleDnaEffectSystem : EntitySystem
+public sealed partial class ScrambleDnaEffectSystem : EntitySystem
 {
 
     [Dependency] private HumanoidAppearanceSystem _humanoidAppearance = default!;

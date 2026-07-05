@@ -2,7 +2,7 @@ using Content.Shared.Weapons.Melee.Events;
 
 namespace Content.Goobstation.Shared.Augments;
 
-public sealed class AugmentRelaySystem : EntitySystem
+public sealed partial class AugmentRelaySystem : EntitySystem
 {
     [Dependency] private AugmentSystem _augment = default!;
 

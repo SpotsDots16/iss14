@@ -423,7 +423,9 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
             return 0.0f;
         }
 
-        return bloodSolution.FillFraction;
+        // iss14: count only the actual blood reagent, not injected medicine sharing the solution
+        // (matches upstream's metabolism-stages behavior; FillFraction let injections inflate blood level)
+        return (bloodSolution.GetTotalPrototypeQuantity(ent.Comp.BloodReagent) / ent.Comp.BloodMaxVolume).Float();
     }
 
     /// <summary>
@@ -440,11 +442,19 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
 
     /// <summary>
     /// iss14: compatibility helper for pre-rollback callers (devour, cryo pods, smoke, injectors...).
-    /// The old single-solution bloodstream added reagents "to the bloodstream"; in the restored
-    /// two-solution bloodstream that maps to the chemical (chemstream) solution so reagents metabolize.
+    /// Adds reagents to the BLOOD solution — that is the solution the heart's Bloodstream
+    /// metabolism stage reads, so reagents actually metabolize (the chemstream solution has
+    /// no metabolizer stage attached in the stages system and would be a dead-end).
+    /// Blood level is unaffected because <see cref="GetBloodLevelPercentage"/> counts only the blood reagent.
     /// </summary>
     public bool TryAddToBloodstream(Entity<BloodstreamComponent?> ent, Solution solution)
-        => TryAddToChemicals(ent, solution);
+    {
+        if (!Resolve(ent, ref ent.Comp, logMissing: false)
+            || !SolutionContainer.ResolveSolution(ent.Owner, ent.Comp.BloodSolutionName, ref ent.Comp.BloodSolution))
+            return false;
+
+        return SolutionContainer.TryAddSolution(ent.Comp.BloodSolution.Value, solution);
+    }
 
     /// <summary>
     /// Attempt to transfer a provided solution to internal solution.

@@ -2,7 +2,7 @@ using Content.Shared._Shitmed.Medical.Surgery.Tools;
 
 namespace Content.Goobstation.Shared.Surgery.Steps.Parts;
 
-public sealed class TissueSampleSystem : EntitySystem
+public sealed partial class TissueSampleSystem : EntitySystem
 {
     [Dependency] private SurgeryToolExamineSystem _toolExamine = default!;
 

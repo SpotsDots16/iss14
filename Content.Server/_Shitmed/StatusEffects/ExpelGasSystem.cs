@@ -11,7 +11,7 @@ using Robust.Shared.Random;
 
 namespace Content.Server._Shitmed.StatusEffects;
 
-public sealed class ExpelGasEffectSystem : EntitySystem
+public sealed partial class ExpelGasEffectSystem : EntitySystem
 {
     [Dependency] private AtmosphereSystem _atmos = default!;
     [Dependency] private ChatSystem _chat = default!;

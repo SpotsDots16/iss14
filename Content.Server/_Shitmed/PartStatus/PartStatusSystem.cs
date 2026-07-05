@@ -6,7 +6,6 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-using Content.Shared.Damage.Components;
 using System.Linq;
 using System.Text;
 using Content.Server.Body.Systems;
@@ -18,25 +17,25 @@ using Content.Shared._Shitmed.Medical.Surgery.Wounds;
 using Content.Shared._Shitmed.Medical.Surgery.Wounds.Components;
 using Content.Shared._Shitmed.Medical.Surgery.Wounds.Systems;
 using Content.Shared._Shitmed.PartStatus.Events;
-using Content.Shared.Body.Part;
 using Content.Shared.Chat;
-using Content.Shared.Mobs.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
 
 using Content.Goobstation.Common.Examine; // Goobstation Change
+using Content.Shared.Body.Part; // iss14: restored (lost in a using dedup)
 using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
+using Content.Shared.Mobs.Systems;
 using Content.Shared.Examine;
 using Content.Shared.FixedPoint;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Verbs;
-using Robust.Shared.Utility;
 using Content.Shared.HealthExaminable;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._Shitmed.PartStatus;
 
-public sealed class PartStatusSystem : EntitySystem
+public sealed partial class PartStatusSystem : EntitySystem
 {
     [Dependency] private WoundSystem _woundSystem = default!;
     [Dependency] private BodySystem _bodySystem = default!;

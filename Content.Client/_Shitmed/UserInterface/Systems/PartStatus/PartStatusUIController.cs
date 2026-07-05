@@ -21,7 +21,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Client._Shitmed.UserInterface.Systems.PartStatus;
 
-public sealed class PartStatusUIController : UIController, IOnStateEntered<GameplayState>, IOnSystemChanged<TargetingSystem>
+public sealed partial class PartStatusUIController : UIController, IOnStateEntered<GameplayState>, IOnSystemChanged<TargetingSystem>
 {
     [Dependency] private IEntityManager _entManager = default!;
     [Dependency] private IEntityNetworkManager _net = default!;

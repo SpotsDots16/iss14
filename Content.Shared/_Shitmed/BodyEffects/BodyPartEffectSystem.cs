@@ -83,7 +83,7 @@ public sealed partial class BodyPartEffectSystem : EntitySystem
                 continue;
 
             var newComp = (Component) _serManager.CreateCopy(comp.Component, notNullableOverride: true);
-            EntityManager.AddComponent(body, newComp, true);
+            AddComp(body, newComp, true); // iss14: analyzer requires the proxy method
 
             effectComp.Active[key] = comp;
         }
