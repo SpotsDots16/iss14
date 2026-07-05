@@ -214,11 +214,9 @@
   - type: Metabolizer # iss14: converted to metabolism stages
     metabolizerTypes: [ Cybernetic ]
     stages: [ Respiration ]
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      Lung:
-        maxVol: 100.0
-        canReact: false
+    - SolutionLungGas
   - type: Tag
     tags:
     - Organ

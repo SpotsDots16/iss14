@@ -40,13 +40,9 @@
     sprite: Mobs/Species/Human/organs.rsi
   - type: StaticPrice
     price: 50
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
+    - SolutionOrganFood
   - type: FlavorProfile
     flavors:
       - chicken # everything kinda tastes like chicken
@@ -87,16 +83,10 @@
   - type: Metabolizer # iss14: converted to metabolism stages
     metabolizerTypes: [ Animal ]
     stages: [ Respiration ]
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      Lung:
-        maxVol: 100.0
-        canReact: false
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
+    - SolutionLungGas
+    - SolutionOrganFood
   - type: Tag # goob edit
     tags:
     - Meat
@@ -122,15 +112,10 @@
       Normal: 28
       Damaged: 16
       Destroyed: 0
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      stomach:
-        maxVol: 40
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
+    - SolutionStomachAnimal
+    - SolutionOrganFood
   - type: Stomach
   - type: Metabolizer # iss14: converted to metabolism stages
     maxReagents: 3
@@ -151,10 +136,9 @@
   name: stomach
   categories: [ HideSpawnMenu ]
   components:
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      stomach:
-        maxVol: 30
+    - SolutionStomachSmall
   - type: Item
     size: Small
     heldPrefix: stomach

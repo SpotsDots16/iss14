@@ -43,18 +43,10 @@
   - type: Edible # iss14: Ingestion rework renamed Food
   - type: Extractable
     grindableSolutionName: organ
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      organ:
-        maxVol: 10
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 10
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
+    - SolutionOrgan
+    - SolutionOrganFood
   - type: FlavorProfile
     flavors:
       - people
@@ -100,23 +92,11 @@
       Destroyed: 0
     slotId: brain
   - type: Brain # Shitmed
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      organ:
-        maxVol: 15 # goob edit
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 10
-        - ReagentId: Cognizine # goob edit
-          Quantity: 5 # goob edit
-      Lung:
-        maxVol: 100
-        canReact: False
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: GreyMatter
-          Quantity: 5
+    - SolutionOrganBrain
+    - SolutionLungGas
+    - SolutionOrganFoodGreyMatter
   - type: Tag # goob edit
     tags:
     - Meat
@@ -158,15 +138,10 @@
   components:
   - type: Sprite
     state: stomach
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      stomach:
-        maxVol: 50
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
+    - SolutionStomach
+    - SolutionOrganFood
   - type: Organ # Shitmed
     intCap: 35
     integrity: 35
@@ -212,16 +187,10 @@
   - type: Metabolizer # iss14: converted to metabolism stages
     metabolizerTypes: [ Plant ]
     stages: [ Respiration ]
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      organ:
-        maxVol: 10
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 10
-      Lung:
-        maxVol: 100
-        canReact: False
+    - SolutionOrgan
+    - SolutionLungGas
   - type: Tag # goob edit
     tags:
     - Meat

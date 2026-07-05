@@ -26,14 +26,9 @@
   parent: OrganAnimalStomach
   suffix: "rat"
   components:
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      stomach:
-        maxVol: 50
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
+    - SolutionStomach
+    - SolutionOrganFood
   - type: Sprite
     state: stomach

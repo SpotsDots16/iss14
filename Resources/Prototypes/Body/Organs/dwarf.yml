@@ -36,15 +36,10 @@
       Normal: 38
       Damaged: 22
       Destroyed: 0
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      stomach:
-        maxVol: 75
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
+    - SolutionStomachDwarf
+    - SolutionOrganFood
   - type: Stomach
   - type: Metabolizer # iss14: converted to metabolism stages (stages inherited from OrganHumanStomach)
     # mm very yummy

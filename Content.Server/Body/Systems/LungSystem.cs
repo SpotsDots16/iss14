@@ -120,7 +120,9 @@ public sealed partial class LungSystem : EntitySystem
     public void GasToReagent(EntityUid uid, LungComponent lung)
     {
         if (!_solutionContainerSystem.ResolveSolution(uid, lung.SolutionName, ref lung.Solution, out var solution))
+        {
             return;
+        }
 
         GasToReagent(lung.Air, solution);
         _solutionContainerSystem.UpdateChemicals(lung.Solution.Value);

@@ -29,13 +29,13 @@
         Quantity: 10
   # Goob edit start
   - type: Edible
-  - type: SolutionContainerManager
-    solutions:
-      food:
-        maxVol: 15
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 15
+  - type: Solution # iss14: converted to new solution system
+    id: food
+    solution:
+      maxVol: 15
+      reagents:
+      - ReagentId: UncookedAnimalProteins
+        Quantity: 15
   # Goob edit end
 
 # organic torsos have higher health

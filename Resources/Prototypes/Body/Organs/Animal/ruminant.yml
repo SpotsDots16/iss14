@@ -17,7 +17,6 @@
       - Ruminant
       - Wheat
       - BananaPeel
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      stomach:
-        maxVol: 80
+    - SolutionStomachRuminant

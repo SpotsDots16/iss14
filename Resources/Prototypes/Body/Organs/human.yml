@@ -154,17 +154,10 @@
   - type: Edible
   - type: Extractable
     grindableSolutionName: organ
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      organ:
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 10
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
+    - SolutionOrgan
+    - SolutionOrganFood
   - type: FlavorProfile
     flavors:
       - people
@@ -212,21 +205,10 @@
     - Meat
     - Organ
     - Brain
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      organ:
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 10
-        - ReagentId: Cognizine # goob edit
-          Quantity: 5 # goob edit
-      food:
-        maxVol: 10 # goob edit
-        reagents:
-        - ReagentId: GreyMatter
-          Quantity: 5
-        - ReagentId: Cognizine # goob edit
-          Quantity: 5 # goob edit
+    - SolutionOrganBrain
+    - SolutionOrganFoodBrain
   - type: FlavorProfile
     flavors:
       - people
@@ -329,20 +311,11 @@
   - type: Metabolizer # iss14: converted to metabolism stages
     metabolizerTypes: [ Human ]
     stages: [ Respiration ]
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      organ:
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 10
-      Lung:
-        maxVol: 100.0
-        canReact: false
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
+    - SolutionOrgan
+    - SolutionLungGas
+    - SolutionOrganFood
   - type: Tag # goob edit
     tags:
     - Meat
@@ -401,15 +374,10 @@
   - type: Item
     size: Small
     heldPrefix: stomach
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      stomach:
-        maxVol: 50
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
+    - SolutionStomach
+    - SolutionOrganFood
   - type: Stomach
   # The stomach metabolizes stuff like foods and drinks.
   # TODO: Have it work off of the ent's solution container, and move this

@@ -49,23 +49,11 @@
       maxReagents: 2 # Shitmed
       metabolizerTypes: [ Slime ]
       stages: [ Digestion, Bloodstream, Metabolites ]
-    - type: SolutionContainerManager
+    - type: SolutionManager # iss14: converted to new solution system
       solutions:
-        stomach:
-          maxVol: 50.0
-        food:
-          maxVol: 10 # goob edit
-          reagents:
-            - ReagentId: GreyMatter
-              Quantity: 5
-            - ReagentId: Cognizine # goob edit
-              Quantity: 5 # goob edit
-        organ:
-          reagents:
-            - ReagentId: Slime
-              Quantity: 10
-            - ReagentId: Cognizine # goob edit
-              Quantity: 5 # goob edit
+      - SolutionStomach
+      - SolutionOrganFoodBrain
+      - SolutionOrganSlimeBrain
     - type: Item
       size: Small
       heldPrefix: brain
@@ -95,20 +83,11 @@
   - type: Metabolizer # iss14: converted to metabolism stages
     metabolizerTypes: [ Slime ]
     stages: [ Respiration ]
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      organ:
-        reagents:
-        - ReagentId: Slime
-          Quantity: 10
-      Lung:
-        maxVol: 100.0
-        canReact: false
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
+    - SolutionOrganSlime
+    - SolutionLungGas
+    - SolutionOrganFood
   - type: Item
     size: Small
     heldPrefix: lungs

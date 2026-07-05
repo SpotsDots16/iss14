@@ -27,10 +27,9 @@
       maxReagents: 3
       metabolizerTypes: [ Slime ]
       stages: [ Digestion, Bloodstream, Metabolites ]
-    - type: SolutionContainerManager
+    - type: SolutionManager # iss14: converted to new solution system
       solutions:
-        stomach:
-          maxVol: 30.0
+      - SolutionStomachSmall
 
 - type: entity # Goobstation add
   id: XenobioSentientSlimesCore
@@ -38,10 +37,9 @@
   name: mutated slimes core
   description: "Mutated slime core, looks bigger."
   components:
-    - type: SolutionContainerManager
+    - type: SolutionManager # iss14: converted to new solution system
       solutions:
-        stomach:
-          maxVol: 50.0 # 2.5u added per sec when slime latched, 20 sec metabolize time, 2.5 * 20 = 50u
+      - SolutionStomach # 2.5u added per sec when slime latched, 20 sec metabolize time, 2.5 * 20 = 50u
     - type: Metabolizer # iss14: converted to metabolism stages
       maxReagents: 3
       metabolizerTypes: [ Slime, XenobioSlime ]
@@ -70,12 +68,7 @@
     - type: Metabolizer # iss14: converted to metabolism stages
       metabolizerTypes: [ Slime ]
       stages: [ Respiration ]
-    - type: SolutionContainerManager
+    - type: SolutionManager # iss14: converted to new solution system
       solutions:
-        organ:
-          reagents:
-          - ReagentId: Nutriment
-            Quantity: 10
-        Lung:
-          maxVol: 100.0
-          canReact: false
+      - SolutionOrgan
+      - SolutionLungGas

@@ -1,0 +1,166 @@
+# iss14: shared solution entity prototypes for organs ported from Goob-Station.
+# The port used the legacy inline `SolutionContainerManager` format; iss14's engine
+# uses the new solution system (`SolutionManager` + child solution entities), so the
+# inline solutions are defined here once and referenced from the organ prototypes.
+
+# Gas exchange solution used by all lungs (code expects the name "Lung").
+- type: entity
+  parent: Solution
+  id: SolutionLungGas # TODO: Metabolize directly from gasses :(
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: Lung
+    solution:
+      maxVol: 100.0
+      canReact: false
+
+# Grindable "organ" solutions (Extractable grindableSolutionName: organ).
+- type: entity
+  parent: Solution
+  id: SolutionOrgan
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: organ
+    solution:
+      maxVol: 10
+      reagents:
+      - ReagentId: Nutriment
+        Quantity: 10
+
+- type: entity
+  parent: Solution
+  id: SolutionOrganBrain
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: organ
+    solution:
+      maxVol: 15
+      reagents:
+      - ReagentId: Nutriment
+        Quantity: 10
+      - ReagentId: Cognizine
+        Quantity: 5
+
+- type: entity
+  parent: Solution
+  id: SolutionOrganSlime
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: organ
+    solution:
+      maxVol: 10
+      reagents:
+      - ReagentId: Slime
+        Quantity: 10
+
+- type: entity
+  parent: Solution
+  id: SolutionOrganSlimeBrain
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: organ
+    solution:
+      maxVol: 15
+      reagents:
+      - ReagentId: Slime
+        Quantity: 10
+      - ReagentId: Cognizine
+        Quantity: 5
+
+# Edible "food" solutions for organs.
+- type: entity
+  parent: Solution
+  id: SolutionOrganFood
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: food
+    solution:
+      maxVol: 5
+      reagents:
+      - ReagentId: UncookedAnimalProteins
+        Quantity: 5
+
+- type: entity
+  parent: Solution
+  id: SolutionOrganFoodBrain
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: food
+    solution:
+      maxVol: 10
+      reagents:
+      - ReagentId: GreyMatter
+        Quantity: 5
+      - ReagentId: Cognizine
+        Quantity: 5
+
+- type: entity
+  parent: Solution
+  id: SolutionOrganFoodGreyMatter
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: food
+    solution:
+      maxVol: 5
+      reagents:
+      - ReagentId: GreyMatter
+        Quantity: 5
+
+# Stomach digestion solutions (code expects the name "stomach").
+- type: entity
+  parent: Solution
+  id: SolutionStomach
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: stomach
+    solution:
+      maxVol: 50
+
+- type: entity
+  parent: Solution
+  id: SolutionStomachAnimal
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: stomach
+    solution:
+      maxVol: 40
+
+- type: entity
+  parent: Solution
+  id: SolutionStomachSmall
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: stomach
+    solution:
+      maxVol: 30
+
+- type: entity
+  parent: Solution
+  id: SolutionStomachDwarf
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: stomach
+    solution:
+      maxVol: 75
+
+- type: entity
+  parent: Solution
+  id: SolutionStomachRuminant
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    id: stomach
+    solution:
+      maxVol: 80

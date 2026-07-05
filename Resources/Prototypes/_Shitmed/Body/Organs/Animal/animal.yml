@@ -33,17 +33,10 @@
       - Meat
       - Organ
       - Brain
-  - type: SolutionContainerManager
+  - type: SolutionManager # iss14: converted to new solution system
     solutions:
-      organ:
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 10
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: GreyMatter
-          Quantity: 5
+    - SolutionOrgan
+    - SolutionOrganFoodGreyMatter
   - type: FlavorProfile
     flavors:
       - people
