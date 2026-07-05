@@ -148,6 +148,15 @@ public sealed partial class DoAfterArgs
     /// </summary>
     [DataField]
     public bool MultiplyDelay = true;
+
+    /// <summary>
+    /// Shitmed Change (iss14): allow the do-after target to live inside a container.
+    /// Surgery do-afters target body PART entities, which sit inside the patient's
+    /// body containers; upstream's InRangeAndAccessible check would reject them.
+    /// When true, only the positional range check is applied to the target.
+    /// </summary>
+    [DataField]
+    public bool AllowContainedTarget;
     #endregion
 
     #region Duplicates
@@ -268,6 +277,7 @@ public sealed partial class DoAfterArgs
         DamageThreshold = other.DamageThreshold;
         RequireCanInteract = other.RequireCanInteract;
         MultiplyDelay = other.MultiplyDelay; // Goobstation
+        AllowContainedTarget = other.AllowContainedTarget; // Shitmed Change (iss14)
         AttemptFrequency = other.AttemptFrequency;
         BlockDuplicate = other.BlockDuplicate;
         CancelDuplicate = other.CancelDuplicate;

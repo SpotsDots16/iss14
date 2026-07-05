@@ -78,7 +78,10 @@ public sealed partial class InsideBodyPartSystem : CommonInsideBodyPartSystem
         }
 
         var ev = new BurstDoAfterEvent();
-        args.Handled = _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, ent.Owner, delay, ev, eventTarget: ent, target: part));
+        args.Handled = _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, ent.Owner, delay, ev, eventTarget: ent, target: part)
+        {
+            AllowContainedTarget = true, // iss14: both user and target part sit inside body containers
+        });
 
         var victim = Identity.Name(body ?? part, EntityManager);
         _popup.PopupPredicted(Loc.GetString("body-part-burst-starting", ("victim", victim), ("part", part)), ent, ent, PopupType.LargeCaution);

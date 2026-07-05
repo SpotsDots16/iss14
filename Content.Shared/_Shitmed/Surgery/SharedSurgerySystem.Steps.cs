@@ -898,6 +898,7 @@ public abstract partial class SharedSurgerySystem
             NeedHand = true,
             BreakOnHandChange = true,
             AttemptFrequency = AttemptFrequency.EveryTick,
+            AllowContainedTarget = true, // iss14: the target is a body part inside the patient's containers
         };
 
         if (!_doAfter.TryStartDoAfter(doAfter))

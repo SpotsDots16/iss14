@@ -227,7 +227,15 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
         {
             if (args.DistanceThreshold != null)
             {
-                if (!_interaction.InRangeAndAccessible(args.User, args.Target.Value, args.DistanceThreshold.Value))
+                // Shitmed Change (iss14): surgery do-afters target body part entities inside the
+                // patient's containers - the accessibility check would reject those, so such
+                // do-afters opt into a purely positional range check.
+                if (args.AllowContainedTarget)
+                {
+                    if (!_interaction.InRangeUnobstructed(args.User, args.Target.Value, args.DistanceThreshold.Value))
+                        return true;
+                }
+                else if (!_interaction.InRangeAndAccessible(args.User, args.Target.Value, args.DistanceThreshold.Value))
                     return true;
             }
         }
