@@ -21,7 +21,6 @@
       - id: OrganDubiousInvisible
       - id: OrganDubiousSpaceAdaptation
       - id: OrganDubiousScrambleDna
-      - id: OrganDubiousScrambleLocation
       - id: OrganDubiousArtifact
       - id: OrganDubiousVentcrawler
       - id: OrganDubiousSteptriggerImmune

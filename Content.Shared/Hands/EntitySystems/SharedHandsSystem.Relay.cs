@@ -1,3 +1,4 @@
+using Content.Shared._Shitmed.Surgery; // Shitmed Change
 using Content.Shared.Atmos;
 using Content.Shared.Camera;
 using Content.Shared.Cuffs;
@@ -16,6 +17,11 @@ public abstract partial class SharedHandsSystem
         SubscribeLocalEvent<HandsComponent, GetEyeOffsetRelayedEvent>(RelayEvent);
         SubscribeLocalEvent<HandsComponent, GetEyePvsScaleRelayedEvent>(RelayEvent);
         SubscribeLocalEvent<HandsComponent, RefreshMovementSpeedModifiersEvent>(RelayEvent);
+        // Shitmed Change Start - relay surgery events to held items
+        SubscribeLocalEvent<HandsComponent, SurgerySanitizationEvent>(RelayEvent);
+        SubscribeLocalEvent<HandsComponent, SurgeryPainEvent>(RelayEvent);
+        SubscribeLocalEvent<HandsComponent, SurgeryIgnorePreviousStepsEvent>(RelayEvent);
+        // Shitmed Change End
 
         // By-ref events.
         SubscribeLocalEvent<HandsComponent, ExtinguishEvent>(RefRelayEvent);

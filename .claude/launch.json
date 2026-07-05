@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "rules-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["Tools/RulesPreview/rules_preview.py", "--port", "8777"],
+      "port": 8777
+    }
+  ]
+}

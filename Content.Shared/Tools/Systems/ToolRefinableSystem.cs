@@ -5,7 +5,6 @@ using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.Construction;
 using Content.Shared.Destructible;
 using Content.Shared.FixedPoint;
-using Content.Shared.Gibbing;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Content.Shared.Random.Helpers;
@@ -25,7 +24,6 @@ namespace Content.Shared.Tools.Systems;
 public sealed partial class ToolRefinablSystem : EntitySystem
 {
     [Dependency] private SharedToolSystem _toolSystem = default!;
-    [Dependency] private GibbingSystem _gib = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedContainerSystem _container = default!;
@@ -154,7 +152,7 @@ public sealed partial class ToolRefinablSystem : EntitySystem
         if (component.Sound != null)
             _audio.PlayPredicted(component.Sound, Transform(uid).Coordinates, args.User, AudioParams.Default.WithVolume(-2));
 
-        _gib.Gib(uid);
+        // iss14: refinables are plain items, not bodies; DestroyEntity covers the old flat Gib call.
         _destructible.DestroyEntity(uid);
     }
 

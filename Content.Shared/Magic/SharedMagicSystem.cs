@@ -4,8 +4,9 @@ using Content.Shared.Charges.Systems;
 using Content.Shared.Coordinates.Helpers;
 using Content.Shared.Doors.Components;
 using Content.Shared.Doors.Systems;
+using Content.Shared.Body.Components;
+using Content.Shared.Body.Systems;
 using Content.Shared.Examine;
-using Content.Shared.Gibbing;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
@@ -53,7 +54,7 @@ public abstract partial class SharedMagicSystem : EntitySystem
     [Dependency] private SharedPhysicsSystem _physics = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
     [Dependency] private INetManager _net = default!;
-    [Dependency] private GibbingSystem _gibbing = default!;
+    [Dependency] private SharedBodySystem _body = default!;
     [Dependency] private EntityLookupSystem _lookup = default!;
     [Dependency] private SharedDoorSystem _door = default!;
     [Dependency] private InventorySystem _inventory = default!;
@@ -394,7 +395,11 @@ public abstract partial class SharedMagicSystem : EntitySystem
         var impulseVector = direction * 10000;
 
         _physics.ApplyLinearImpulse(ev.Target, impulseVector);
-        _gibbing.Gib(ev.Target);
+
+        if (!TryComp<BodyComponent>(ev.Target, out var body))
+            return;
+
+        _body.GibBody(ev.Target, true, body, splatModifier: 10f);
     }
 
     // End Touch Spells

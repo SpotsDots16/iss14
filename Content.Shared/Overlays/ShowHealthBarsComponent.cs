@@ -12,11 +12,15 @@ namespace Content.Shared.Overlays;
 [AutoGenerateComponentState(true)]
 public sealed partial class ShowHealthBarsComponent : Component
 {
+    // Goobstation
+    [DataField]
+    public bool WorksInHands;
+
     /// <summary>
     /// Displays health bars of the damage containers.
     /// </summary>
     [DataField]
-    [AutoNetworkedField]
+    [AutoNetworkedField] // Shitmed Change
     public List<ProtoId<DamageContainerPrototype>> DamageContainers = new()
     {
         "Biological"

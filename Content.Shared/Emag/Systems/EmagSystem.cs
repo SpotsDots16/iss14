@@ -7,6 +7,7 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Content.Shared.Tag;
+using Content.Shared.Whitelist; // Shitmed - Starlight Abductors
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Serialization;
 
@@ -25,6 +26,7 @@ public sealed partial class EmagSystem : EntitySystem
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private TagSystem _tag = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private EntityWhitelistSystem _whitelist = default!; // Shitmed - Starlight Abductors
 
     public override void Initialize()
     {
@@ -67,6 +69,14 @@ public sealed partial class EmagSystem : EntitySystem
             _popup.PopupClient(Loc.GetString("emag-no-charges"), user, user);
             return false;
         }
+
+        // Shitmed - Starlight Abductors: Check if the target has a whitelist, and check if it passes
+        if (_whitelist.IsWhitelistFail(ent.Comp.ValidTargets, target))
+        {
+            _popup.PopupClient(Loc.GetString("emag-attempt-failed", ("tool", ent)), user, user);
+            return false;
+        }
+        // Shitmed end
 
         var typeToUse = customEmagType ?? ent.Comp.EmagType;
 

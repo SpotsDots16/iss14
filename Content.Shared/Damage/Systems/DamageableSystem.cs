@@ -11,6 +11,15 @@ using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
+// Shitmed Change
+using Content.Shared._Shitmed.Body;
+using Content.Shared._Shitmed.Medical.Surgery.Wounds.Components;
+using Content.Shared._Shitmed.Medical.Surgery.Wounds.Systems;
+using Content.Shared.Body.Components;
+using Content.Shared.Body.Systems;
+using Robust.Shared.Random;
+using Robust.Shared.Timing;
+
 namespace Content.Shared.Damage.Systems;
 
 public sealed partial class DamageableSystem : EntitySystem
@@ -23,9 +32,20 @@ public sealed partial class DamageableSystem : EntitySystem
     [Dependency] private SharedChemistryGuideDataSystem _chemistryGuideData = default!;
     [Dependency] private SharedExplosionSystem _explosion = default!;
 
+    // Shitmed Dependencies
+    [Dependency] private SharedBodySystem _body = default!;
+    [Dependency] private WoundSystem _wounds = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private IComponentFactory _factory = default!;
+    [Dependency] private IGameTiming _timing = default!;
+
     [Dependency] private EntityQuery<AppearanceComponent> _appearanceQuery = default!;
     [Dependency] private EntityQuery<DamageableComponent> _damageableQuery = default!;
     [Dependency] private EntityQuery<InjurableComponent> _injurableQuery = default!;
+
+    // Shitmed Ent Queries
+    [Dependency] private EntityQuery<BodyComponent> _bodyQuery = default!;
+    [Dependency] private EntityQuery<WoundableComponent> _woundableQuery = default!;
 
     public float UniversalAllDamageModifier { get; private set; } = 1f;
     public float UniversalAllHealModifier { get; private set; } = 1f;
@@ -41,6 +61,8 @@ public sealed partial class DamageableSystem : EntitySystem
 
     private Dictionary<ProtoId<DamageContainerPrototype>, HashSet<ProtoId<DamageTypePrototype>>> _supportedTypesByContainer = new();
 
+    private ProtoId<DamageGroupPrototype>[] _vitalOnlyDamageTypes = { "Airloss", "Toxin", "Genetic", "Metaphysical" }; // Goobstation
+
     /// <summary>
     ///     If the damage in a DamageableComponent was changed this function should be called.
     /// </summary>
@@ -52,11 +74,14 @@ public sealed partial class DamageableSystem : EntitySystem
         Entity<DamageableComponent> ent,
         DamageSpecifier? damageDelta = null,
         bool interruptsDoAfters = true,
-        EntityUid? origin = null
+        EntityUid? origin = null,
+        bool ignoreBlockers = false, // Shitmed Change
+        DamageSpecifier? uncappedDamage = null // Goobstation
     )
     {
         ent.Comp.Damage.GetDamagePerGroup(_prototypeManager, ent.Comp.DamagePerGroup);
         ent.Comp.TotalDamage = ent.Comp.Damage.GetTotal();
+        ent.Comp.LastModifiedTime = _timing.CurTime; // Shitmed Change
         Dirty(ent);
 
         if (damageDelta != null && _appearanceQuery.TryGetComponent(ent, out var appearance))
@@ -71,7 +96,7 @@ public sealed partial class DamageableSystem : EntitySystem
 
         // TODO DAMAGE
         // byref struct event.
-        RaiseLocalEvent(ent, new DamageChangedEvent(ent.Comp, damageDelta, interruptsDoAfters, origin));
+        RaiseLocalEvent(ent, new DamageChangedEvent(ent.Comp, damageDelta, interruptsDoAfters, origin, ignoreBlockers, uncappedDamage)); // Shitmed Change, Goob edit
     }
 
     /// <summary>

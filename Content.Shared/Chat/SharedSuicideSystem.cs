@@ -6,6 +6,13 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.Mobs.Components;
 using Robust.Shared.Prototypes;
 
+// Shitmed Change
+using Content.Shared._Shitmed.Medical.Surgery.Consciousness;
+using Content.Shared._Shitmed.Medical.Surgery.Consciousness.Components;
+using Content.Shared._Shitmed.Medical.Surgery.Consciousness.Systems;
+using Content.Shared._Shitmed.Targeting;
+using Content.Shared.Mobs.Systems;
+
 namespace Content.Shared.Chat;
 
 public sealed partial class SharedSuicideSystem : EntitySystem
@@ -14,12 +21,17 @@ public sealed partial class SharedSuicideSystem : EntitySystem
 
     [Dependency] private DamageableSystem _damageableSystem = default!;
     [Dependency] private IPrototypeManager _prototypeManager = default!;
+    [Dependency] private ConsciousnessSystem _consciousness = default!; // Shitmed Change
+    [Dependency] private MobThresholdSystem _mobThresholdSystem = default!; // Goobstation
 
     /// <summary>
     /// Applies lethal damage spread out across the damage types given.
     /// </summary>
     public void ApplyLethalDamage(Entity<DamageableComponent> target, DamageSpecifier damageSpecifier)
     {
+        if (TryComp<ConsciousnessComponent>(target, out var victimConsciousness)) // Shitmed Change
+            KillConsciousness((target, victimConsciousness));
+
         // Create a new damageSpecifier so that we don't make alterations to the original DamageSpecifier
         // Failing  to do this will permanently change a weapon's damage making it insta-kill people
         var appliedDamageSpecifier = new DamageSpecifier(damageSpecifier);
@@ -29,7 +41,7 @@ public sealed partial class SharedSuicideSystem : EntitySystem
         // Mob thresholds are sorted from alive -> crit -> dead,
         // grabbing the last key will give us how much damage is needed to kill a target from zero
         // The exact lethal damage amount is adjusted based on their current damage taken
-        var lethalAmountOfDamage = mobThresholds.Thresholds.Keys.Last() - _damageableSystem.GetTotalDamage(target.AsNullable());
+        var lethalAmountOfDamage = mobThresholds.Thresholds.Keys.Last() - _mobThresholdSystem.CheckVitalDamage(target, target.Comp); // Goobstation
         var totalDamage = appliedDamageSpecifier.GetTotal();
 
         // Removing structural because it causes issues against entities that cannot take structural damage,
@@ -42,7 +54,8 @@ public sealed partial class SharedSuicideSystem : EntitySystem
             appliedDamageSpecifier.DamageDict[key] = Math.Ceiling((double) (value * lethalAmountOfDamage / totalDamage));
         }
 
-        _damageableSystem.ChangeDamage(target.AsNullable(), appliedDamageSpecifier, true, origin: target);
+        _damageableSystem.TryChangeDamage(target.Owner, appliedDamageSpecifier, true, origin: target, targetPart: TargetBodyPart.Chest); // Shitmed Change
+        Dirty(target, target.Comp); // Shitmed Change
     }
 
     /// <summary>
@@ -50,13 +63,16 @@ public sealed partial class SharedSuicideSystem : EntitySystem
     /// </summary>
     public void ApplyLethalDamage(Entity<DamageableComponent> target, ProtoId<DamageTypePrototype>? damageType)
     {
+        if (TryComp<ConsciousnessComponent>(target, out var victimConsciousness)) // Shitmed Change
+            KillConsciousness((target, victimConsciousness));
+
         if (!TryComp<MobThresholdsComponent>(target, out var mobThresholds))
             return;
 
         // Mob thresholds are sorted from alive -> crit -> dead,
         // grabbing the last key will give us how much damage is needed to kill a target from zero
         // The exact lethal damage amount is adjusted based on their current damage taken
-        var lethalAmountOfDamage = mobThresholds.Thresholds.Keys.Last() - _damageableSystem.GetTotalDamage(target.AsNullable());
+        var lethalAmountOfDamage = mobThresholds.Thresholds.Keys.Last() - _mobThresholdSystem.CheckVitalDamage(target, target.Comp); // Goobstation
 
         // We don't want structural damage for the same reasons listed above
         if (!_prototypeManager.TryIndex(damageType, out var damagePrototype) || damagePrototype.ID == "Structural")
@@ -66,6 +82,24 @@ public sealed partial class SharedSuicideSystem : EntitySystem
         }
 
         var damage = new DamageSpecifier(damagePrototype, lethalAmountOfDamage);
-        _damageableSystem.ChangeDamage(target.AsNullable(), damage, true, origin: target);
+        _damageableSystem.TryChangeDamage(target.Owner, damage, true, origin: target, targetPart: TargetBodyPart.Chest); // Shitmed Change
+        Dirty(target, target.Comp); // Shitmed Change
     }
+
+    // Shitmed Change Start
+    /// <summary>
+    ///     Kills a consciousness. lol
+    /// </summary>
+    public void KillConsciousness(Entity<ConsciousnessComponent> target)
+    {
+        foreach (var modifier in target.Comp.Modifiers)
+            _consciousness.RemoveConsciousnessModifier(target, modifier.Key.Item1, modifier.Key.Item2);
+
+        foreach (var multiplier in target.Comp.Multipliers)
+            _consciousness.RemoveConsciousnessMultiplier(target, multiplier.Key.Item1, multiplier.Key.Item2, target);
+
+        _consciousness.AddConsciousnessModifier(target, target, -target.Comp.Cap, "Suicide", ConsciousnessModType.Pain, consciousness: target);
+        _consciousness.AddConsciousnessMultiplier(target, target, 0f, "Suicide", ConsciousnessModType.Pain, consciousness: target);
+    }
+    // Shitmed Change End
 }

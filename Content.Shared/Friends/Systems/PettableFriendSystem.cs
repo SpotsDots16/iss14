@@ -1,3 +1,4 @@
+using Content.Shared._Shitmed.Spawners.EntitySystems; // Shitmed Change
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Friends.Components;
 using Content.Shared.Interaction.Events;
@@ -23,6 +24,7 @@ public sealed partial class PettableFriendSystem : EntitySystem
 
         SubscribeLocalEvent<PettableFriendComponent, UseInHandEvent>(OnUseInHand);
         SubscribeLocalEvent<PettableFriendComponent, GotRehydratedEvent>(OnRehydrated);
+        SubscribeLocalEvent<PettableFriendComponent, SpawnerSpawnedEvent>(OnSpawned); // Shitmed Change
     }
 
     private void OnUseInHand(Entity<PettableFriendComponent> ent, ref UseInHandEvent args)
@@ -55,5 +57,14 @@ public sealed partial class PettableFriendSystem : EntitySystem
             return;
 
         _factionException.IgnoreEntities(args.Target, comp.Ignored);
+    }
+
+    // Shitmed Change
+    private void OnSpawned(Entity<PettableFriendComponent> ent, ref SpawnerSpawnedEvent args)
+    {
+        if (!TryComp<FactionExceptionComponent>(ent, out var comp))
+            return;
+
+        _factionException.IgnoreEntities(args.Entity, comp.Ignored);
     }
 }

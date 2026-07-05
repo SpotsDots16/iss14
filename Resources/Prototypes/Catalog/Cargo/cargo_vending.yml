@@ -126,7 +126,7 @@
     sprite: Objects/Specific/Service/vending_machine_restock.rsi
     state: base
   product: CrateVendingMachineRestockMedicalFilled
-  cost: 1750
+  cost: 1750 # iss14: kept vanilla price - Goob's 3100 assumed vend additions (patches/cigs) that were not ported
   category: cargoproduct-category-name-medical
   group: market
 

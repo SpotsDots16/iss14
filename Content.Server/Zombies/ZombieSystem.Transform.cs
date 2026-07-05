@@ -31,6 +31,7 @@ using Content.Shared.NPC.Systems;
 using Content.Shared.Nutrition.AnimalHusbandry;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Popups;
+using Content.Shared.Rejuvenate; // Shitmed Change
 using Content.Shared.Weapons.Melee;
 using Content.Shared.Zombies;
 using Content.Shared.Prying.Components;
@@ -113,6 +114,10 @@ public sealed partial class ZombieSystem
 
         if (!Resolve(target, ref mobState, logMissing: false))
             return;
+
+        // Shitmed Change: heal all wounds/traumas so the risen zombie isn't crippled by its old body state.
+        // Note: iss14's RejuvenateEvent has no uncuff/resetActions flags (Goob passed (false, false)).
+        RaiseLocalEvent(target, new RejuvenateEvent()); // Shitmed Change
 
         // Detach role-banned players before zombification
         if (TryComp<ActorComponent>(target, out var actor) && _ban.IsRoleBanned(actor.PlayerSession, BannableZombiePrototypes))

@@ -67,15 +67,15 @@ namespace Content.Shared.Humanoid;
 ///     you still need a local copy so that players can set up their
 ///     characters.
 /// </summary>
-public abstract class SharedHumanoidAppearanceSystem : EntitySystem
+public abstract partial class SharedHumanoidAppearanceSystem : EntitySystem
 {
-    [Dependency] private readonly IConfigurationManager _cfgManager = default!;
-    [Dependency] private readonly INetManager _netManager = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly ISerializationManager _serManager = default!;
-    [Dependency] private readonly MarkingManager _markingManager = default!;
-    [Dependency] private readonly GrammarSystem _grammarSystem = default!;
-    [Dependency] private readonly SharedIdentitySystem _identity = default!;
+    [Dependency] private IConfigurationManager _cfgManager = default!;
+    [Dependency] private INetManager _netManager = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private ISerializationManager _serManager = default!;
+    [Dependency] private MarkingManager _markingManager = default!;
+    [Dependency] private GrammarSystem _grammarSystem = default!;
+    [Dependency] private IdentitySystem _identity = default!;
 
     public static readonly ProtoId<SpeciesPrototype> DefaultSpecies = "Human";
     public static readonly ProtoId<BarkPrototype> DefaultBarkVoice = "Alto"; // Goob Station - Barks
@@ -576,13 +576,10 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
         humanoid.Age = profile.Age;
 
         // begin Goobstation: port EE height/width sliders
+        // iss14: HumanoidCharacterProfile has no Height/Width fields, so profiles cannot override
+        // the body scale; always apply the species default scale.
         var species = _proto.Index(humanoid.Species);
-
-        if (profile.Height <= 0 || profile.Width <= 0)
-            SetScale(uid, new Vector2(species.DefaultWidth, species.DefaultHeight), true, humanoid);
-        else
-            SetScale(uid, new Vector2(profile.Width, profile.Height), true, humanoid);
-
+        SetScale(uid, new Vector2(species.DefaultWidth, species.DefaultHeight), true, humanoid);
         // end Goobstation: port EE height/width sliders (iss14: HeightAdjustSystem not ported)
 
         RaiseLocalEvent(uid, new ProfileLoadFinishedEvent()); // Shitmed Change

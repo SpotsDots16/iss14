@@ -4,8 +4,10 @@ using Content.Server.Medical.Components;
 using Content.Server.NodeContainer.EntitySystems;
 using Content.Server.NodeContainer.NodeGroups;
 using Content.Server.NodeContainer.Nodes;
+using Content.Shared.Actions; // Shitmed Change
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Components;
+using Content.Shared.Bed.Sleep; // Shitmed Change
 using Content.Shared.Damage.Systems;
 using Content.Shared.Medical.Cryogenics;
 
@@ -19,6 +21,8 @@ public sealed partial class CryoPodSystem : SharedCryoPodSystem
     [Dependency] private HealthAnalyzerSystem _healthAnalyzerSystem = default!;
     [Dependency] private NodeContainerSystem _nodeContainer = default!;
     [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private SharedActionsSystem _actionsSystem = default!; // Shitmed Change
+    [Dependency] private SleepingSystem _sleepingSystem = default!; // Shitmed change
 
 
     public override void Initialize()

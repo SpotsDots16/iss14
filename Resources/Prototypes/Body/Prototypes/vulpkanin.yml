@@ -1,0 +1,56 @@
+# iss14: vulpkanin body restored for the part-based (Shitmed) body system, modeled on Human.
+- type: body
+  id: Vulpkanin
+  name: "vulpkanin"
+  root: chest
+  slots:
+    head:
+      part: HeadVulpkanin
+      connections:
+      - chest
+      organs:
+        brain: OrganHumanBrain
+        eyes: OrganHumanEyes
+    chest:
+      part: ChestVulpkanin
+      connections:
+      - groin
+      - right arm
+      - left arm
+      - head # Shitmed
+      organs:
+        heart: OrganAnimalHeart
+        lungs: OrganHumanLungs
+    groin:
+      part: GroinVulpkanin
+      connections:
+      - right leg
+      - left leg
+      organs:
+        stomach: OrganVulpkaninStomach
+        liver: OrganAnimalLiver
+        kidneys: OrganHumanKidneys
+    right arm:
+      part: RightArmVulpkanin
+      connections:
+      - right hand
+    left arm:
+      part: LeftArmVulpkanin
+      connections:
+      - left hand
+    right hand:
+      part: RightHandVulpkanin
+    left hand:
+      part: LeftHandVulpkanin
+    right leg:
+      part: RightLegVulpkanin
+      connections:
+      - right foot
+    left leg:
+      part: LeftLegVulpkanin
+      connections:
+      - left foot
+    right foot:
+      part: RightFootVulpkanin
+    left foot:
+      part: LeftFootVulpkanin

@@ -1,5 +1,6 @@
 using Content.Shared.Emag.Systems;
 using Content.Shared.Tag;
+using Content.Shared.Whitelist; // Shitmed - Starlight Abductors
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
@@ -33,4 +34,10 @@ public sealed partial class EmagComponent : Component
     [DataField]
     [AutoNetworkedField]
     public SoundSpecifier EmagSound = new SoundCollectionSpecifier("sparks");
+
+    /// <summary>
+    ///     Shitmed - Starlight Abductors: Entities that this EMAG works on.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public EntityWhitelist? ValidTargets;
 }

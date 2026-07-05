@@ -770,19 +770,20 @@ HandheldHealthAnalyzerEmpty: HandheldHealthAnalyzer
 #2026-01-09
 BorgModuleAdvancedChemical: BorgModuleAdvancedTopical
 
-# 2026-01-14
-HeadHuman: OrganHumanHead
-HeadSkeleton: OrganSkeletonPersonHead
-LeftArmHuman: OrganHumanArmLeft
-LeftArmSkeleton: OrganSkeletonPersonArmLeft
-LeftHandSkeleton: OrganSkeletonPersonHandLeft
-LeftLegHuman: OrganHumanLegLeft
-LeftLegSkeleton: OrganSkeletonPersonLegLeft
-RightArmHuman: OrganHumanArmRight
-RightHandSkeleton: OrganSkeletonPersonHandRight
-RightLegHuman: OrganHumanLegRight
-TorsoSkeleton: OrganSkeletonPersonTorso
-RightArmSkeleton: OrganSkeletonPersonArmRight
+# 2026-07-05 Shitmed port: Nubody rolled back, part-based body restored.
+# Reverse of the 2026-01-14 Nubody migrations so post-Nubody saves map back.
+OrganHumanHead: HeadHuman
+OrganSkeletonPersonHead: HeadSkeleton
+OrganHumanArmLeft: LeftArmHuman
+OrganSkeletonPersonArmLeft: LeftArmSkeleton
+OrganSkeletonPersonHandLeft: LeftHandSkeleton
+OrganHumanLegLeft: LeftLegHuman
+OrganSkeletonPersonLegLeft: LeftLegSkeleton
+OrganHumanArmRight: RightArmHuman
+OrganSkeletonPersonHandRight: RightHandSkeleton
+OrganHumanLegRight: RightLegHuman
+OrganSkeletonPersonTorso: TorsoSkeleton
+OrganSkeletonPersonArmRight: RightArmSkeleton
 
 # 2026-01-19
 TowelColorPurple: null

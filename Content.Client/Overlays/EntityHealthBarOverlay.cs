@@ -137,7 +137,7 @@ public sealed class EntityHealthBarOverlay : Overlay
     /// </summary>
     private (float ratio, bool inCrit)? CalcProgress(EntityUid uid, MobStateComponent component, DamageableComponent dmg, MobThresholdsComponent thresholds)
     {
-        var totalDamage = _damageable.GetTotalDamage((uid, dmg));
+        var totalDamage = _mobThresholdSystem.CheckVitalDamage(uid, dmg); // GoobStation
         if (_mobStateSystem.IsAlive(uid, component))
         {
             if (!_mobThresholdSystem.TryGetThresholdForState(uid, MobState.Critical, out var threshold, thresholds) &&

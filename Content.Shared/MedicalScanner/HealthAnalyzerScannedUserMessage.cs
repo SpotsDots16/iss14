@@ -1,3 +1,4 @@
+using Content.Shared._Shitmed.Targeting; // Shitmed Change
 using Robust.Shared.Serialization;
 
 namespace Content.Shared.MedicalScanner;
@@ -41,3 +42,12 @@ public struct HealthAnalyzerUiState
         Unrevivable = unrevivable;
     }
 }
+
+// Shitmed Change Start
+[Serializable, NetSerializable]
+public sealed class HealthAnalyzerPartMessage(NetEntity? owner, TargetBodyPart? bodyPart) : BoundUserInterfaceMessage
+{
+    public readonly NetEntity? Owner = owner;
+    public readonly TargetBodyPart? BodyPart = bodyPart;
+}
+// Shitmed Change End

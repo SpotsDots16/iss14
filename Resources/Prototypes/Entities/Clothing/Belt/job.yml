@@ -224,6 +224,7 @@
       - Injector
       - Pill
       - HandLabeler
+      - SurgeryTool # Shitmed Change
   - type: ItemMapper
     sprite: *BeltOverlay
     mapLayers:

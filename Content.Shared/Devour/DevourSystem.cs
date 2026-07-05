@@ -1,9 +1,9 @@
 using Content.Shared.Actions;
+using Content.Shared.Body.Events;
 using Content.Shared.Body.Systems;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Devour.Components;
 using Content.Shared.DoAfter;
-using Content.Shared.Gibbing;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Popups;

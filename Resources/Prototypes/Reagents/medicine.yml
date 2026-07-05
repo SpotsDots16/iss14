@@ -32,7 +32,7 @@
       - !type:HealthChange
         damage:
           types:
-            Poison: -1
+            Poison: -1.5 # Was 1, Slight Buff as it should heal for half the amount as Dip or Stelli(GoobStation)
       - !type:HealthChange
         conditions:
         - !type:ReagentCondition
@@ -148,7 +148,7 @@
       effects:
       - !type:EvenHealthChange
         damage:
-          Brute: -1.5
+          Brute: -2.5 # Was 2, Buffed due to limb damage changes(GoobStation)
       - !type:HealthChange
         conditions:
         - !type:ReagentCondition
@@ -235,9 +235,9 @@
       - !type:HealthChange
         damage:
           types:
-            Heat: -1.5
-            Shock: -1.5
-            Cold: -1.5
+            Heat: -2
+            Shock: -2
+            Cold: -2 # Was 1.5, Buffed due to limb damage changes(GoobStation)
       - !type:HealthChange
         conditions:
         - !type:ReagentCondition
@@ -353,8 +353,8 @@
           reagent: Epinephrine
           max: 20
         damage:
-          Brute: -0.5
-          Burn: -0.5
+          Brute: -1
+          Burn: -1 # Was .5, Buffed due to limb damage changes(GoobStation)
       - !type:HealthChange
         conditions:
         - !type:ReagentCondition
@@ -482,9 +482,9 @@
       - !type:HealthChange
         damage:
           types:
-            Heat: -0.33
-            Shock: -0.33
-            Cold: -0.33
+            Heat: -0.5
+            Shock: -0.5
+            Cold: -0.5 # Was .33, Buffed due to limb damage changes(GoobStation)
       - !type:SatiateThirst
         factor: -10
         conditions:
@@ -727,7 +727,7 @@
         - !type:SatiateThirst
           factor: 6
         - !type:ModifyBloodLevel
-          amount: 6
+          amount: 12 # Goobstation - buffed by two times due to shitmed changes
 
 - type: reagent
   id: Siderlac
@@ -877,12 +877,20 @@
   metabolisms:
     Bloodstream:
       effects:
-      - !type:EvenHealthChange
+      - !type:HealthChange # Goobstation - Make Omnizine great again!!!!!!!
         damage:
-          Burn: -2
-          Toxin: -2
-          Airloss: -2
-          Brute: -2
+          types: # Goobstation change, Healthchange needs types or groups and groups fuck up the math for some reason and split the groups into types anyway
+            Heat: -3 # Goob change from group to types
+            Shock: -3 # Goob change from group to types
+            Cold: -3 # Goob change from group to types
+            Caustic: -3 # Goob change from group to types
+            Poison: -3 # Goob change from group to types
+            Radiation: -3 # Goob change from group to types
+            Asphyxiation: -3 # Goob change from group to types
+            Bloodloss: -3 # Goob change from group to types
+            Blunt: -3 # Was 2, Buffed due to limb damage changes(GoobStation)
+            Slash: -3 # Was 2, Buffed due to limb damage changes(GoobStation)
+            Piercing: -3 # Was 2, Buffed due to limb damage changes(GoobStation)
 
 - type: reagent
   id: Ultravasculine
@@ -1432,6 +1440,10 @@
   metabolisms:
     Bloodstream:
       effects:
+      - !type:HealthChange #Goobstation
+        damage:
+          types:
+            Radiation: -0.25 #Goobend
       - !type:ModifyStatusEffect
         effectProto: StatusEffectRadiationProtection
         time: 2

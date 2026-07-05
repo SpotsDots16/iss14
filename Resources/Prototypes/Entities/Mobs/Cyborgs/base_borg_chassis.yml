@@ -73,6 +73,7 @@
       # Only used for NT borgs that can switch type, defined here to avoid copy-pasting the rest of this component.
       enum.BorgSwitchableTypeUiKey.SelectBorgType:
         type: BorgSelectTypeUserInterface
+  - type: Targeting # Shitmed Change
   - type: ActivatableUI
     key: enum.BorgUiKey.Key
   - type: SiliconLawBound
@@ -135,7 +136,8 @@
     slots:
       cell_slot:
         name: power-cell-slot-component-slot-name-default
-  - type: Body
+  - type: Body # Shitmed Change
+    bodyType: Simple
   - type: StatusEffects
     allowed:
     - Flashed

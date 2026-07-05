@@ -4,6 +4,7 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Standing;
 using Robust.Shared.Timing;
+using Content.Shared._Shitmed.Medical.Surgery.Consciousness.Systems; // Shitmed Change
 
 namespace Content.Shared.Mobs.Systems;
 
@@ -17,6 +18,7 @@ public partial class MobStateSystem : EntitySystem
     [Dependency] private ILogManager _logManager = default!;
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private ConsciousnessSystem _consciousness = default!; // Shitmed Change
     private ISawmill _sawmill = default!;
 
     [Dependency] private EntityQuery<MobStateComponent> _mobStateQuery = default!;

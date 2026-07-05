@@ -1,11 +1,170 @@
+# iss14: Vulpkanin species (ported back to the old-architecture species format for the Shitmed body system).
+# Structure follows Goob-Station's reptilian.yml; content taken from the pre-Nubody iss14 vulpkanin.yml.
+
 - type: species
   id: Vulpkanin
   name: species-name-vulpkanin
   roundStart: true
   prototype: MobVulpkanin
+  sprites: MobVulpkaninSprites
   defaultSkinTone: "#5a3f2d"
-  dollPrototype: AppearanceVulpkanin
-  skinColoration: VulpkaninColors
+  markingLimits: MobVulpkaninMarkingLimits
+  dollPrototype: MobVulpkaninDummy # Shitmed: part-based dummies
+  skinColoration: Hues # iss14: was VulpkaninColors (skinColoration prototype); Goob C# only has the HumanoidSkinColor enum
   maleFirstNames: names_vulpkanin_male
   femaleFirstNames: names_vulpkanin_female
   lastNames: names_vulpkanin_last
+
+- type: speciesBaseSprites
+  id: MobVulpkaninSprites
+  sprites:
+    Head: MobVulpkaninHead
+    Face: MobHumanoidAnyMarking
+    Hair: MobHumanoidAnyMarking
+    FacialHair: MobHumanoidAnyMarking
+    Snout: MobHumanoidAnyMarking
+    Underwear: MobHumanoidAnyMarking
+    Undershirt: MobHumanoidAnyMarking
+    Chest: MobVulpkaninTorso
+    HeadTop: MobHumanoidAnyMarking
+    HeadSide: MobHumanoidAnyMarking
+    Tail: MobHumanoidAnyMarking
+    Eyes: MobVulpkaninEyes
+    LArm: MobVulpkaninLArm
+    RArm: MobVulpkaninRArm
+    LHand: MobVulpkaninLHand
+    RHand: MobVulpkaninRHand
+    LLeg: MobVulpkaninLLeg
+    RLeg: MobVulpkaninRLeg
+    LFoot: MobVulpkaninLFoot
+    RFoot: MobVulpkaninRFoot
+
+- type: markingPoints # 6 points on arms and legs due to the "expected" marking usage. Two for hands, two for arms and 2 for claws.
+  id: MobVulpkaninMarkingLimits
+  points:
+    Hair:
+      points: 1
+      required: false
+    FacialHair:
+      points: 1
+      onlyWhitelisted: true # Beards lack displacement maps and are impossible to displace onto a snout.
+      required: false
+    Snout: # iss14: 1 base snout + up to 3 snout covers (the SnoutCover category no longer exists)
+      points: 4
+      required: true
+      defaultMarkings: [ VulpSnout ]
+    Tail:
+      points: 1
+      required: true
+      defaultMarkings: [ VulpTailVulp ]
+    Head:
+      points: 3
+      required: false
+    HeadTop:
+      points: 1
+      required: true
+      defaultMarkings: [ VulpEar ]
+    Undershirt: # iss14: was UndergarmentTop
+      points: 1
+      required: false
+    Underwear: # iss14: was UndergarmentBottom
+      points: 1
+      required: false
+    Arms:
+      points: 6
+      required: false
+    Legs:
+      points: 6
+      required: false
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninEyes
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: eyes
+
+# iss14: the Vulpkanin parts.rsi only has an unsexed "head" state (post-Nubody rename);
+# the Male/Female morphs are required because the Head layer has a sex morph.
+- type: humanoidBaseSprite
+  id: MobVulpkaninHead
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: head
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninHeadMale
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: head
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninHeadFemale
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: head
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninTorso
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: torso_m
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninTorsoMale
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: torso_m
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninTorsoFemale
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: torso_f
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninLLeg
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: l_leg
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninLHand
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: l_hand
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninLArm
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: l_arm
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninLFoot
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: l_foot
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninRLeg
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: r_leg
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninRHand
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: r_hand
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninRArm
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: r_arm
+
+- type: humanoidBaseSprite
+  id: MobVulpkaninRFoot
+  baseSprite:
+    sprite: Mobs/Species/Vulpkanin/parts.rsi
+    state: r_foot

@@ -4,4 +4,5 @@ namespace Content.Shared.Weapons.Melee.Events;
 /// Raised directed on a weapon when attempt a melee attack.
 /// </summary>
 [ByRefEvent]
-public record struct AttemptMeleeEvent(EntityUid User, bool Cancelled = false, string? Message = null);
+// Shitmed Change - Added Weapon and WeaponComponent
+public record struct AttemptMeleeEvent(EntityUid User, EntityUid Weapon, MeleeWeaponComponent WeaponComponent, bool Cancelled = false, string? Message = null);

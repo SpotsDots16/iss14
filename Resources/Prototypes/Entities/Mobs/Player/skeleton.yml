@@ -1,4 +1,9 @@
 - type: entity
+  save: false
+  parent: BaseMobSkeletonPerson
+  id: MobSkeletonPerson
+
+- type: entity
   name: skeleton pirate
   parent: MobSkeletonPerson
   id: MobSkeletonPirate

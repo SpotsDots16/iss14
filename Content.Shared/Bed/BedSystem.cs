@@ -9,6 +9,8 @@ using Content.Shared.Metabolism;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Power;
 using Content.Shared.Power.EntitySystems;
+using Content.Shared._Shitmed.Damage; // Shitmed Change
+using Content.Shared._Shitmed.Targeting; // Shitmed Change
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
@@ -156,7 +158,7 @@ public sealed partial class BedSystem : EntitySystem
                 if (_sleepingQuery.HasComp(healedEntity))
                     damage *= bedComponent.SleepMultiplier;
 
-                _damageableSystem.TryChangeDamage(healedEntity, damage, true, origin: uid);
+                _damageableSystem.TryChangeDamage(healedEntity, damage, true, origin: uid, targetPart: TargetBodyPart.All, splitDamage: SplitDamageBehavior.SplitEnsureAll); // Shitmed Change
             }
         }
     }

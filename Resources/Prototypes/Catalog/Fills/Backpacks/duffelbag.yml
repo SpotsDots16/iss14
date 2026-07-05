@@ -9,11 +9,15 @@
       storagebase: !type:AllSelector
         children:
         - id: Hemostat
-        - id: Saw
+        - id: SawElectric # Shitmed Change
         - id: Drill
         - id: Cautery
         - id: Retractor
         - id: Scalpel
+        - id: ClothingMaskSterile # Goobstation
+        - id: BoneGel # Shitmed Change
+        - id: MedicalStitches # Shitmed Change
+        - id: ClothingMaskBreath # Goobstation
 
 - type: entity
   parent: ClothingBackpackDuffelSyndicateMedicalBundle
@@ -24,15 +28,17 @@
   - type: EntityTableContainerFill
     containers:
       storagebase: !type:AllSelector
-        children:
-        - id: Hemostat
+        children: # goob edited
+        - id: DefibrillatorSyndicate
+        - id: ScalpelAdvanced
         - id: SawAdvanced
         - id: Drill
-        - id: Cautery
-        - id: Retractor
-        - id: ScalpelAdvanced
+        - id: AdvancedRetractor
+        - id: EnergyCautery
+        - id: AdvancedBoneGel
         - id: ClothingHandsGlovesNitrile
         - id: EmergencyRollerBedSpawnFolded
+        - id: ClothingMaskSterile
 
 - type: entity
   parent: ClothingBackpackDuffelSyndicateMedicalBundle

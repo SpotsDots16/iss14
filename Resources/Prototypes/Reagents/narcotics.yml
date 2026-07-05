@@ -121,6 +121,9 @@
         - !type:ReagentCondition
           reagent: Ephedrine
           min: 15
+      - !type:SuppressPain # Shitmed Change
+        amount: 1.2
+        time: 10 # it accumulated 1.2*quantity and then exists for 30 seconds.
 
 - type: reagent
   id: Stimulants

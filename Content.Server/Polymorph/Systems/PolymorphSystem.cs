@@ -21,6 +21,11 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+// Shitmed Change
+using Content.Shared._Shitmed.Medical.Surgery.Wounds.Systems;
+using Content.Shared.Body.Components;
+using Content.Shared.Body.Systems;
+using System.Linq;
 
 namespace Content.Server.Polymorph.Systems;
 
@@ -43,6 +48,10 @@ public sealed partial class PolymorphSystem : EntitySystem
     [Dependency] private SharedVisualBodySystem _visualBody = default!;
     [Dependency] private SharedMindSystem _mindSystem = default!;
     [Dependency] private MetaDataSystem _metaData = default!;
+
+    // Shitmed Deps
+    [Dependency] private SharedBodySystem _body = default!;
+    [Dependency] private WoundSystem _wound = default!;
 
     private const string RevertPolymorphId = "ActionRevertPolymorph";
 
@@ -226,9 +235,32 @@ public sealed partial class PolymorphSystem : EntitySystem
         //Transfers all damage from the original to the new one
         if (configuration.TransferDamage &&
             TryComp<DamageableComponent>(child, out var damageParent) &&
-            _mobThreshold.GetScaledDamage(uid, child, out var damage) &&
+            _mobThreshold.GetScaledDamage(uid, child, out var damage, out var woundableDamage) && // Shitmed Change
             damage != null)
         {
+            // Shitmed Change Start
+            if (TryComp<BodyComponent>(child, out var childBody)
+                && childBody.BodyType == Shared._Shitmed.Body.BodyType.Complex // Too lazy to come up with a new name lmfao
+                && _body.TryGetRootPart(child, out var rootPart, childBody))
+            {
+                var woundables = _wound.GetAllWoundableChildrenWithComp<DamageableComponent>(rootPart.Value);
+                var count = woundables.Count();
+                foreach (var woundable in woundables)
+                {
+                    var target = _body.GetTargetBodyPart(woundable);
+
+                    if (woundableDamage is not null)
+                    {
+                        if (woundableDamage.TryGetValue(target, out var wounds))
+                            _damageable.SetDamage((woundable.Owner, woundable.Comp2), wounds);
+                    }
+                    else
+                    {
+                        _damageable.SetDamage((woundable.Owner, woundable.Comp2), damage / count);
+                    }
+                }
+            }
+            // Shitmed Change End
             _damageable.SetDamage((child, damageParent), damage);
         }
 
@@ -321,9 +353,32 @@ public sealed partial class PolymorphSystem : EntitySystem
 
         if (component.Configuration.TransferDamage &&
             TryComp<DamageableComponent>(parent, out var damageParent) &&
-            _mobThreshold.GetScaledDamage(uid, parent, out var damage) &&
+            _mobThreshold.GetScaledDamage(uid, parent, out var damage, out var woundableDamage) && // Shitmed Change
             damage != null)
         {
+            // Shitmed Change Start
+            if (TryComp<BodyComponent>(parent, out var parentBody)
+                && parentBody.BodyType == Shared._Shitmed.Body.BodyType.Complex // Too lazy to come up with a new name lmfao
+                && _body.TryGetRootPart(parent, out var rootPart, parentBody))
+            {
+                var woundables = _wound.GetAllWoundableChildrenWithComp<DamageableComponent>(rootPart.Value);
+                var count = woundables.Count();
+                foreach (var woundable in woundables)
+                {
+                    var target = _body.GetTargetBodyPart(woundable);
+
+                    if (woundableDamage is not null)
+                    {
+                        if (woundableDamage.TryGetValue(target, out var wounds))
+                            _damageable.SetDamage((woundable.Owner, woundable.Comp2), wounds);
+                    }
+                    else
+                    {
+                        _damageable.SetDamage((woundable.Owner, woundable.Comp2), damage / count);
+                    }
+                }
+            }
+            // Shitmed Change End
             _damageable.SetDamage((parent, damageParent), damage);
         }
 

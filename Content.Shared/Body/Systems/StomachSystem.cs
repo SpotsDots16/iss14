@@ -31,7 +31,7 @@ using Robust.Shared.Utility;
 
 namespace Content.Shared.Body.Systems
 {
-    public sealed class StomachSystem : EntitySystem
+    public sealed partial class StomachSystem : EntitySystem
     {
         [Dependency] private IGameTiming _gameTiming = default!;
         [Dependency] private SharedSolutionContainerSystem _solutionContainerSystem = default!;
@@ -68,7 +68,7 @@ namespace Content.Shared.Body.Systems
 
         public override void Update(float frameTime)
         {
-            var query = EntityQueryEnumerator<StomachComponent, OrganComponent, SolutionContainerManagerComponent>();
+            var query = EntityQueryEnumerator<StomachComponent, OrganComponent, SolutionManagerComponent>();
             while (query.MoveNext(out var uid, out var stomach, out var organ, out var sol))
             {
                 if (_gameTiming.CurTime < stomach.NextUpdate)
@@ -125,7 +125,7 @@ namespace Content.Shared.Body.Systems
             EntityUid uid,
             Solution solution,
             StomachComponent? stomach = null,
-            SolutionContainerManagerComponent? solutions = null)
+            SolutionManagerComponent? solutions = null)
         {
             return Resolve(uid, ref stomach, ref solutions, logMissing: false)
                 && _solutionContainerSystem.ResolveSolution((uid, solutions), DefaultSolutionName, ref stomach.Solution, out var stomachSolution)
@@ -137,7 +137,7 @@ namespace Content.Shared.Body.Systems
             EntityUid uid,
             Solution solution,
             StomachComponent? stomach = null,
-            SolutionContainerManagerComponent? solutions = null)
+            SolutionManagerComponent? solutions = null)
         {
             if (!Resolve(uid, ref stomach, ref solutions, logMissing: false)
                 || !_solutionContainerSystem.ResolveSolution((uid, solutions), DefaultSolutionName, ref stomach.Solution)

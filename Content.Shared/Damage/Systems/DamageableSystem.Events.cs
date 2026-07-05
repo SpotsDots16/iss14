@@ -8,6 +8,9 @@ using Content.Shared.Rejuvenate;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
+// Shitmed Change
+using Content.Shared._Shitmed.Targeting;
+
 namespace Content.Shared.Damage.Systems;
 
 public sealed partial class DamageableSystem
@@ -22,7 +25,8 @@ public sealed partial class DamageableSystem
         SubscribeLocalEvent<DamageableComponent, RejuvenateEvent>(OnRejuvenate);
         SubscribeLocalEvent<DamageableComponent, ComponentHandleState>(DamageableHandleState);
         SubscribeLocalEvent<DamageableComponent, ComponentGetState>(DamageableGetState);
-        SubscribeLocalEvent<InjurableComponent, DamageDealtEvent>(OnDamageDealt);
+        // Shitmed Change: damage application now happens inline in ApplyDamageToEntity (with
+        // woundable integrity caps and body-part routing); DamageDealtEvent is only a notification.
 
         // Damage modifier CVars are updated and stored here to be queried in other systems.
         // Note that certain modifiers requires reloading the guidebook.
@@ -159,6 +163,29 @@ public sealed partial class DamageableSystem
     /// </summary>
     private void DamageableInit(Entity<DamageableComponent> ent, ref ComponentInit _)
     {
+        // Shitmed Change Start - pre-populate the damage dictionary from the damage container so
+        // wound/body-part damage bookkeeping has all supported types present.
+        if (ent.Comp.DamageContainerID != null &&
+            _prototypeManager.TryIndex(ent.Comp.DamageContainerID, out var damageContainerPrototype))
+        {
+            // Initialize damage dictionary, using the types and groups from the damage
+            // container prototype
+            foreach (var type in damageContainerPrototype.SupportedTypes)
+            {
+                ent.Comp.Damage.DamageDict.TryAdd(type, FixedPoint2.Zero);
+            }
+
+            foreach (var groupId in damageContainerPrototype.SupportedGroups)
+            {
+                var group = _prototypeManager.Index(groupId);
+                foreach (var type in group.DamageTypes)
+                {
+                    ent.Comp.Damage.DamageDict.TryAdd(type, FixedPoint2.Zero);
+                }
+            }
+        }
+        // Shitmed Change End
+
         ent.Comp.Damage.GetDamagePerGroup(_prototypeManager, ent.Comp.DamagePerGroup);
         ent.Comp.TotalDamage = ent.Comp.Damage.GetTotal();
     }
@@ -189,7 +216,9 @@ public sealed partial class DamageableSystem
     {
         args.State = new DamageableComponentState(
             _netMan.IsServer ? ent.Comp.Damage : ent.Comp.Damage.Clone(),
-            ent.Comp.DamageModifierSetId
+            ent.Comp.DamageContainerID, // Shitmed Change
+            ent.Comp.DamageModifierSetId,
+            ent.Comp.HealthBarThreshold // Shitmed Change
         );
     }
 
@@ -198,7 +227,9 @@ public sealed partial class DamageableSystem
         if (args.Current is not DamageableComponentState state)
             return;
 
+        ent.Comp.DamageContainerID = state.DamageContainerID; // Shitmed Change
         ent.Comp.DamageModifierSetId = state.ModifierSetId;
+        ent.Comp.HealthBarThreshold = state.HealthBarThreshold; // Shitmed Change
 
         // Has the damage actually changed?
         var newDamage = state.Damage.Clone();
@@ -213,40 +244,21 @@ public sealed partial class DamageableSystem
         OnEntityDamageChanged(ent, delta);
     }
 
-    private void OnDamageDealt(Entity<InjurableComponent> ent, ref DamageDealtEvent args)
-    {
-        if (!_damageableQuery.TryGetComponent(ent, out var damageable))
-            return;
-
-        var damageDone = new DamageSpecifier();
-
-        damageDone.DamageDict.EnsureCapacity(args.Damage.DamageDict.Count);
-
-        var dict = damageable.Damage.DamageDict;
-        foreach (var (type, value) in args.Damage.DamageDict)
-        {
-            if (!SupportsType(ent.Comp.DamageContainer, type))
-                continue;
-
-            var oldValue = dict.GetValueOrDefault(type);
-            var newValue = FixedPoint2.Max(FixedPoint2.Zero, oldValue + value);
-            if (newValue == oldValue)
-                continue;
-
-            dict[type] = newValue;
-            damageDone.DamageDict[type] = newValue - oldValue;
-        }
-
-        if (!damageDone.Empty)
-            OnEntityDamageChanged((ent, damageable), damageDone, args.InterruptsDoAfters, args.Origin);
-    }
+    // Shitmed Change: OnDamageDealt (InjurableComponent damage application) was absorbed into
+    // ApplyDamageToEntity so damage application can respect woundable integrity caps and update
+    // parent bodies. See DamageableSystem.API.cs.
 }
 
 /// <summary>
 ///     Raised before damage is done, so stuff can cancel it if necessary.
 /// </summary>
 [ByRefEvent]
-public record struct BeforeDamageChangedEvent(DamageSpecifier Damage, EntityUid? Origin = null, bool Cancelled = false);
+public record struct BeforeDamageChangedEvent(
+    DamageSpecifier Damage,
+    EntityUid? Origin = null,
+    bool CanBeCancelled = false, // Shitmed Change
+    TargetBodyPart? TargetPart = null, // Shitmed Change
+    bool Cancelled = false);
 
 /// <summary>
 ///     Raised on an entity when damage is about to be dealt,
@@ -255,8 +267,7 @@ public record struct BeforeDamageChangedEvent(DamageSpecifier Damage, EntityUid?
 ///
 ///     For example, armor.
 /// </summary>
-public sealed class DamageModifyEvent(DamageSpecifier damage, EntityUid? origin = null)
-    : EntityEventArgs, IInventoryRelayEvent
+public sealed class DamageModifyEvent : EntityEventArgs, IInventoryRelayEvent
 {
     /// <inheritdoc/>
     /// <remarks>
@@ -264,21 +275,34 @@ public sealed class DamageModifyEvent(DamageSpecifier damage, EntityUid? origin 
     /// </remarks>
     public SlotFlags TargetSlots => ~SlotFlags.POCKET;
 
+    public readonly EntityUid Target; // Goobstation
+
     /// <summary>
     ///     Contains the original damage, prior to any modifers.
     /// </summary>
-    public readonly DamageSpecifier OriginalDamage = damage;
+    public readonly DamageSpecifier OriginalDamage;
 
     /// <summary>
     ///     Contains the damage after modifiers have been applied.
     ///     This is the damage that will be inflicted.
     /// </summary>
-    public DamageSpecifier Damage = damage;
+    public DamageSpecifier Damage;
 
     /// <summary>
     ///     Contains the entity which caused the damage, if any was responsible.
     /// </summary>
-    public readonly EntityUid? Origin = origin;
+    public EntityUid? Origin;
+
+    public readonly TargetBodyPart? TargetPart; // Shitmed Change
+
+    public DamageModifyEvent(EntityUid target, DamageSpecifier damage, EntityUid? origin = null, TargetBodyPart? targetPart = null) // Shitmed + Goobstation Change
+    {
+        Target = target; // Goobstation
+        OriginalDamage = damage;
+        Damage = damage;
+        Origin = origin;
+        TargetPart = targetPart; // Shitmed Change
+    }
 }
 
 /// <summary>
@@ -310,6 +334,11 @@ public sealed class DamageChangedEvent : EntityEventArgs
     public readonly DamageSpecifier? DamageDelta;
 
     /// <summary>
+    ///     Damage before clamp of excessive heal and damage cap was applied - Goobstation
+    /// </summary>
+    public readonly DamageSpecifier? UncappedDamage;
+
+    /// <summary>
     ///     Was any of the damage change dealing damage, or was it all healing?
     /// </summary>
     public readonly bool DamageIncreased;
@@ -326,19 +355,29 @@ public sealed class DamageChangedEvent : EntityEventArgs
     /// </summary>
     public readonly EntityUid? Origin;
 
+    /// <summary>
+    ///     Whether or not the damage change should be blocked due to traumas or wounds - Shitmed Change
+    /// </summary>
+    public readonly bool IgnoreBlockers;
+
     public DamageChangedEvent(
         DamageableComponent damageable,
         DamageSpecifier? damageDelta,
         bool interruptsDoAfters,
-        EntityUid? origin
+        EntityUid? origin,
+        bool ignoreBlockers = false, // Shitmed Change
+        DamageSpecifier? uncapped = null // Goob edit
     )
     {
         Damageable = damageable;
         DamageDelta = damageDelta;
         Origin = origin;
+        IgnoreBlockers = ignoreBlockers; // Shitmed Change
 
         if (DamageDelta is null)
             return;
+
+        UncappedDamage = uncapped ?? damageDelta; // Goobstation
 
         foreach (var damageChange in DamageDelta.DamageDict.Values)
         {

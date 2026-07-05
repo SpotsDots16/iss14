@@ -141,6 +141,13 @@ public sealed partial class DoAfterArgs
     /// </summary>
     [DataField]
     public bool RequireCanInteract = true;
+
+    /// <summary>
+    /// Goobstation
+    /// Whether the delay multiplier event should be raised
+    /// </summary>
+    [DataField]
+    public bool MultiplyDelay = true;
     #endregion
 
     #region Duplicates
@@ -260,6 +267,7 @@ public sealed partial class DoAfterArgs
         BreakOnDamage = other.BreakOnDamage;
         DamageThreshold = other.DamageThreshold;
         RequireCanInteract = other.RequireCanInteract;
+        MultiplyDelay = other.MultiplyDelay; // Goobstation
         AttemptFrequency = other.AttemptFrequency;
         BlockDuplicate = other.BlockDuplicate;
         CancelDuplicate = other.CancelDuplicate;

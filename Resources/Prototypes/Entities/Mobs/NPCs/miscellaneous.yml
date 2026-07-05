@@ -4,6 +4,8 @@
   parent: [SimpleMobBase, BaseSlicingRefinable]
   description: From the Viking age.
   components:
+    - type: Body # Shitmed Change
+      prototype: LaserRaptor
     - type: NpcFactionMember
       factions:
         - SimpleHostile
@@ -142,7 +144,7 @@
   - type: NPCImprintingOnSpawnBehaviour
     whitelist:
       components:
-      - HumanoidProfile
+      - HumanoidAppearance # Shitmed: HumanoidProfile no longer exists
   - type: Sprite
     sprite: Mobs/Demons/tomatokiller.rsi
     noRot: true
@@ -150,10 +152,8 @@
       - map: [ "enum.DamageStateVisualLayers.Base" ]
         state: alive
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: JuiceTomato
-        Quantity: 50
+    bloodReagent: JuiceTomato
+    bloodMaxVolume: 50
   - type: DamageStateVisuals
     states:
       Alive:

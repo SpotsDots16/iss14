@@ -1,7 +1,6 @@
 using Content.Shared.Species.Components;
 using Content.Shared.Actions;
 using Content.Shared.Body.Systems;
-using Content.Shared.Gibbing;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Popups;
@@ -13,7 +12,7 @@ namespace Content.Shared.Species;
 public sealed partial class GibActionSystem : EntitySystem
 {
     [Dependency] private SharedActionsSystem _actionsSystem = default!;
-    [Dependency] private GibbingSystem _gibbing = default!;
+    [Dependency] private SharedBodySystem _bodySystem = default!;
     [Dependency] private IPrototypeManager _protoManager = default!;
     [Dependency] private SharedPopupSystem _popupSystem = default!;
 
@@ -53,7 +52,7 @@ public sealed partial class GibActionSystem : EntitySystem
     {
         // When they use the action, gib them.
         _popupSystem.PopupClient(Loc.GetString(comp.PopupText, ("name", uid)), uid, uid);
-        _gibbing.Gib(uid, user: args.Performer);
+        _bodySystem.GibBody(uid, true);
     }
 
 

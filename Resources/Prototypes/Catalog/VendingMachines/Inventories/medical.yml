@@ -45,6 +45,7 @@
     Brutepack: 4
     Ointment: 4
     Bloodpack: 4
+    Tourniquet: 6 # Shitmed Change
     # Optional / Situational Gear
     BoxBottle: 3
     Defibrillator: 2 # Easily shared between several people

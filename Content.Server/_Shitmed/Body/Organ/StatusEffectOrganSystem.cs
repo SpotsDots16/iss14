@@ -12,8 +12,8 @@ namespace Content.Server._Shitmed.Body.Organ;
 
 public sealed class StatusEffectOrganSystem : EntitySystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly StatusEffectsSystem _effects = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private StatusEffectsSystem _effects = default!;
 
     public override void Update(float frameTime)
     {

@@ -1,0 +1,14 @@
+using Content.Shared.Chemistry.Reagent;
+
+namespace Content.Shared.Body.Events;
+
+/// <summary>
+/// Event called by <see cref="Content.Shared.Metabolism.MetabolizerSystem"/> to get a list of
+/// blood like reagents for metabolism to skip.
+/// iss14: kept from the pre-rollback bloodstream for the metabolism-stages system.
+/// </summary>
+[ByRefEvent]
+public readonly record struct MetabolismExclusionEvent()
+{
+    public readonly List<ReagentId> Reagents = [];
+}

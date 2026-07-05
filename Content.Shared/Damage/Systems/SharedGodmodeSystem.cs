@@ -5,6 +5,7 @@ using Content.Shared.Nutrition;
 using Content.Shared.Prototypes;
 using Content.Shared.Rejuvenate;
 using Content.Shared.Slippery;
+using Content.Shared.Body.Systems; // Shitmed Change
 using Content.Shared.StatusEffect;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.StatusEffectNew.Components;
@@ -15,6 +16,8 @@ namespace Content.Shared.Damage.Systems;
 public abstract partial class SharedGodmodeSystem : EntitySystem
 {
     [Dependency] private IPrototypeManager _protoMan = default!;
+
+    [Dependency] private SharedBodySystem _bodySystem = default!; // Shitmed Change
 
     public override void Initialize()
     {
@@ -78,6 +81,9 @@ public abstract partial class SharedGodmodeSystem : EntitySystem
             return;
 
         RemComp<GodmodeComponent>(uid);
+
+        foreach (var (id, _) in _bodySystem.GetBodyChildren(uid)) // Shitmed Change
+            DisableGodmode(id);
     }
 
     /// <summary>

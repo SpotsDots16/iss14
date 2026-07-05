@@ -17,6 +17,12 @@ using Content.Shared.Traits.Assorted;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Player;
 
+// Shitmed Change
+using Content.Shared._Shitmed.Targeting;
+using Content.Shared._Shitmed.Damage;
+using Content.Shared._Shitmed.Medical.Surgery.Consciousness.Components;
+using Content.Shared._Shitmed.Medical.Surgery.Consciousness.Systems;
+
 namespace Content.Shared.Medical;
 
 /// <summary>
@@ -39,6 +45,7 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
     [Dependency] private SharedMindSystem _mind = default!;
     [Dependency] private UseDelaySystem _useDelay = default!;
     [Dependency] private SharedInteractionSystem _interactionSystem = default!;
+    [Dependency] private ConsciousnessSystem _consciousness = default!; // Shitmed Change
 
     private readonly HashSet<EntityUid> _interacters = new();
 
@@ -135,7 +142,8 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
             ent.Owner, target, ent.Owner)
             {
                 NeedHand = true,
-                BreakOnMove = !ent.Comp.AllowDoAfterMovement
+                BreakOnMove = !ent.Comp.AllowDoAfterMovement,
+                MultiplyDelay = false, // Goobstation
             });
     }
 
@@ -205,12 +213,28 @@ public abstract partial class SharedDefibrillatorSystem : EntitySystem
         }
         else
         {
+            // Shitmed Change Start
             if (_mobState.IsDead(target, targetMobState))
-                _damageable.TryChangeDamage(target, ent.Comp.ZapHeal, true, origin: user);
+            {
+                if (HasComp<ConsciousnessComponent>(target) && _consciousness.TryGetNerveSystem(target, out _))
+                {
+                    _consciousness.RemoveConsciousnessModifier(target, target, "Suffocation");
+                    _consciousness.RemoveConsciousnessModifier(target, target, "DeathThreshold");
+                }
+
+                _damageable.TryChangeDamage(target,
+                    ent.Comp.ZapHeal,
+                    true,
+                    origin: user,
+                    targetPart: TargetBodyPart.All,
+                    splitDamage: SplitDamageBehavior.SplitEnsureAll);
+            }
+            // Shitmed Change End
 
             if (TryComp<MobThresholdsComponent>(target, out var targetThresholds) &&
                 _mobThreshold.TryGetThresholdForState(target, MobState.Dead, out var threshold, targetThresholds) &&
-                _damageable.GetTotalDamage(target) < threshold)
+                TryComp<DamageableComponent>(target, out var damageableComponent) &&
+                _mobThreshold.CheckVitalDamage(target, damageableComponent) < threshold) // GoobStation
             {
                 _mobState.ChangeMobState(target, MobState.Critical, targetMobState, user);
                 failedRevive = false;

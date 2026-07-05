@@ -7,6 +7,8 @@ using Content.Shared._Shitmed.Weapons.Melee.Events;
 using Content.Shared._Shitmed.Weapons.Ranged.Events;
 using Content.Shared.Body.Part;
 using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.Gibbing.Events;
 using Robust.Shared.Audio;
@@ -175,13 +177,16 @@ public sealed partial class WoundSystem
             && TryComp(uid, out bp)
             && bp.Body.HasValue;
 
+        // iss14: DamageableComponent.Damage is no longer externally accessible; snapshot it via DamageableSystem.
+        var damageableDamage = damageable != null ? _damageable.GetAllDamage((uid, damageable)) : null;
+
         foreach (var (damageType, damageValue) in args.UncappedDamage.DamageDict)
         {
             if (damageValue == 0)
                 continue;
 
-            if (damageable != null
-                    && !damageable.Damage.DamageDict.ContainsKey(damageType))
+            if (damageableDamage != null
+                    && !damageableDamage.DamageDict.ContainsKey(damageType))
                 continue;
 
             if (damageValue < 0)

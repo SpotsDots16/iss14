@@ -1,4 +1,4 @@
-using Content.Shared.Body;
+using Content.Shared.Body.Components;
 using Content.Shared.Containers;
 using Content.Shared.Database;
 using Content.Shared.Disposal.Components;

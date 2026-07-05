@@ -15,6 +15,12 @@
   - Maintenance
   extendedAccess:
   - Chemistry
+  # Shitmed change
+  special:
+  - !type:AddComponentSpecial
+    components:
+    - type: SurgerySpeedModifier
+      speedModifier: 1.25
 
 - type: startingGear
   id: ParamedicGear

@@ -94,7 +94,6 @@ using Robust.Shared.Containers;
 using Content.Shared.Damage;
 using Content.Shared._Shitmed.BodyEffects;
 using Content.Shared._Shitmed.Body.Organ;
-using Content.Shared.Heretic;
 
 namespace Content.Shared.Body.Systems;
 
@@ -298,13 +297,8 @@ public partial class SharedBodySystem
         if (!Resolve(entity, ref entity.Comp))
             return new List<Entity<T, OrganComponent>>();
 
-        // Goobstation start
-        var ev = new GetBodyOrganOverrideEvent<T>();
-        RaiseLocalEvent(entity, ref ev);
-        var result = ev.Organ;
-        if (result != null)
-            return new List<Entity<T, OrganComponent>> {result.Value};
-        // Goobstation end
+        // Goobstation: upstream raised GetBodyOrganOverrideEvent<T> here to let heretic ghoul organs
+        // override the result; that event lives in Goob's _Shitcode heretic module, which is not ported.
 
         var query = GetEntityQuery<T>();
         var list = new List<Entity<T, OrganComponent>>(3);

@@ -70,11 +70,23 @@ public sealed partial class ZombieComponent : Component
     [DataField("zombieRoleId", customTypeSerializer: typeof(PrototypeIdSerializer<AntagPrototype>))]
     public string ZombieRoleId = "Zombie";
 
-    [DataField]
-    public Dictionary<ProtoId<OrganCategoryPrototype>, OrganProfileData> BeforeZombifiedProfiles;
+    /// <summary>
+    /// The CustomBaseLayers of the humanoid to restore in case of cloning
+    /// </summary>
+    [DataField("beforeZombifiedCustomBaseLayers")]
+    public Dictionary<HumanoidVisualLayers, CustomBaseLayerInfo> BeforeZombifiedCustomBaseLayers = new();
 
-    [DataField]
-    public Dictionary<ProtoId<OrganCategoryPrototype>, Dictionary<HumanoidVisualLayers, List<Marking>>> BeforeZombifiedMarkings;
+    /// <summary>
+    /// The skin color of the humanoid to restore in case of cloning
+    /// </summary>
+    [DataField("beforeZombifiedSkinColor")]
+    public Color BeforeZombifiedSkinColor;
+
+    /// <summary>
+    /// The eye color of the humanoid to restore in case of cloning
+    /// </summary>
+    [DataField("beforeZombifiedEyeColor")]
+    public Color BeforeZombifiedEyeColor;
 
     [DataField("emoteId")]
     public ProtoId<EmoteSoundsPrototype>? EmoteSoundsId = "Zombie";

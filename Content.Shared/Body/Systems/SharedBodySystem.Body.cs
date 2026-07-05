@@ -553,7 +553,7 @@ public partial class SharedBodySystem
                 && !GetBodyChildrenOfType(args.EquipTarget, bodyPart.Value).Any())
             {
                 _popup.PopupClient(Loc.GetString("equip-part-missing-error",
-                    ("target", args.EquipTarget), ("part", bodyPartString)), args.Equipee, args.Equipee);
+                    ("target", args.EquipTarget), ("part", bodyPartString)), args.User, args.User); // Shitmed Change - iss14: Equipee was renamed to User upstream
                 args.Cancel();
             }
         }

@@ -1,0 +1,51 @@
+# iss14: abstract animal body bases. These ids were introduced by upstream's Nubody refactor and are
+# referenced throughout the NPC prototypes; re-implemented here on top of the part-based (Shitmed)
+# body prototypes copied from Goob-Station.
+- type: entity
+  id: BaseMobAnimal
+  abstract: true
+  components:
+  - type: Body # Shitmed: part-based body
+    prototype: Animal
+
+- type: entity
+  id: BaseMobBloodsucker
+  abstract: true
+  components:
+  - type: Body # Shitmed: part-based body
+    prototype: Bloodsucker
+
+- type: entity
+  id: BaseMobHemocyanin
+  abstract: true
+  components:
+  - type: Body # Shitmed: part-based body
+    prototype: AnimalHemocyanin
+
+- type: entity
+  id: BaseMobMothroach
+  abstract: true
+  components:
+  - type: Body # Shitmed: part-based body
+    prototype: Mothroach
+
+- type: entity
+  id: BaseMobRat
+  abstract: true
+  components:
+  - type: Body # Shitmed: part-based body
+    prototype: Rat
+
+- type: entity
+  id: BaseMobRuminant
+  abstract: true
+  components:
+  - type: Body # Shitmed: part-based body
+    prototype: AnimalRuminant
+
+- type: entity
+  id: BaseMobSlimes
+  abstract: true
+  components:
+  - type: Body # Shitmed: part-based body
+    prototype: Slimes

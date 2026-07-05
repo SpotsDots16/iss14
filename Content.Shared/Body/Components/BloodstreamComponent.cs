@@ -25,6 +25,12 @@ public sealed partial class BloodstreamComponent : Component
     public const string DefaultBloodTemporarySolutionName = "bloodstreamTemporary";
 
     /// <summary>
+    /// iss14: kept from the pre-rollback bloodstream for the metabolism-stages metabolizer,
+    /// which uses a metabolites solution as the sink for metabolized byproducts.
+    /// </summary>
+    public const string DefaultMetabolitesSolutionName = "metabolites";
+
+    /// <summary>
     /// The next time that blood level will be updated and bloodloss damage dealt.
     /// </summary>
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]

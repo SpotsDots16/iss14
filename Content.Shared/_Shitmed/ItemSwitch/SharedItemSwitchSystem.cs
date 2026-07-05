@@ -26,23 +26,27 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Network;
 using Content.Shared.Weapons.Melee;
 using Robust.Shared.Containers;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared._Shitmed.ItemSwitch;
-public abstract class SharedItemSwitchSystem : EntitySystem
+public abstract partial class SharedItemSwitchSystem : EntitySystem
 {
-    [Dependency] private readonly INetManager _netManager = default!;
-    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedItemSystem _item = default!;
-    [Dependency] private readonly ClothingSystem _clothing = default!;
-    [Dependency] private readonly SharedContainerSystem _container = default!;
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly SharedStorageSystem _storage = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly InventorySystem _inventory = default!;
+    [Dependency] private INetManager _netManager = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedItemSystem _item = default!;
+    [Dependency] private ClothingSystem _clothing = default!;
+    [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private SharedStorageSystem _storage = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private InventorySystem _inventory = default!;
 
     private EntityQuery<ItemSwitchComponent> _query;
+
+    // iss14: InventorySystem.PocketableItemSize is private upstream; mirror its value ("Small") here.
+    private static readonly ProtoId<ItemSizePrototype> PocketableItemSize = "Small";
 
     public override void Initialize()
     {
@@ -216,7 +220,7 @@ public abstract class SharedItemSwitchSystem : EntitySystem
                 if (!_storage.Insert(container.Owner, uid, out _, null, storage, false))
                     _hands.PickupOrDrop(user, uid, animate: false);
             }
-            else if (HasComp<InventoryComponent>(container.Owner) && _item.GetSizePrototype(item.Size) > _item.GetSizePrototype(InventorySystem.PocketableItemSize))
+            else if (HasComp<InventoryComponent>(container.Owner) && _item.GetSizePrototype(item.Size) > _item.GetSizePrototype(PocketableItemSize))
             {
                 var enumerator = _inventory.GetSlotEnumerator(container.Owner, SlotFlags.POCKET);
                 while (enumerator.NextItem(out var slotItem))

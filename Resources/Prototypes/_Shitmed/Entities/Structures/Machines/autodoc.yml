@@ -9,7 +9,7 @@
 # Autodocs
 
 - type: entity
-  parent: [ ConstructibleMachine, BaseMachinePowered, BaseAutomatedMachine ] # Goob: Automation
+  parent: [ ConstructibleMachine, BaseMachinePowered ] # iss14: BaseAutomatedMachine dropped - Goob factory automation not ported
   id: Autodoc
   name: Autodoc Mk.XIV
   description: A programmable robotic surgeon capable of automatically operating on patients.

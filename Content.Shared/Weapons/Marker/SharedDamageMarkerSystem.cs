@@ -1,3 +1,5 @@
+using Content.Shared._Shitmed.Damage; // Shitmed Change
+using Content.Shared._Shitmed.Targeting; // Shitmed Change
 using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Projectiles;
@@ -36,7 +38,7 @@ public abstract partial class SharedDamageMarkerSystem : EntitySystem
 
         if (TryComp<LeechOnMarkerComponent>(args.Used, out var leech))
         {
-            _damageable.TryChangeDamage(args.User, leech.Leech, true, false, origin: args.Used);
+            _damageable.TryChangeDamage(args.User, leech.Leech, true, false, origin: args.Used, targetPart: TargetBodyPart.All, splitDamage: SplitDamageBehavior.SplitEnsureAll); // Shitmed Change
         }
     }
 

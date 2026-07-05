@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Content.Shared._Shitmed.DoAfter; // Shitmed
 using Content.Shared.ActionBlocker;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Hands.Components;
@@ -240,6 +241,15 @@ public abstract partial class SharedDoAfterSystem : EntitySystem
             id = null;
             return false;
         }
+
+        // Shitmed Change Start - wounds/bone damage can slow down do-afters
+        if (args.MultiplyDelay)
+        {
+            var delayMultiplierEv = new GetDoAfterDelayMultiplierEvent();
+            RaiseLocalEvent(args.User, delayMultiplierEv);
+            args.Delay *= delayMultiplierEv.Multiplier;
+        }
+        // Shitmed Change End
 
         id = new DoAfterId(args.User, comp.NextId++);
         var doAfter = new DoAfter(id.Value.Index, args, GameTiming.CurTime);

@@ -1,0 +1,15 @@
+- type: entity
+  save: false
+  name: Urist McPlants
+  parent: BaseMobDiona
+  id: MobDiona
+
+# Reformed Diona
+- type: entity
+  parent: MobDiona
+  categories: [ HideSpawnMenu ]
+  id: MobDionaReformed
+  name: Reformed Diona
+  components:
+    - type: IsDeadIC
+    - type: RandomHumanoidAppearance

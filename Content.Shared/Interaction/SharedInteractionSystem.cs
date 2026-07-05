@@ -159,7 +159,8 @@ namespace Content.Shared.Interaction
                 // We permit ghosts to open uis unless explicitly blocked
                 if (ev.Message is not OpenBoundInterfaceMessage
                     || !HasComp<GhostComponent>(ev.Actor)
-                    || aUiComp?.BlockSpectators == true)
+                    || aUiComp?.BlockSpectators == true
+                    || _tagSystem.HasTag(ev.Actor, "CantInteract")) // Shitmed change
                 {
                     ev.Cancel();
                     return;

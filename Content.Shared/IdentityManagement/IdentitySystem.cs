@@ -31,7 +31,7 @@ public sealed partial class IdentitySystem : EntitySystem
     [Dependency] private MetaDataSystem _metaData = default!;
     [Dependency] private SharedContainerSystem _container = default!;
     [Dependency] private SharedCriminalRecordsConsoleSystem _criminalRecordsConsole = default!;
-    [Dependency] private HumanoidProfileSystem _humanoidProfile = default!;
+    [Dependency] private SharedHumanoidAppearanceSystem _humanoid = default!;
     [Dependency] private SharedIdCardSystem _idCard = default!;
     [Dependency] private ExamineSystemShared _examine = default!;
 
@@ -250,7 +250,7 @@ public sealed partial class IdentitySystem : EntitySystem
     /// Gets an 'identity representation' of an entity, with their true name being the entity name
     /// and their 'presumed name' and 'presumed job' being the name/job on their ID card, if they have one.
     /// </summary>
-    private IdentityRepresentation GetIdentityRepresentation(Entity<InventoryComponent?, HumanoidProfileComponent?> target)
+    private IdentityRepresentation GetIdentityRepresentation(Entity<InventoryComponent?, HumanoidAppearanceComponent?> target)
     {
         var age = 18;
         var gender = Gender.Epicene;
@@ -264,7 +264,7 @@ public sealed partial class IdentitySystem : EntitySystem
             species = target.Comp2.Species;
         }
 
-        var ageString = _humanoidProfile.GetAgeRepresentation(species, age);
+        var ageString = _humanoid.GetAgeRepresentation(species, age);
         var trueName = Name(target);
         if (!Resolve(target, ref target.Comp1, false))
             return new(trueName, gender, ageString, string.Empty);

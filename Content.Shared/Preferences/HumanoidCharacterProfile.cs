@@ -218,7 +218,7 @@ namespace Content.Shared.Preferences
             {
                 Species = species.Value,
                 Sex = sex.Value,
-                Appearance = HumanoidCharacterAppearance.DefaultWithSpecies(species.Value, sex.Value),
+                Appearance = HumanoidCharacterAppearance.DefaultWithSpecies(species.Value), // Shitmed: old humanoid tree's DefaultWithSpecies has no sex parameter
             };
         }
 
@@ -802,7 +802,8 @@ namespace Content.Shared.Preferences
             IoCManager.Resolve(ref serialization);
             IoCManager.Resolve(ref configuration);
 
-            var export = new HumanoidProfileExportV2()
+            // iss14: rollback to the single pre-Nubody export format.
+            var export = new HumanoidProfileExport()
             {
                 ForkId = configuration.GetCVar(CVars.BuildForkId),
                 Profile = this,
@@ -822,21 +823,9 @@ namespace Content.Shared.Preferences
             yamlStream.Load(reader);
 
             var root = yamlStream.Documents[0].RootNode;
-            HumanoidCharacterProfile profile;
-            if (root["version"].Equals(new YamlScalarNode("1")))
-            {
-                var export = serialization.Read<HumanoidProfileExportV1>(root.ToDataNode(), notNullableOverride: true);
-                profile = export.ToV2().Profile;
-            }
-            else if (root["version"].Equals(new YamlScalarNode("2")))
-            {
-                var export = serialization.Read<HumanoidProfileExportV2>(root.ToDataNode(), notNullableOverride: true);
-                profile = export.Profile;
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unknown version {root["version"]}");
-            }
+            // iss14: rollback to the single pre-Nubody export format.
+            var export = serialization.Read<HumanoidProfileExport>(root.ToDataNode(), notNullableOverride: true);
+            var profile = export.Profile;
 
             var collection = IoCManager.Instance;
             profile.EnsureValid(session, collection!);

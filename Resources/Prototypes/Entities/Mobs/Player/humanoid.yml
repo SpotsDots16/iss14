@@ -2,6 +2,11 @@
 
 - type: randomHumanoidSettings
   id: EventHumanoid
+  # Shitmed Change Start
+  speciesBlacklist:
+  - Monkey
+  - Kobold
+  # Shitmed Change End
   components:
     - type: RandomHumanoidAppearance
       randomizeName: false

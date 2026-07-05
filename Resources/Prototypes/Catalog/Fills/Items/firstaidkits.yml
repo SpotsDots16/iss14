@@ -12,6 +12,7 @@
         - id: Ointment
         - id: Gauze
         - id: PillCanisterTricordrazine
+        - id: PillCanisterIron # Goobstation
       # see https://github.com/tgstation/blob/master/code/game/objects/items/storage/firstaid.dm for example contents
 
 - type: entity
@@ -25,6 +26,7 @@
         children:
         - id: Ointment
           amount: 2
+        - id: BurnAutoInjector # Goobstation
         - id: PillCanisterKelotane
         - id: PillCanisterDermaline
 
@@ -39,6 +41,7 @@
         children:
         - id: Brutepack
         - id: Gauze
+        - id: BruteAutoInjector # Goobstation
         - id: PillCanisterIron
         - id: PillCanisterCopper
 
@@ -99,6 +102,7 @@
         - id: RegenerativeMesh
         - id: Bloodpack
           amount: 2
+        - id: Tourniquet # Shitmed Change
 
 - type: entity
   id: MedkitCombatFilled

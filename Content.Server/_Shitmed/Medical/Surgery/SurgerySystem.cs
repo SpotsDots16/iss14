@@ -17,6 +17,7 @@ using Content.Shared.Body.Part;
 using Content.Server.Popups;
 using Content.Shared.Bed.Sleep;
 using Content.Shared.Damage;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared._Shitmed.Targeting;
 using Content.Shared._Shitmed.Damage;
@@ -35,13 +36,13 @@ namespace Content.Server._Shitmed.Medical.Surgery;
 
 public sealed class SurgerySystem : SharedSurgerySystem
 {
-    [Dependency] private readonly BodySystem _body = default!;
-    [Dependency] private readonly ChatSystem _chat = default!;
-    [Dependency] private readonly DamageableSystem _damageable = default!;
-    [Dependency] private readonly IPrototypeManager _prototypes = default!;
-    [Dependency] private readonly PopupSystem _popup = default!;
-    [Dependency] private readonly WoundSystem _wounds = default!;
-    [Dependency] private readonly UserInterfaceSystem _ui = default!;
+    [Dependency] private BodySystem _body = default!;
+    [Dependency] private ChatSystem _chat = default!;
+    [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private IPrototypeManager _prototypes = default!;
+    [Dependency] private PopupSystem _popup = default!;
+    [Dependency] private WoundSystem _wounds = default!;
+    [Dependency] private UserInterfaceSystem _ui = default!;
 
     private readonly Dictionary<NetEntity, List<EntProtoId>> _surgeries = new();
 

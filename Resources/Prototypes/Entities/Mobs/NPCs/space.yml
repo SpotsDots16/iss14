@@ -39,10 +39,8 @@
     baseCritThreshold: 150
   - type: MovementAlwaysTouching
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Cryoxadone
-        Quantity: 300
+    bloodReagent: Cryoxadone
+    bloodMaxVolume: 300
   - type: CombatMode
   - type: Temperature
   - type: TemperatureDamage
@@ -77,6 +75,13 @@
   parent: [MobSpaceBasic, BaseSlicingRefinable]
   description: It looks friendly. Why don't you give it a hug?
   components:
+  - type: Body # Shitmed Change
+    prototype: SpaceBear
+  - type: SurgeryTarget # Shitmed
+  - type: UserInterface # Shitmed
+    interfaces:
+      enum.SurgeryUIKey.Key:
+        type: SurgeryBui
   - type: Sprite
     drawdepth: Mobs
     sprite: Mobs/Animals/bear.rsi
@@ -127,6 +132,13 @@
   parent: [MobSpaceBasic, StripableInventoryBase, BaseSlicingRefinable]
   description: It looks friendly. Why don't you give it a hug?
   components:
+  - type: Body # Shitmed Change
+    prototype: SpaceKangaroo
+  - type: SurgeryTarget # Shitmed
+  - type: UserInterface # Shitmed
+    interfaces:
+      enum.SurgeryUIKey.Key:
+        type: SurgeryBui
   - type: Sprite
     drawdepth: Mobs
     sprite: Mobs/Animals/kangaroo.rsi
@@ -189,6 +201,13 @@
   parent: [MobSpaceBasic, BaseSlicingRefinable]
   description: It's so glowing, it looks dangerous.
   components:
+  - type: Body # Shitmed Change
+    prototype: SpaceSpider
+  - type: SurgeryTarget # Shitmed
+  - type: UserInterface # Shitmed
+    interfaces:
+      enum.SurgeryUIKey.Key:
+        type: SurgeryBui
   - type: Sprite
     drawdepth: Mobs
     sprite: Mobs/Animals/spacespider.rsi
@@ -219,10 +238,8 @@
       amount: 1
       prob: 0.5
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Cryoxadone
-        Quantity: 250
+    bloodReagent: Cryoxadone
+    bloodMaxVolume: 250
   - type: Fixtures
     fixtures:
       fix1:
@@ -297,6 +314,13 @@
   parent: [MobSpaceBasic, BaseSlicingRefinable]
   description: Long fangs and a glowing hood, and the alluring look begs to come closer.
   components:
+    - type: Body # Shitmed Change
+      prototype: SpaceCobra
+    - type: SurgeryTarget # Shitmed
+    - type: UserInterface # Shitmed
+      interfaces:
+        enum.SurgeryUIKey.Key:
+          type: SurgeryBui
     - type: Sprite
       drawdepth: Mobs
       sprite: Mobs/Animals/spacecobra.rsi
@@ -332,10 +356,8 @@
         amount: 1
         prob: 0.3
     - type: Bloodstream
-      bloodReferenceSolution:
-        reagents:
-        - ReagentId: Cryoxadone
-          Quantity: 200
+      bloodReagent: Cryoxadone
+      bloodMaxVolume: 200
     - type: Fixtures
       fixtures:
         fix1:
@@ -607,10 +629,8 @@
   - type: CombatMode
     combatToggleAction: ActionCombatModeToggleOff
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Cryoxadone
-        Quantity: 30
+    bloodReagent: Cryoxadone
+    bloodMaxVolume: 30
   - type: CanEscapeInventory
   - type: MobPrice
     price: 50

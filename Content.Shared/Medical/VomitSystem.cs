@@ -1,5 +1,5 @@
-using Content.Shared.Body;
 using Content.Shared.Body.Components;
+using Content.Shared.Body.Organ;
 using Content.Shared.Body.Systems;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
@@ -29,6 +29,7 @@ public sealed partial class VomitSystem : EntitySystem
     [Dependency] private ThirstSystem _thirst = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedBloodstreamSystem _bloodstream = default!;
+    [Dependency] private SharedBodySystem _body = default!;
     [Dependency] private SharedForensicsSystem _forensics = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private SharedPuddleSystem _puddle = default!;
@@ -38,7 +39,8 @@ public sealed partial class VomitSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<StomachComponent, BodyRelayedEvent<TryVomitEvent>>(TryVomitSolution);
+        // iss14: the restored body system has no organ event relay; stomach organs are
+        // queried directly in Vomit() via SharedBodySystem instead.
     }
 
     private const float ChemMultiplier = 0.1f;
@@ -50,21 +52,24 @@ public sealed partial class VomitSystem : EntitySystem
     private readonly SoundSpecifier _vomitSound = new SoundCollectionSpecifier(VomitCollection,
         AudioParams.Default.WithVariation(0.2f).WithVolume(-4f));
 
-    private void TryVomitSolution(Entity<StomachComponent> ent, ref BodyRelayedEvent<TryVomitEvent> args)
+    /// <summary>
+    /// Empties a stomach organ's solution into the given vomit solution.
+    /// </summary>
+    private bool TryVomitSolution(Entity<StomachComponent, OrganComponent> ent, Solution vomitSolution)
     {
         if (!_solutionContainer.ResolveSolution(ent.Owner,
                 StomachSystem.DefaultSolutionName,
-                ref ent.Comp.Solution,
+                ref ent.Comp1.Solution,
                 out var sol))
-            return;
+            return false;
 
         // Empty stomach solution into the new vomit solution
-        args.Args.Sol.AddSolution(sol, _proto);
+        vomitSolution.AddSolution(sol, _proto);
         sol.RemoveAllSolution();
 
         // Remind the stomach that it's empty.
-        _solutionContainer.UpdateChemicals(ent.Comp.Solution.Value);
-        args.Args = args.Args with { Handled = true };
+        _solutionContainer.UpdateChemicals(ent.Comp1.Solution.Value);
+        return true;
     }
 
     /// <summary>
@@ -80,7 +85,16 @@ public sealed partial class VomitSystem : EntitySystem
         // TODO: Need decals
         var solution = new Solution();
 
-        var ev = new TryVomitEvent(solution, force);
+        // iss14: query stomach organs directly instead of relaying an event through the body.
+        var handled = false;
+        foreach (var stomach in _body.GetBodyOrganEntityComps<StomachComponent>(uid))
+        {
+            if (TryVomitSolution(stomach, solution))
+                handled = true;
+        }
+
+        // Keep the event so non-body entities can still contribute or handle vomiting.
+        var ev = new TryVomitEvent(solution, force, handled);
         RaiseLocalEvent(uid, ref ev);
 
         if (!ev.Handled)
@@ -104,21 +118,18 @@ public sealed partial class VomitSystem : EntitySystem
         {
             var vomitAmount = solutionSize;
 
-            // Flushes small portion of the chemicals removed from the bloodstream stream
-            if (_solutionContainer.ResolveSolution(uid, bloodStream.BloodSolutionName, ref bloodStream.BloodSolution))
+            // iss14: the restored bloodstream keeps chemicals in a separate chemstream solution;
+            // take 10% of the chemicals removed from it, like the pre-Nubody vomit did.
+            if (_solutionContainer.ResolveSolution(uid, bloodStream.ChemicalSolutionName, ref bloodStream.ChemicalSolution))
             {
-                var vomitChemstreamAmount = _bloodstream.FlushChemicals((uid, bloodStream), vomitAmount);
-
-                if (vomitChemstreamAmount != null)
-                {
-                    vomitChemstreamAmount.ScaleSolution(ChemMultiplier);
-                    solution.AddSolution(vomitChemstreamAmount, _proto);
-                    vomitAmount -= (float)vomitChemstreamAmount.Volume;
-                }
+                var vomitChemstreamAmount = _solutionContainer.SplitSolution(bloodStream.ChemicalSolution.Value, vomitAmount);
+                vomitChemstreamAmount.ScaleSolution(ChemMultiplier);
+                solution.AddSolution(vomitChemstreamAmount, _proto);
+                vomitAmount -= (float)vomitChemstreamAmount.Volume;
             }
 
             // Makes a vomit solution the size of 90% of the chemicals removed from the chemstream
-            solution.AddReagent(new ReagentId(VomitPrototype, _bloodstream.GetEntityBloodData((uid, bloodStream))), vomitAmount);
+            solution.AddReagent(new ReagentId(VomitPrototype, _bloodstream.GetEntityBloodData(uid)), vomitAmount);
         }
 
         if (_puddle.TrySpillAt(uid, solution, out var puddle, false))

@@ -14,6 +14,9 @@ using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.Interaction.Events;
 using Robust.Shared.Player;
 using Robust.Shared.Audio.Systems;
+using Content.Shared.Body.Part; // Goobstation decapitation
+using Content.Shared.Body.Systems; // Goobstation decapitation
+using Content.Shared._Shitmed.Medical.Surgery.Wounds.Systems; // Goobstation decapitation
 
 namespace Content.Shared.Execution;
 
@@ -31,6 +34,8 @@ public sealed partial class SharedExecutionSystem : EntitySystem
     [Dependency] private SharedCombatModeSystem _combat = default!;
     [Dependency] private SharedExecutionSystem _execution = default!;
     [Dependency] private SharedMeleeWeaponSystem _melee = default!;
+    [Dependency] private WoundSystem _wounds = default!; // Goobstation decapitation
+    [Dependency] private SharedBodySystem _body = default!; // Goobstation decapitation
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -87,7 +92,8 @@ public sealed partial class SharedExecutionSystem : EntitySystem
             {
                 BreakOnMove = true,
                 BreakOnDamage = true,
-                NeedHand = true
+                NeedHand = true,
+                MultiplyDelay = false, // Goobstation
             };
 
         _doAfter.TryStartDoAfter(doAfter);
@@ -217,6 +223,8 @@ public sealed partial class SharedExecutionSystem : EntitySystem
         else
         {
             _melee.AttemptLightAttack(attacker, weapon, meleeWeaponComp, victim);
+            if (entity.Comp.Decapitation)// Goobstation Decapitation
+                Decapitation(victim);
         }
 
         _combat.SetInCombatMode(attacker, prev);
@@ -229,4 +237,27 @@ public sealed partial class SharedExecutionSystem : EntitySystem
             _execution.ShowExecutionExternalPopup(externalMsg, attacker, victim, entity);
         }
     }
+
+    // Goobatation  start Decapitation
+    private void Decapitation(EntityUid victim)
+    {
+        var bodyparts = _body.GetBodyChildren(victim);
+
+        var head = new EntityUid?();
+        var body = new EntityUid?();
+
+        foreach (var bodypart in bodyparts)
+        {
+            if (bodypart.Component.PartType == BodyPartType.Chest)
+                body = bodypart.Id;
+            if (bodypart.Component.PartType == BodyPartType.Head)
+                head = bodypart.Id;
+        }
+
+        if(!head.HasValue || !body.HasValue)
+            return;
+
+        _wounds.AmputateWoundable(body.Value,head.Value);
+    }
+    // Goobstation end
 }

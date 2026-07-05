@@ -113,12 +113,16 @@ public sealed partial class NetworkConfiguratorSystem : SharedNetworkConfigurato
             _configurator = configurator;
             _keyBindingName = keyBindingName;
             _label = new RichTextLabel { StyleClasses = { StyleClass.ItemStatus } };
-            AddChild(_label);
+            if (_configurator.ShowLabel) // Shitmed - Starlight Abductors: Allow hiding the label on multitools that dont need List mode.
+                AddChild(_label);
         }
 
         protected override void FrameUpdate(FrameEventArgs args)
         {
             base.FrameUpdate(args);
+
+            if (!_configurator.ShowLabel) // Shitmed - Starlight Abductors: Allow hiding the label on multitools that dont need List mode.
+                return;
 
             if (_linkModeActive != null && _linkModeActive == _configurator.LinkModeActive)
                 return;

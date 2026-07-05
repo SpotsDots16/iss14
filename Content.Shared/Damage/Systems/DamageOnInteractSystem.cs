@@ -13,6 +13,9 @@ using Content.Shared.Random;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Effects;
 using Content.Shared.Stunnable;
+using Content.Shared._Shitmed.Targeting; // Shitmed Change
+using Content.Shared.Hands.Components;
+using Content.Shared.Hands.EntitySystems; // Shitmed Change
 
 namespace Content.Shared.Damage.Systems;
 
@@ -27,6 +30,7 @@ public sealed partial class DamageOnInteractSystem : EntitySystem
     [Dependency] private IRobustRandom _random = default!;
     [Dependency] private IGameTiming _gameTiming = default!;
     [Dependency] private SharedStunSystem _stun = default!;
+    [Dependency] private SharedHandsSystem _hands = default!; // Shitmed Change
 
     public override void Initialize()
     {
@@ -75,7 +79,21 @@ public sealed partial class DamageOnInteractSystem : EntitySystem
             }
         }
 
-        totalDamage = _damageableSystem.ChangeDamage(args.User, totalDamage, origin: args.Target);
+        // Shitmed Change Start
+        TargetBodyPart? targetPart = null;
+        if (_hands.GetActiveHand(args.User) is { } handId
+            && _hands.TryGetHand(args.User, handId, out var hand))
+        {
+            targetPart = hand.Value.Location switch
+            {
+                HandLocation.Left => TargetBodyPart.LeftHand,
+                HandLocation.Right => TargetBodyPart.RightHand,
+                _ => null
+            };
+        }
+
+        totalDamage = _damageableSystem.TryChangeDamage(args.User, totalDamage, origin: args.Target, targetPart: targetPart, canMiss: false) ?? new DamageSpecifier();
+        // Shitmed Change End
 
         if (totalDamage.AnyPositive())
         {

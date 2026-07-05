@@ -65,10 +65,8 @@
     refineResult:
     - id: FoodMeatXeno
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 50
+    bloodReagent: Blood
+    bloodMaxVolume: 50
   - type: CombatMode
   - type: MeleeWeapon
     soundHit:

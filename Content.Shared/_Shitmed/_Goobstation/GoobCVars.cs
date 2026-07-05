@@ -1,3 +1,4 @@
+using Robust.Shared;
 using Robust.Shared.Configuration;
 
 namespace Content.Goobstation.Common.CCVar;
@@ -6,7 +7,7 @@ namespace Content.Goobstation.Common.CCVar;
 /// Minimal vendored subset of Goob-Station's GoobCVars needed by the Shitmed port.
 /// </summary>
 [CVarDefs]
-public sealed partial class GoobCVars
+public sealed partial class GoobCVars : CVars
 {
     /// <summary>
     /// A multiplier for bloodloss damage and heal.

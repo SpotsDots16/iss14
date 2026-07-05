@@ -167,6 +167,28 @@ public sealed partial class MeleeWeaponComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public bool MustBeEquippedToUse = false;
+
+    // Shitmed Change Start
+
+    /// <summary>
+    ///     Shitmed Change: Part damage is multiplied by this amount for single-target attacks
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float ClickPartDamageMultiplier = 1.00f;
+
+    /// <summary>
+    ///     Shitmed Change: Part damage is multiplied by this amount for heavy swings
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float HeavyPartDamageMultiplier = 1.00f;
+
+    /// <summary>
+    ///     Wound severity is multiplied by this amount for heavy swings.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float HeavyAttackWoundMultiplier = 0.5f;
+
+    // Shitmed Change End
 }
 
 /// <summary>

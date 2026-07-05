@@ -97,6 +97,7 @@ using Content.Shared.Chemistry.Components;
 using Content.Shared.EntityEffects;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Damage;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Database;
 using Content.Server.EntityEffects;
 using Content.Shared.Mobs.Systems;

@@ -31,6 +31,13 @@
   name: goliath
   description: A massive beast that uses long tentacles to ensnare its prey, threatening them is not advised under any conditions.
   components:
+  - type: Body # Shitmed Change
+    prototype: Goliath
+  - type: SurgeryTarget # Shitmed
+  - type: UserInterface # Shitmed
+    interfaces:
+      enum.SurgeryUIKey.Key:
+        type: SurgeryBui
   - type: Sprite
     sprite: Mobs/Aliens/Asteroid/goliath.rsi
     layers:
@@ -46,10 +53,8 @@
     baseWalkSpeed : 2.00
     baseSprintSpeed : 2.00
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 350
+    bloodReagent: Blood
+    bloodMaxVolume: 350
   - type: MobThresholds
     thresholds:
       0: Alive
@@ -401,10 +406,8 @@
     capacity: 1
     count: 1
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 200
+    bloodReagent: Blood
+    bloodMaxVolume: 200
   - type: NpcFactionMember
     factions:
     - SimpleHostile

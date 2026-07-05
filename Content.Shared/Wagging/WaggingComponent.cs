@@ -1,5 +1,4 @@
-﻿using Content.Shared.Body;
-using Content.Shared.Chat.Prototypes;
+﻿using Content.Shared.Chat.Prototypes;
 using Content.Shared.Humanoid;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
@@ -21,9 +20,6 @@ public sealed partial class WaggingComponent : Component
 
     [DataField]
     public HumanoidVisualLayers Layer = HumanoidVisualLayers.Tail;
-
-    [DataField]
-    public ProtoId<OrganCategoryPrototype> Organ = "Torso";
 
     /// <summary>
     /// Suffix to add to get the animated marking.

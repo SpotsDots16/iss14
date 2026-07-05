@@ -1,4 +1,4 @@
-﻿- type: entity
+- type: entity
   name: basic slime
   id: BaseMobAdultSlimes
   parent: [ BaseMobSlimes, SimpleMobBase, MobCombat, BaseSlicingRefinable ]
@@ -51,10 +51,8 @@
   - type: Damageable
     damageModifierSet: Slime
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Slime
-        Quantity: 150
+    bloodReagent: Slime
+    bloodMaxVolume: 150
     bloodlossDamage:
       types:
         Bloodloss:

@@ -1,6 +1,7 @@
 using System.Numerics;
 using Content.Client.Graphics;
 using Content.Shared.CCVar;
+using Content.Shared.Movement.Components; // Shitmed - Starlight Abductors Change
 using Content.Shared.Silicons.StationAi;
 using Robust.Client.Graphics;
 using Robust.Client.Player;
@@ -68,6 +69,14 @@ public sealed partial class StationAiOverlay : Overlay
         var worldBounds = args.WorldBounds;
 
         var playerEnt = _player.LocalEntity;
+
+        // Shitmed - Starlight Abductors Change Start
+        if (_entManager.TryGetComponent(playerEnt, out StationAiOverlayComponent? stationAiOverlay)
+            && stationAiOverlay.AllowCrossGrid
+            && _entManager.TryGetComponent(playerEnt, out RelayInputMoverComponent? relay))
+            playerEnt = relay.RelayEntity;
+        // Shitmed Change End
+
         _entManager.TryGetComponent(playerEnt, out TransformComponent? playerXform);
         var gridUid = playerXform?.GridUid ?? EntityUid.Invalid;
         _entManager.TryGetComponent(gridUid, out MapGridComponent? grid);

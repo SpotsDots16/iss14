@@ -15,7 +15,7 @@ using Content.Shared.Mobs;
 namespace Content.Server._Shitmed.Targeting;
 public sealed class TargetingSystem : SharedTargetingSystem
 {
-    [Dependency] private readonly WoundSystem _woundSystem = default!;
+    [Dependency] private WoundSystem _woundSystem = default!;
 
     public override void Initialize()
     {

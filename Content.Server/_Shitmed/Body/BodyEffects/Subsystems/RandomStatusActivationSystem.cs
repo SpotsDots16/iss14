@@ -14,9 +14,9 @@ namespace Content.Server._Shitmed.BodyEffects.Subsystems;
 
 public sealed class RandomStatusActivationSystem : EntitySystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly StatusEffectsSystem _effects = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private StatusEffectsSystem _effects = default!;
+    [Dependency] private IRobustRandom _random = default!;
 
     public override void Initialize()
     {

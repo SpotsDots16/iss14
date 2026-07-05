@@ -14,7 +14,7 @@
   - Dna
   - Fingerprint
   - Grammar # Pronouns
-  - HumanoidProfile # Age, Sex, Gender
+  - HumanoidAppearance # Shitmed: was HumanoidProfile - Age, Sex, Gender
   - MeleeWeapon # Attack animation, damage and sound
   - NpcFactionMember
   - RandomPrice

@@ -12,6 +12,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Content.Shared.Power;
 using Content.Shared.Rejuvenate;
+using Content.Shared.Tag; // Shitmed Change
 using Content.Shared.Tools;
 using Content.Shared.Tools.Components;
 using Content.Shared.Wires;
@@ -31,6 +32,7 @@ public sealed partial class WiresSystem : SharedWiresSystem
     [Dependency] private SharedInteractionSystem _interactionSystem = default!;
     [Dependency] private IRobustRandom _random = default!;
     [Dependency] private ConstructionSystem _construction = default!;
+    [Dependency] private TagSystem _tags = default!; // Shitmed Change
 
     private static readonly ProtoId<ToolQualityPrototype> CuttingQuality = "Cutting";
     private static readonly ProtoId<ToolQualityPrototype> PulsingQuality = "Pulsing";
@@ -449,6 +451,15 @@ public sealed partial class WiresSystem : SharedWiresSystem
         {
             if (TryComp(args.User, out ActorComponent? actor))
             {
+                // Shitmed Change Start
+                if (_tags.HasTag(args.Used, component.ShowWiresTag))
+                    component.ViewWires = true;
+                else
+                    component.ViewWires = false;
+
+                UpdateUserInterface(uid);
+                // Shitmed Change End
+
                 UI.OpenUi(uid, WiresUiKey.Key, actor.PlayerSession);
                 args.Handled = true;
             }
@@ -558,8 +569,25 @@ public sealed partial class WiresSystem : SharedWiresSystem
         var statuses = new List<(int position, object key, object value)>();
         foreach (var (key, value) in wires.Statuses)
         {
+            // Shitmed Change Start
             var valueCast = ((int position, StatusLightData? value)) value;
-            statuses.Add((valueCast.position, key, valueCast.value!));
+            if (valueCast.value is { } data)
+            {
+                if (wires.ViewWires)
+                {
+                    var foundWires = wires.WiresList
+                        .Where(wire => wire.OriginalPosition == valueCast.position)
+                        .ToList();
+                    if (foundWires.Any())
+                    {
+                        var wireLetters = string.Join(", ", foundWires.Select(wire => wire.Letter.ToString()));
+                        data.Text = $"{data.Text}({wireLetters})";
+                    }
+                }
+
+                statuses.Add((valueCast.position, key, data));
+            }
+            // Shitmed Change End
         }
 
         statuses.Sort((a, b) => a.position.CompareTo(b.position));

@@ -8,7 +8,7 @@
 using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.Popups;
 using Content.Shared.Smoking;
-using Content.Shared.Smoking.Components;
+using Content.Shared.IgnitionSource.Components; // iss14: matchstick moved
 using Content.Shared.Weapons.Ranged;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Events;
@@ -18,9 +18,9 @@ namespace Content.Shared._Shitmed.Medical.Surgery.Tools;
 /// <summary>
 ///  Prevents using esword or welder when off, laser when no charges.
 /// </summary>
-public sealed class SurgeryToolConditionsSystem : EntitySystem
+public sealed partial class SurgeryToolConditionsSystem : EntitySystem
 {
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
 
     public override void Initialize()
     {
@@ -55,7 +55,7 @@ public sealed class SurgeryToolConditionsSystem : EntitySystem
 
     private void OnMatchUsed(Entity<MatchstickComponent> ent, ref SurgeryToolUsedEvent args)
     {
-        var state = ent.Comp.CurrentState;
+        var state = ent.Comp.State;
         if (state == SmokableState.Lit)
             return;
 

@@ -44,6 +44,9 @@ public sealed partial class AntagLoadProfileRuleSystem : GameRuleSystem<AntagLoa
             species = Proto.Index(ent.Comp.SpeciesOverride.Value);
         }
 
+        if (ent.Comp.SpeciesHardOverride is not null) // Shitmed - Starlight Abductors
+            species = Proto.Index(ent.Comp.SpeciesHardOverride.Value); // Shitmed - Starlight Abductors
+
         args.Entity = Spawn(species.Prototype, args.Coords);
         if (profile?.WithSpecies(species.ID) is { } humanoidProfile)
         {

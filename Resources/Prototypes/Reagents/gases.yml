@@ -21,7 +21,7 @@
       - !type:ModifyLungGas
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Vox ]
+          type: [ Vox, Cybernetic ] # Shitmed - Cybernetic Organs
           inverted: true
         ratios:
           CarbonDioxide: 1.0
@@ -42,6 +42,17 @@
             type: [ Vox ]
         clear: true
         time: 5
+      - !type:Oxygenate # Shitmed - Cybernetic Organs
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Cybernetic ]
+      - !type:ModifyLungGas # Shitmed - Cybernetic Organs
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Cybernetic ]
+        ratios:
+          CarbonDioxide: 0.5
+          Oxygen: -0.5
     Respiration:
       effects:
       - !type:Oxygenate
@@ -52,7 +63,7 @@
       - !type:ModifyLungGas
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Vox ]
+          type: [ Vox, Cybernetic ] # Shitmed - Cybernetic Organs
           inverted: true
         ratios:
           CarbonDioxide: 1.0
@@ -73,6 +84,17 @@
             type: [ Vox ]
         clear: true
         time: 5
+      - !type:Oxygenate # Shitmed - Cybernetic Organs
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Cybernetic ]
+      - !type:ModifyLungGas # Shitmed - Cybernetic Organs
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Cybernetic ]
+        ratios:
+          CarbonDioxide: 0.5
+          Oxygen: -0.5
 
 - type: reagent
   id: Plasma
@@ -91,15 +113,30 @@
     Bloodstream:
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:MetabolizerTypeCondition # Shitmed - Cybernetic Organs
+          type: [ Cybernetic ]
+          inverted: true
         damage:
           types:
             Poison: 1.5
       - !type:AdjustReagent
         reagent: Inaprovaline
         amount: -2.0
+      - !type:HealthChange # Shitmed - Cybernetic Organs
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Cybernetic ]
+        damage:
+          types:
+            Poison: 0.75
     Respiration:
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:MetabolizerTypeCondition # Shitmed - Cybernetic Organs
+          type: [ Cybernetic ]
+          inverted: true
         ignoreResistances: true
         damage:
           types:
@@ -111,6 +148,15 @@
         minScale: 1.5
         clear: True
         time: 5
+      - !type:HealthChange # Shitmed - Cybernetic Organs
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Cybernetic ]
+        ignoreResistances: true
+        damage:
+          types:
+            Poison:
+              0.05
   reactiveEffects:
     Flammable:
       methods: [ Touch ]
@@ -139,12 +185,27 @@
     Bloodstream:
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:MetabolizerTypeCondition # Shitmed - Cybernetic Organs
+          type: [ Cybernetic ]
+          inverted: true
         damage:
           types:
             Radiation: 1.5
+      - !type:HealthChange # Shitmed - Cybernetic Organs
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Cybernetic ]
+        damage:
+          types:
+            Radiation: 0.75
     Respiration:
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:MetabolizerTypeCondition # Shitmed - Cybernetic Organs
+          type: [ Cybernetic ]
+          inverted: true
         ignoreResistances: true
         damage:
           types:
@@ -156,6 +217,15 @@
         minScale: 1.5
         clear: True
         time: 5
+      - !type:HealthChange # Shitmed - Cybernetic Organs
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Cybernetic ]
+        ignoreResistances: true
+        damage:
+          types:
+            Radiation:
+              0.5
 
 - type: reagent
   id: CarbonDioxide
@@ -174,7 +244,7 @@
       - !type:HealthChange
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Plant, Vox ]
+          type: [ Plant, Vox, Cybernetic ] # Shitmed - Cybernetic Organs
           inverted: true
         ignoreResistances: true
         damage:
@@ -184,7 +254,7 @@
       - !type:Oxygenate
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Plant ]
+          type: [ Plant, Cybernetic ] # Shitmed - Cybernetic Organs
           inverted: true
         factor: -4
     Respiration:
@@ -197,7 +267,7 @@
         minScale: 0.5
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Plant, Vox ]
+          type: [ Plant, Vox, Cybernetic ] # Shitmed - Cybernetic Organs
           inverted: true
         # Don't want people to get toxin damage from the gas they just
         # exhaled, right?
@@ -209,7 +279,7 @@
       - !type:Oxygenate # carbon dioxide displaces oxygen from the bloodstream, causing asphyxiation
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Plant ]
+          type: [ Plant, Cybernetic ] # Shitmed - Cybernetic Organs
           inverted: true
         factor: -4
       # We need a metabolism effect on reagent removal
@@ -253,6 +323,17 @@
         ratios:
           NitrousOxide: 1.0
           Nitrogen: -1.0
+      - !type:Oxygenate # Shitmed - Cybernetic Organs
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Cybernetic ]
+      - !type:ModifyLungGas # Shitmed - Cybernetic Organs
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Cybernetic ]
+        ratios:
+          NitrousOxide: 0.5
+          Nitrogen: -0.5
 
 - type: reagent
   id: NitrousOxide
@@ -276,7 +357,7 @@
         minScale: 0.2
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Slime ]
+          type: [ Slime, Cybernetic ] # Shitmed - Cybernetic Organs
           inverted: true
         emote: Laugh
         showInChat: true
@@ -285,7 +366,7 @@
         minScale: 0.2
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Slime ]
+          type: [ Slime, Cybernetic ] # Shitmed - Cybernetic Organs
           inverted: true
         emote: Scream
         showInChat: true
@@ -294,7 +375,7 @@
         minScale: 0.5
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Slime ]
+          type: [ Slime, Cybernetic ] # Shitmed - Cybernetic Organs
           inverted: true
         type: Local
         visualType: Medium
@@ -304,7 +385,7 @@
         minScale: 1
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Slime ]
+          type: [ Slime, Cybernetic ] # Shitmed - Cybernetic Organs
           inverted: true
         walkSpeedModifier: 0.65
         sprintSpeedModifier: 0.65
@@ -312,7 +393,7 @@
         minScale: 1.8
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Slime ]
+          type: [ Slime, Cybernetic ] # Shitmed - Cybernetic Organs
           inverted: true
         effectProto: StatusEffectForcedSleeping
         time: 3
@@ -321,7 +402,7 @@
         minScale: 3.5
         conditions:
         - !type:MetabolizerTypeCondition
-          type: [ Slime ]
+          type: [ Slime, Cybernetic ] # Shitmed - Cybernetic Organs
           inverted: true
         ignoreResistances: true
         scaling: true
@@ -372,10 +453,23 @@
       effects:
       - !type:HealthChange
         minScale: 0.5
+        conditions:
+        - !type:MetabolizerTypeCondition # Shitmed - Cybernetic Organs
+          type: [ Cybernetic ]
+          inverted: true
         ignoreResistances: true
         damage:
           types:
             Cellular: 0.05
+      - !type:HealthChange # Shitmed - Cybernetic Organs
+        minScale: 0.5
+        conditions:
+        - !type:MetabolizerTypeCondition
+          type: [ Cybernetic ]
+        ignoreResistances: true
+        damage:
+          types:
+            Cellular: 0.025
       - !type:ModifyStatusEffect
         minScale: 1
         effectProto: StatusEffectSeeingRainbow

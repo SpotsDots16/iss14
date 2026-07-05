@@ -1,4 +1,6 @@
-﻿using Content.Shared.MedicalScanner;
+using Content.Shared.MedicalScanner;
+using Content.Shared._Shitmed.Targeting; // Shitmed Change
+using Content.Shared._Shitmed.Medical.HealthAnalyzer; // Shitmed Change
 using JetBrains.Annotations;
 using Robust.Client.UserInterface;
 
@@ -19,7 +21,8 @@ namespace Content.Client.HealthAnalyzer.UI
             base.Open();
 
             _window = this.CreateWindow<HealthAnalyzerWindow>();
-
+            _window.OnBodyPartSelected += SendBodyPartMessage; // Shitmed Change
+            _window.OnModeChanged += SendModeMessage; // Shitmed Change
             _window.Title = EntMan.GetComponent<MetaDataComponent>(Owner).EntityName;
         }
 
@@ -28,10 +31,38 @@ namespace Content.Client.HealthAnalyzer.UI
             if (_window == null)
                 return;
 
-            if (message is not HealthAnalyzerScannedUserMessage cast)
+            // Shitmed Change Start
+            switch (message)
+            {
+                case HealthAnalyzerBodyMessage bodyMessage:
+                    _window.Populate(bodyMessage);
+                    break;
+                case HealthAnalyzerOrgansMessage organsMessage:
+                    _window.Populate(organsMessage);
+                    break;
+                case HealthAnalyzerChemicalsMessage chemicalsMessage:
+                    _window.Populate(chemicalsMessage);
+                    break;
+            }
+            // Shitmed Change End
+        }
+
+        // Shitmed Change Start
+        private void SendBodyPartMessage(TargetBodyPart? part, EntityUid target) => SendMessage(new HealthAnalyzerPartMessage(EntMan.GetNetEntity(target), part ?? null));
+
+        private void SendModeMessage(HealthAnalyzerMode mode, EntityUid target) => SendMessage(new HealthAnalyzerModeSelectedMessage(EntMan.GetNetEntity(target), mode));
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (!disposing)
                 return;
 
-            _window.Populate(cast);
+            if (_window != null)
+                _window.OnBodyPartSelected -= SendBodyPartMessage;
+
+            _window?.Dispose();
         }
+        // Shitmed Change End
     }
 }

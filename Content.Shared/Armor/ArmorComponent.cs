@@ -3,12 +3,18 @@ using Content.Shared.Inventory;
 using Robust.Shared.GameStates;
 using Robust.Shared.Utility;
 
+// Shitmed Change
+using Content.Shared._Shitmed.Medical.Surgery.Traumas;
+using Content.Shared._Shitmed.Medical.Surgery.Traumas.Systems;
+using Content.Shared.Body.Part;
+using Content.Shared.FixedPoint;
+
 namespace Content.Shared.Armor;
 
 /// <summary>
 /// Used for clothing that reduces damage when worn.
 /// </summary>
-[RegisterComponent, NetworkedComponent, Access(typeof(SharedArmorSystem))]
+[RegisterComponent, NetworkedComponent, Access(typeof(SharedArmorSystem), typeof(TraumaSystem))] // Shitmed Change
 public sealed partial class ArmorComponent : Component
 {
     /// <summary>
@@ -29,6 +35,41 @@ public sealed partial class ArmorComponent : Component
     /// </summary>
     [DataField]
     public bool ShowArmorOnExamine = true;
+
+    // Shitmed Change Start
+
+    /// <summary>
+    /// Shitmed Change: If true, the coverage won't show.
+    /// </summary>
+    [DataField("coverageHidden")]
+    public bool ArmourCoverageHidden = false;
+
+    /// <summary>
+    /// Shitmed Change: If true, the modifiers won't show.
+    /// </summary>
+    [DataField("modifiersHidden")]
+    public bool ArmourModifiersHidden = false;
+
+    /// <summary>
+    /// Shitmed Change: thankfully all the armor in the game is symmetrical.
+    /// </summary>
+    [DataField("coverage"), Access(Other = AccessPermissions.ReadExecute)]
+    public List<BodyPartType> ArmorCoverage = new();
+
+    /// <summary>
+    /// Shitmed Change: The amount of dismemberment chance deduction.
+    /// </summary>
+    [DataField, Access(Other = AccessPermissions.ReadExecute)]
+    public Dictionary<TraumaType, FixedPoint2> TraumaDeductions = new()
+    {
+        { TraumaType.Dismemberment, 0 },
+        { TraumaType.BoneDamage, 0 },
+        { TraumaType.OrganDamage, 0 },
+        { TraumaType.VeinsDamage, 0 },
+        { TraumaType.NerveDamage, 0 },
+    };
+
+    // Shitmed Change End
 }
 
 /// <summary>

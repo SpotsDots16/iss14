@@ -6,6 +6,7 @@ using Content.Shared._Shitmed.Targeting;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Part;
 using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.FixedPoint;
 using Robust.Shared.Prototypes;
@@ -254,7 +255,7 @@ public sealed partial class WoundSystem
                 continue;
 
             var nearestSeverity = WoundableSeverity.Severed;
-            var damage = damageable.TotalDamage;
+            var damage = _damageable.GetTotalDamage((id, damageable)); // iss14: TotalDamage is no longer externally readable
 
             woundable.SortedThresholds ??= [.. woundable.Thresholds.OrderByDescending(kv => kv.Value)];
             foreach (var (severity, threshold) in woundable.SortedThresholds)

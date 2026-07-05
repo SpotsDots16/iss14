@@ -54,7 +54,7 @@
         stomach: OrganMouseStomach
         liver: OrganAnimalLiver
         kidneys: OrganAnimalKidneys
-        egg_sack: OrganMouseEggSack # Trauma
+        # egg_sack: OrganMouseEggSack # Trauma - iss14: not ported (EggSack component/textures are Goob _Trauma/_White)
     legs:
       part: LegsAnimal
       connections:

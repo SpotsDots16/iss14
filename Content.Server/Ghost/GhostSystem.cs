@@ -29,6 +29,10 @@ using Content.Shared.Popups;
 using Content.Shared.Storage.Components;
 using Content.Shared.Tag;
 using Content.Shared.Warps;
+// Shitmed Change
+using Content.Shared._Shitmed.Body;
+using Content.Shared._Shitmed.Targeting;
+using Content.Shared.Body.Components;
 using Robust.Server.GameObjects;
 using Robust.Shared.Configuration;
 using Robust.Shared.Map;
@@ -604,7 +608,14 @@ namespace Content.Server.Ghost
 
                     DamageSpecifier damage = new(_prototypeManager.Index(AsphyxiationDamageType), dealtDamage);
 
-                    _damageable.ChangeDamage(playerEntity.Value, damage, true);
+                    // Shitmed Change Start
+                    if (TryComp<BodyComponent>(playerEntity, out var body)
+                        && body.BodyType == BodyType.Complex
+                        && body.RootContainer.ContainedEntity != null)
+                        _damageable.TryChangeDamage(playerEntity.Value, damage, true, targetPart: TargetBodyPart.All);
+                    else
+                        _damageable.ChangeDamage(playerEntity.Value, damage, true);
+                    // Shitmed Change End
                 }
             }
 

@@ -24,8 +24,7 @@ public sealed partial class ExpelGasComponent : Component
         Gas.Ammonia,
         Gas.NitrousOxide,
         Gas.Frezon,
-        Gas.BZ, ///tg/ gases
-        Gas.Healium, ///tg/ gases
-        Gas.Nitrium, ///tg/ gases
+        // iss14: upstream Goob also listed the /tg/ gases (BZ, Healium, Nitrium),
+        // which don't exist in this fork's Gas enum.
     };
 }

@@ -3,40 +3,33 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using System.Linq;
 using System.Text.Json.Serialization;
-using Content.Shared.Body.Components;
-using Content.Shared._Shitmed.Medical.Surgery.Wounds.Components;
-using Content.Shared._Shitmed.Medical.Surgery.Wounds.Systems;
-using Content.Shared._Shitmed.Medical.Surgery.Traumas.Components;
 using Content.Shared._Shitmed.Medical.Surgery.Traumas.Systems;
-using Content.Shared.EntityEffects;
+using Content.Shared._Shitmed.Medical.Surgery.Wounds.Systems;
+using Content.Shared.Body.Components;
 using Content.Shared.FixedPoint;
 using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
 using Robust.Shared.Utility;
-using System.Linq;
 
 namespace Content.Shared.EntityEffects.Effects;
 
-[UsedImplicitly]
-public sealed partial class AdjustBoneDamage : EntityEffect
+/// <summary>
+/// Adjusts bone damage on all of the body's woundables, spreading the amount evenly between them.
+/// </summary>
+/// <inheritdoc cref="EntityEffectSystem{T,TEffect}"/>
+public sealed partial class AdjustBoneDamageEntityEffectSystem : EntityEffectSystem<BodyComponent, AdjustBoneDamage>
 {
-    [DataField(required: true)]
-    [JsonPropertyName("amount")]
-    public FixedPoint2 Amount = default!;
+    [Dependency] private TraumaSystem _trauma = default!;
+    [Dependency] private WoundSystem _wound = default!;
 
-    protected override string? ReagentEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
-        => Loc.GetString("reagent-effect-guidebook-adjust-bone-damage", ("amount", Amount));
-
-    public override void Effect(EntityEffectBaseArgs args)
+    protected override void Effect(Entity<BodyComponent> entity, ref EntityEffectEvent<AdjustBoneDamage> args)
     {
-        if (!args.EntityManager.TryGetComponent<BodyComponent>(args.TargetEntity, out var body)
-            || body.RootContainer.ContainedEntities.FirstOrNull() is not { } root)
+        if (entity.Comp.RootContainer.ContainedEntities.FirstOrNull() is not { } root)
             return;
 
-        var traumaSystem = args.EntityManager.System<TraumaSystem>();
-        var woundables = args.EntityManager.System<WoundSystem>().GetAllWoundableChildren(root).ToList();
+        var woundables = _wound.GetAllWoundableChildren(root).ToList();
         foreach (var woundable in woundables)
         {
             if (woundable.Comp.Bone.ContainedEntities.FirstOrNull() is not { } bone)
@@ -44,7 +37,19 @@ public sealed partial class AdjustBoneDamage : EntityEffect
 
             // Yeah this is less efficient when theres not as many parts damaged but who tf cares,
             // its a bone medication so it should probs be strong enough to ignore this.
-            traumaSystem.ApplyDamageToBone(bone, Amount / woundables.Count);
+            _trauma.ApplyDamageToBone(bone, args.Effect.Amount / woundables.Count);
         }
     }
+}
+
+/// <inheritdoc cref="EntityEffect"/>
+[UsedImplicitly]
+public sealed partial class AdjustBoneDamage : EntityEffectBase<AdjustBoneDamage>
+{
+    [DataField(required: true)]
+    [JsonPropertyName("amount")]
+    public FixedPoint2 Amount = default!;
+
+    public override string? EntityEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
+        => Loc.GetString("reagent-effect-guidebook-adjust-bone-damage", ("amount", Amount));
 }

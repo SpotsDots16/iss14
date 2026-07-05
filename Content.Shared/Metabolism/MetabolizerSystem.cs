@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Shared.Body.Events;
-using Content.Shared.Body;
+using Content.Shared.Body.Organ;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
@@ -39,7 +39,9 @@ public sealed partial class MetabolizerSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<MetabolizerComponent, MapInitEvent>(OnMapInit);
-        SubscribeLocalEvent<MetabolizerComponent, BodyRelayedEvent<ApplyMetabolicMultiplierEvent>>(OnApplyMetabolicMultiplier);
+        // iss14: the restored body system re-raises ApplyMetabolicMultiplierEvent directly on each organ
+        // (see Content.Server BodySystem.OnApplyMetabolicMultiplier), so subscribe to the plain event.
+        SubscribeLocalEvent<MetabolizerComponent, ApplyMetabolicMultiplierEvent>(OnApplyMetabolicMultiplier);
     }
 
     private void OnMapInit(Entity<MetabolizerComponent> ent, ref MapInitEvent args)
@@ -48,9 +50,9 @@ public sealed partial class MetabolizerSystem : EntitySystem
         Dirty(ent);
     }
 
-    private void OnApplyMetabolicMultiplier(Entity<MetabolizerComponent> ent, ref BodyRelayedEvent<ApplyMetabolicMultiplierEvent> args)
+    private void OnApplyMetabolicMultiplier(Entity<MetabolizerComponent> ent, ref ApplyMetabolicMultiplierEvent args)
     {
-        ent.Comp.UpdateIntervalMultiplier = args.Args.Multiplier;
+        ent.Comp.UpdateIntervalMultiplier = args.Multiplier;
         Dirty(ent);
     }
 

@@ -29,7 +29,7 @@ public sealed partial class ChangelingClonerSystem : EntitySystem
     [Dependency] private SharedAppearanceSystem _appearance = default!;
     [Dependency] private SharedChangelingIdentitySystem _changelingIdentity = default!;
     [Dependency] private SharedForensicsSystem _forensics = default!;
-    [Dependency] private SharedVisualBodySystem _visualBody = default!;
+    [Dependency] private SharedHumanoidAppearanceSystem _humanoidAppearance = default!;
 
     public override void Initialize()
     {
@@ -133,7 +133,7 @@ public sealed partial class ChangelingClonerSystem : EntitySystem
         if (ent.Comp.State != ChangelingClonerState.Empty)
             return false;
 
-        if (!HasComp<HumanoidProfileComponent>(target))
+        if (!HasComp<HumanoidAppearanceComponent>(target))
             return false; // cloning only works for humanoids at the moment
 
         var args = new DoAfterArgs(EntityManager, user, ent.Comp.DoAfter, new ClonerDrawDoAfterEvent(), ent, target: target, used: ent)
@@ -169,7 +169,7 @@ public sealed partial class ChangelingClonerSystem : EntitySystem
         if (ent.Comp.State != ChangelingClonerState.Filled)
             return false;
 
-        if (!HasComp<HumanoidProfileComponent>(target))
+        if (!HasComp<HumanoidAppearanceComponent>(target))
             return false; // cloning only works for humanoids at the moment
 
         var args = new DoAfterArgs(EntityManager, user, ent.Comp.DoAfter, new ClonerInjectDoAfterEvent(), ent, target: target, used: ent)
@@ -206,7 +206,7 @@ public sealed partial class ChangelingClonerSystem : EntitySystem
         if (ent.Comp.State != ChangelingClonerState.Empty)
             return;
 
-        if (!HasComp<HumanoidProfileComponent>(target))
+        if (!HasComp<HumanoidAppearanceComponent>(target))
             return; // cloning only works for humanoids at the moment
 
         _adminLogger.Add(LogType.Identity,
@@ -236,7 +236,7 @@ public sealed partial class ChangelingClonerSystem : EntitySystem
         if (ent.Comp.State != ChangelingClonerState.Filled)
             return;
 
-        if (!HasComp<HumanoidProfileComponent>(target))
+        if (!HasComp<HumanoidAppearanceComponent>(target))
             return; // cloning only works for humanoids at the moment
 
         if (!_prototype.Resolve(ent.Comp.Settings, out var settings))
@@ -259,7 +259,7 @@ public sealed partial class ChangelingClonerSystem : EntitySystem
             $"{user} is using {ent.Owner} to inject DNA into {target} changing their identity to {ent.Comp.ClonedBackup.Value}.");
 
         // Do the actual transformation.
-        _visualBody.CopyAppearanceFrom(ent.Comp.ClonedBackup.Value, target);
+        _humanoidAppearance.CloneAppearance(ent.Comp.ClonedBackup.Value, target);
         _cloning.CloneComponents(ent.Comp.ClonedBackup.Value, target, settings);
         _metaData.SetEntityName(target, Name(ent.Comp.ClonedBackup.Value), raiseEvents: ent.Comp.RaiseNameChangeEvents);
 

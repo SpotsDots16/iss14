@@ -14,6 +14,8 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Timing;
 using Content.Shared.Verbs;
+using Content.Shared._Shitmed.Damage; // Shitmed Change
+using Content.Shared._Shitmed.Targeting; // Shitmed Change
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Player;
@@ -109,7 +111,7 @@ namespace Content.Server.Bible
                 _popupSystem.PopupEntity(Loc.GetString("bible-sizzle"), args.User, args.User);
 
                 _audio.PlayPvs(component.SizzleSoundPath, args.User);
-                _damageableSystem.TryChangeDamage(args.User, component.DamageOnUntrainedUse, true, origin: uid);
+                _damageableSystem.TryChangeDamage(args.User, component.DamageOnUntrainedUse, true, origin: uid, targetPart: TargetBodyPart.All, ignoreBlockers: true); // Shitmed Change
                 _delay.TryResetDelay((uid, useDelay));
 
                 return;
@@ -139,7 +141,7 @@ namespace Content.Server.Bible
             string othersMessage;
             string selfMessage;
 
-            if (_damageableSystem.TryChangeDamage(args.Target.Value, component.Damage, true, origin: uid))
+            if (_damageableSystem.TryChangeDamage(args.Target.Value, component.Damage, true, origin: uid, targetPart: TargetBodyPart.All, ignoreBlockers: true, splitDamage: SplitDamageBehavior.SplitEnsureAll)) // Shitmed Change
             {
                 othersMessage = Loc.GetString(component.LocPrefix + "-heal-success-others", ("user", userEnt), ("target", targetEnt), ("bible", uid));
                 selfMessage = Loc.GetString(component.LocPrefix + "-heal-success-self", ("target", targetEnt), ("bible", uid));

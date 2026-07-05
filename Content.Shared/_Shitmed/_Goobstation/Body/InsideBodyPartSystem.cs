@@ -5,6 +5,7 @@ using Content.Shared.Body.Components;
 using Content.Shared.Body.Part;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.DoAfter;
 using Content.Shared.IdentityManagement;
@@ -16,7 +17,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Goobstation.Shared.Body;
 
-public sealed class InsideBodyPartSystem : CommonInsideBodyPartSystem
+public sealed partial class InsideBodyPartSystem : CommonInsideBodyPartSystem
 {
     [Dependency] private DamageableSystem _damage = default!;
     [Dependency] private IPrototypeManager _proto = default!;

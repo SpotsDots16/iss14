@@ -1,4 +1,4 @@
-﻿- type: entity
+- type: entity
   save: false
   parent: [ BaseSimpleMob, BaseMobAnimal, MobCombat, MobBloodstream ]
   id: BaseMobArgocyte
@@ -17,10 +17,8 @@
   - type: ReplacementAccent
     accent: xeno
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: FerrochromicAcid
-        Quantity: 75 #we don't want the map to become pools of blood
+    bloodReagent: FerrochromicAcid
+    bloodMaxVolume: 75
     bloodlossDamage:
       types:
         Bloodloss:

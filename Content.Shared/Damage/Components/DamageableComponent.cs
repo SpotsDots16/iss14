@@ -63,14 +63,40 @@ public sealed partial class DamageableComponent : Component
     [DataField("radiationDamageTypes")]
     // ReSharper disable once UseCollectionExpression - Cannot refactor this as it's a potential sandbox violation.
     public List<ProtoId<DamageTypePrototype>> RadiationDamageTypeIDs = new() { "Radiation" };
+
+    // Shitmed Change Start
+    /// <summary>
+    ///     The main damage container supported by this component. Body parts use this to
+    ///     define which damage types they support for wound routing.
+    /// </summary>
+    [DataField("damageContainer")]
+    public ProtoId<DamageContainerPrototype>? DamageContainerID;
+
+    /// <summary>
+    ///     Goobstation: if set, health bar overlays only show for this entity once total damage
+    ///     exceeds this threshold.
+    /// </summary>
+    [DataField]
+    public FixedPoint2? HealthBarThreshold;
+
+    /// <summary>
+    ///     Shitmed: time of the last damage change, used by wound/pain processing.
+    /// </summary>
+    [ViewVariables]
+    public TimeSpan LastModifiedTime = TimeSpan.Zero;
+    // Shitmed Change End
 }
 
 [Serializable, NetSerializable]
 public sealed class DamageableComponentState(
     DamageSpecifier damage,
-    ProtoId<DamageModifierSetPrototype>? modifierSetId)
+    ProtoId<DamageContainerPrototype>? damageContainerId, // Shitmed Change
+    ProtoId<DamageModifierSetPrototype>? modifierSetId,
+    FixedPoint2? healthBarThreshold) // Shitmed Change
     : ComponentState
 {
     public readonly DamageSpecifier Damage = damage;
+    public readonly ProtoId<DamageContainerPrototype>? DamageContainerID = damageContainerId; // Shitmed Change
     public readonly ProtoId<DamageModifierSetPrototype>? ModifierSetId = modifierSetId;
+    public readonly FixedPoint2? HealthBarThreshold = healthBarThreshold; // Shitmed Change
 }

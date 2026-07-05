@@ -1,5 +1,6 @@
 using System.Linq;
 using Content.Shared.Administration.Logs;
+using Content.Shared.Bed.Sleep; // Shitmed Change
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Systems;
@@ -52,6 +53,7 @@ public abstract partial class SharedCryoPodSystem : EntitySystem
     [Dependency] private SharedToolSystem _tool = default!;
     [Dependency] protected SharedUserInterfaceSystem UI = default!;
     [Dependency] private StandingStateSystem _standingState = default!;
+    [Dependency] private SleepingSystem _sleep = default!; // Goob shitmed
 
     [Dependency] private EntityQuery<BloodstreamComponent> _bloodstreamQuery = default!;
     [Dependency] private EntityQuery<ItemSlotsComponent> _itemSlotsQuery = default!;
@@ -190,6 +192,13 @@ public abstract partial class SharedCryoPodSystem : EntitySystem
         if (Terminating(ent))
             return;
 
+        // Shitmed Change start
+        // Actually no this does make sense but shitmed never thought itd be predicted
+        // so we gotta ensure container on client
+        ent.Comp.BodyContainer = _container.EnsureContainer<ContainerSlot>(ent, CryoPodComponent.BodyContainerName);
+        var insidePod = ent.Comp.BodyContainer.ContainedEntity;
+        // Shitmed Change end
+
         if (args.Powered)
         {
             EnsureComp<ActiveCryoPodComponent>(ent);
@@ -199,6 +208,8 @@ public abstract partial class SharedCryoPodSystem : EntitySystem
         else
         {
             RemComp<ActiveCryoPodComponent>(ent);
+            if (insidePod is { } patient) // Shitmed Change
+                _sleep.TryWaking(patient);
             UI.CloseUi(ent.Owner, HealthAnalyzerUiKey.Key);
         }
 

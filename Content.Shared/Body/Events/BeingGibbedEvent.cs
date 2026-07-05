@@ -12,3 +12,11 @@ namespace Content.Shared.Body.Events;
 /// </summary>
 [ByRefEvent]
 public readonly record struct BeingGibbedEvent(HashSet<EntityUid> GibbedParts);
+
+/// <summary>
+/// iss14: compatibility event kept from the pre-rollback (Nubody) gibbing system.
+/// Raised right before the gibbed body entity is deleted; several systems
+/// (forensics, rotting, mind transfer, borgs, implants, devour) rely on it.
+/// </summary>
+[ByRefEvent]
+public readonly record struct GibbedBeforeDeletionEvent(HashSet<EntityUid> Giblets);

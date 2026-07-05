@@ -26,7 +26,7 @@ public sealed partial class DamageOverlay : Overlay
     public MobState State = MobState.Alive;
 
     /// <summary>
-    /// Handles the red pulsing overlay
+    /// Shitmed Change: Handles the red pulsing overlay
     /// </summary>
     public float PainLevel = 0f;
 
@@ -136,12 +136,11 @@ public sealed partial class DamageOverlay : Overlay
          * innerCircleMaxRadius is what we start at for 0 level for the inner circle
          */
 
-        // Makes debugging easier don't @ me
+        // Only show pain overlay if there's actual pain and we're not in critical stat
+        // Goobstation start
         float level = 0f;
         level = _oldPainLevel;
-
-        // TODO: Lerping
-        if (level > 0f && _oldCritLevel <= 0f)
+        if (_oldPainLevel > 0f && _oldCritLevel <= 0f)
         {
             var pulseRate = 3f;
             var adjustedTime = time * pulseRate;
@@ -150,14 +149,14 @@ public sealed partial class DamageOverlay : Overlay
             float innerMaxLevel = 0.6f * distance;
             float innerMinLevel = 0.2f * distance;
 
-            var outerRadius = outerMaxLevel - level * (outerMaxLevel - outerMinLevel);
-            var innerRadius = innerMaxLevel - level * (innerMaxLevel - innerMinLevel);
+            var outerRadius = outerMaxLevel - _oldPainLevel * (outerMaxLevel - outerMinLevel);
+            var innerRadius = innerMaxLevel - _oldPainLevel * (innerMaxLevel - innerMinLevel);
 
             var pulse = MathF.Max(0f, MathF.Sin(adjustedTime));
 
             _bruteShader.SetParameter("time", pulse);
             _bruteShader.SetParameter("color", new Vector3(1f, 0f, 0f));
-            _bruteShader.SetParameter("darknessAlphaOuter", 0.8f);
+            _bruteShader.SetParameter("darknessAlphaOuter", 0.8f * _oldPainLevel); // Scale alpha with pain level
 
             _bruteShader.SetParameter("outerCircleRadius", outerRadius);
             _bruteShader.SetParameter("outerCircleMaxRadius", outerRadius + 0.2f * distance);

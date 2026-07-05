@@ -41,9 +41,5 @@
   alwaysAllowed: true
 
 - type: statusEffect
-  id: ScrambleLocationEffect
-  alwaysAllowed: true
-
-- type: statusEffect
   id: ActivateArtifactEffect
   alwaysAllowed: true

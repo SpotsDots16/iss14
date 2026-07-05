@@ -219,6 +219,10 @@ public sealed partial class BodySystem : SharedBodySystem // Shitmed change: mad
         var ev = new BeingGibbedEvent(gibs);
         RaiseLocalEvent(bodyId, ref ev);
 
+        // iss14: compatibility with pre-rollback consumers (forensics, rotting, mind transfer...)
+        var beforeDeletionEv = new GibbedBeforeDeletionEvent(gibs);
+        RaiseLocalEvent(bodyId, ref beforeDeletionEv);
+
         QueueDel(bodyId);
 
         return gibs;

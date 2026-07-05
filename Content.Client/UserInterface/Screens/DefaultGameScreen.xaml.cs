@@ -22,11 +22,13 @@ public sealed partial class DefaultGameScreen : InGameScreen
         SetAnchorAndMarginPreset(Hotbar, LayoutPreset.BottomWide, margin: 5);
         SetAnchorAndMarginPreset(Chat, LayoutPreset.TopRight, margin: 10);
         SetAnchorAndMarginPreset(Alerts, LayoutPreset.TopRight, margin: 10);
+        SetAnchorAndMarginPreset(Targeting, LayoutPreset.BottomRight, margin: 5); // Shitmed Change
 
         Chat.OnResized += ChatOnResized;
         Chat.OnChatResizeFinish += ChatOnResizeFinish;
 
         MainViewport.OnResized += ResizeActionContainer;
+        MainViewport.OnResized += ResizeAlertsContainer; // Shitmed Change
         Inventory.OnResized += ResizeActionContainer;
     }
 
@@ -35,6 +37,14 @@ public sealed partial class DefaultGameScreen : InGameScreen
         float indent = Inventory.Size.Y + TopBar.Size.Y + 40;
         Actions.ActionsContainer.MaxGridHeight = MainViewport.Size.Y - indent;
     }
+
+    // Shitmed Change Start
+    private void ResizeAlertsContainer()
+    {
+        float indent = Chat.Size.Y + Targeting.Size.Y + 120;
+        Alerts.AlertContainer.MaxGridHeight = Math.Max(MainViewport.Size.Y - indent, 1);
+    }
+    // Shitmed Change End
 
     private void ChatOnResizeFinish(Vector2 _)
     {

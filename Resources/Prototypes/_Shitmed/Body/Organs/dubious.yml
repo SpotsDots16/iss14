@@ -137,18 +137,6 @@
         ScrambleDnaEffect: ScrambleDnaEffect
 
 - type: entity
-  id: OrganDubiousScrambleLocation
-  parent: OrganDubiousBase
-  components:
-  - type: Sprite
-    state: vent
-  - type: Organ
-    onAdd:
-    - type: RandomStatusActivation
-      statusEffects:
-        ScrambleLocationEffect: ScrambleLocationEffect
-
-- type: entity
   id: OrganDubiousSpiderEggs
   parent: OrganDubiousBase
   components:

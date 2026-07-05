@@ -50,10 +50,8 @@
   - type: SentienceTarget
     flavorKind: station-event-random-sentience-flavor-organic
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 50
+    bloodReagent: Blood
+    bloodMaxVolume: 50
   - type: ReplacementAccent
     accent: mouse
   - type: MeleeWeapon
@@ -141,10 +139,8 @@
     - Bee
     - Trash
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: InsectBlood
-        Quantity: 0.1
+    bloodReagent: InsectBlood
+    bloodMaxVolume: 0.1
   - type: MobPrice
     price: 50
   - type: NPCRetaliation
@@ -190,10 +186,8 @@
     factions:
     - SimpleHostile
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 0.1
+    bloodReagent: Blood
+    bloodMaxVolume: 0.1
   - type: ZombieImmune
 
 
@@ -267,10 +261,8 @@
     interactSuccessSound:
       path: /Audio/Animals/chicken_cluck_happy.ogg
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 100
+    bloodReagent: Blood
+    bloodMaxVolume: 100
   - type: EggLayer
     eggSpawn:
     - id: FoodEgg
@@ -394,10 +386,8 @@
       Dead:
         Base: cockroach_dead
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: InsectBlood
-        Quantity: 20
+    bloodReagent: InsectBlood
+    bloodMaxVolume: 20
   - type: Edible
   - type: FlavorProfile
     flavors:
@@ -430,6 +420,7 @@
         damage: 10
       behaviors:
       - !type:GibBehavior
+        gibContents: Skip # Shitmed Change
         recursive: false
   - type: NonSpreaderZombie
   - type: StepTrigger
@@ -557,10 +548,8 @@
   - type: Damageable
     damageModifierSet: Moth
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: InsectBlood
-        Quantity: 20
+    bloodReagent: InsectBlood
+    bloodMaxVolume: 20
   - type: Respirator
     damage:
       types:
@@ -712,10 +701,8 @@
     interactSuccessSound:
       path: /Audio/Animals/duck_quack_happy.ogg
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 100
+    bloodReagent: Blood
+    bloodMaxVolume: 100
   - type: EggLayer
     eggSpawn:
     - id: FoodEgg
@@ -838,10 +825,8 @@
     tags:
     - Trash
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: InsectBlood
-        Quantity: 0.1
+    bloodReagent: InsectBlood
+    bloodMaxVolume: 0.1
   - type: MobPrice
     price: 50
   - type: Destructible
@@ -1003,10 +988,8 @@
   - type: ReplacementAccent
     accent: crab
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: CopperBlood
-        Quantity: 50
+    bloodReagent: CopperBlood
+    bloodMaxVolume: 50
   - type: Tag
     tags:
     - VimPilot
@@ -1368,10 +1351,8 @@
     interactSuccessSound:
       path: /Audio/Animals/goose_honk.ogg
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 100
+    bloodReagent: Blood
+    bloodMaxVolume: 100
   - type: NpcFactionMember
     factions:
     - Passive
@@ -1413,10 +1394,8 @@
     - id: FoodMeat
       amount: 4
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 300
+    bloodReagent: Blood
+    bloodMaxVolume: 300
     # if you fuck with the gorilla he will harambe you
   - type: MeleeWeapon
     soundHit:
@@ -1561,6 +1540,11 @@
   components:
   - type: CombatMode
     canDisarm: true
+  # Shitmed Change Start
+  - type: Targeting
+  - type: HumanoidAppearance
+    species: Monkey
+  # Shitmed Change End
   - type: Inventory
     templateId: monkey
     speciesId: monkey
@@ -1585,26 +1569,52 @@
   - type: Sprite
     drawdepth: Mobs
     layers:
-    - map: ["enum.DamageStateVisualLayers.Base"]
-      state: monkey
-      sprite: Mobs/Animals/monkey.rsi
-    - map: [ "jumpsuit" ]
-    - map: [ "enum.HumanoidVisualLayers.Handcuffs" ]
+  # Shitmed Change Start
+    - map: [ "enum.HumanoidVisualLayers.Chest" ]
+    - map: [ "enum.HumanoidVisualLayers.Groin" ]
+    - map: [ "enum.HumanoidVisualLayers.Head" ]
+    - map: [ "enum.HumanoidVisualLayers.Snout" ]
+    - map: [ "enum.HumanoidVisualLayers.Eyes" ]
+    - map: [ "enum.HumanoidVisualLayers.RArm" ]
+    - map: [ "enum.HumanoidVisualLayers.LArm" ]
+    - map: [ "enum.HumanoidVisualLayers.RLeg" ]
+    - map: [ "enum.HumanoidVisualLayers.LLeg" ]
+    - map: ["jumpsuit"]
+    - map: ["enum.HumanoidVisualLayers.LFoot"]
+    - map: ["enum.HumanoidVisualLayers.RFoot"]
+    - map: ["enum.HumanoidVisualLayers.LHand"]
+    - map: ["enum.HumanoidVisualLayers.RHand"]
+    - map: ["enum.HumanoidVisualLayers.Handcuffs"]
       color: "#ffffff"
       sprite: Objects/Misc/handcuffs.rsi
       state: body-overlay-2
       visible: false
+    - map: [ "gloves" ]
+    - map: [ "shoes" ]
     - map: [ "ears" ]
     - map: [ "id" ]
     - map: [ "outerClothing" ]
+    - map: [ "eyes" ]
+    - map: [ "belt" ]
+    - map: [ "neck" ]
+    - map: [ "back" ]
+    - map: [ "enum.HumanoidVisualLayers.FacialHair" ]
+    - map: [ "enum.HumanoidVisualLayers.HeadSide" ]
+    - map: [ "maskalt" ]
+    - map: [ "enum.HumanoidVisualLayers.Hair" ]
     - map: [ "mask" ]
+    - map: [ "enum.HumanoidVisualLayers.HeadTop" ]
+    - map: [ "enum.HumanoidVisualLayers.Tail" ]
     - map: [ "head" ]
+    - map: [ "pocket1" ]
+    - map: [ "pocket2" ]
+  # Shitmed Change End
   - type: Hands
-    activeHandId: Hand
-    hands:
-      Hand:
-        location: Left
   - type: ComplexInteraction
+  - type: Body # Shitmed Change
+    bodyType: Complex
+    prototype: Monkey
+    requiredLegs: 2
   - type: CreamPied
     sprite:
       sprite: Effects/creampie.rsi
@@ -1765,6 +1775,13 @@
   - type: LizardAccent
   - type: ReplacementAccent
     accent: kobold
+  # Shitmed Change Start
+  - type: HumanoidAppearance
+    species: Kobold
+  - type: Body
+    prototype: Kobold
+    requiredLegs: 2
+  # Shitmed Change End
   - type: Speech
     speechSounds: Lizard
     speechVerb: Reptilian
@@ -2072,10 +2089,8 @@
       types:
         Piercing: 0
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 50
+    bloodReagent: Blood
+    bloodMaxVolume: 50
   - type: CanEscapeInventory
   - type: MobPrice
     price: 50
@@ -2089,7 +2104,9 @@
       Taco: RatTaco
       Burger: RatBurger
       Skewer: RatSkewer
-  - type: Destructible
+  - type: Body # Shitmed Change
+    prototype: Mouse
+  - type: Destructible # Shitmed Change
     thresholds:
     - trigger:
         !type:DamageTypeTrigger
@@ -2097,6 +2114,7 @@
         damage: 60
       behaviors:
       - !type:GibBehavior
+        gibContents: Skip
         recursive: false
 
 - type: entity
@@ -2205,10 +2223,8 @@
     intensity: 0.5
     slope: 0.3
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: UnstableMutagen
-        Quantity: 50
+    bloodReagent: UnstableMutagen
+    bloodMaxVolume: 50
   - type: Solution
     solution:
       reagents:
@@ -2272,10 +2288,8 @@
     interactSuccessSound:
       path: /Audio/Animals/lizard_happy.ogg
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 150
+    bloodReagent: Blood
+    bloodMaxVolume: 150
   - type: Damageable
     damageModifierSet: Scale
   - type: Tag
@@ -2327,10 +2341,8 @@
     interactFailureString: petting-failure-generic
     interactSuccessSpawn: EffectHearts
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 50
+    bloodReagent: Blood
+    bloodMaxVolume: 50
 
 - type: entity
   name: frog
@@ -2386,10 +2398,8 @@
     interactSuccessSound:
       path: /Audio/Animals/frog_ribbit.ogg
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 50
+    bloodReagent: Blood
+    bloodMaxVolume: 50
   - type: Tag
     tags:
     - VimPilot
@@ -2480,10 +2490,8 @@
     interactSuccessSound:
       path: /Audio/Animals/parrot_raught.ogg
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 50
+    bloodReagent: Blood
+    bloodMaxVolume: 50
 
 - type: entity
   parent: MobParrotBase
@@ -2672,10 +2680,8 @@
     interactFailureString: petting-failure-generic
     interactSuccessSpawn: EffectHearts
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 50
+    bloodReagent: Blood
+    bloodMaxVolume: 50
   - type: Damageable
     damageModifierSet: Scale
 
@@ -2728,10 +2734,8 @@
   - type: Spider
   - type: IgnoreSpiderWeb
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: CopperBlood
-        Quantity: 150
+    bloodReagent: CopperBlood
+    bloodMaxVolume: 150
   - type: Speech
     speechVerb: Arachnid
     speechSounds: Arachnid
@@ -2889,10 +2893,8 @@
     - type: Speech
       speechVerb: Cluwne
     - type: Bloodstream
-      bloodReferenceSolution:
-        reagents:
-        - ReagentId: Laughter
-          Quantity: 150
+      bloodReagent: Laughter
+      bloodMaxVolume: 150
 - type: entity
   name: wizard spider
   parent: MobGiantSpider
@@ -3088,10 +3090,8 @@
     attributes:
       gender: epicene
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 100
+    bloodReagent: Blood
+    bloodMaxVolume: 100
   - type: MeleeWeapon
     angle: 0
     animation: WeaponArcBite
@@ -3229,10 +3229,8 @@
     attributes:
       gender: epicene
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: DemonsBlood
-        Quantity: 150
+    bloodReagent: DemonsBlood
+    bloodMaxVolume: 150
   - type: Damageable
     damageModifierSet: Infernal
   - type: Injurable
@@ -3757,10 +3755,8 @@
     interactSuccessSound:
       path: /Audio/Animals/fox_squeak.ogg
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 60
+    bloodReagent: Blood
+    bloodMaxVolume: 60
   - type: CanEscapeInventory
     baseResistTime: 3
   - type: MobPrice
@@ -3878,10 +3874,8 @@
     speciesId: cat
     templateId: pet
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Sap
-        Quantity: 60
+    bloodReagent: Sap
+    bloodMaxVolume: 60
   - type: DamageStateVisuals
     states:
       Alive:
@@ -3985,10 +3979,8 @@
     - id: FoodMeat
       amount: 4
   - type: Bloodstream
-    bloodReferenceSolution:
-      reagents:
-      - ReagentId: Blood
-        Quantity: 300
+    bloodReagent: Blood
+    bloodMaxVolume: 300
     # Horns though
   - type: MeleeWeapon
     damage:
@@ -4081,18 +4073,14 @@
             sprite: Mobs/Pets/displacements.rsi
             state: corgi_head_displacement
   - type: Hands # HANDS!
-    activeHandId: Right
-    hands:
-      Right:
-        location: Right
-      Left:
-        location: Left
   - type: Puller
   - type: Cuffable # bad dog!
   - type: BlockWriting # dogs can't write, paws unwieldy; mouth-writing is a myth
   - type: Stripping
   - type: ComplexInteraction
   # Implement custom borgi body type
+  - type: Body # Shitmed: hands come from the body prototype
+    prototype: SmartCorgi
   - type: RotationVisuals
     defaultRotation: 90
     horizontalRotation: 180

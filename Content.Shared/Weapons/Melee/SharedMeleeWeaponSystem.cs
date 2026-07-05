@@ -427,8 +427,9 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
         DirtyField(weaponUid, weapon, nameof(MeleeWeaponComponent.NextAttack));
 
         // Do this AFTER attack so it doesn't spam every tick
-        var ev = new AttemptMeleeEvent();
+        var ev = new AttemptMeleeEvent(user, weaponUid, weapon); // Shitmed Change - Added Weapon and WeaponComponent
         RaiseLocalEvent(weaponUid, ref ev);
+        RaiseLocalEvent(user, ref ev); // Shitmed Change
 
         if (weapon.SwingBeverage)
         {
@@ -551,7 +552,8 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
 
         var modifiedDamage = DamageSpecifier.ApplyModifierSets(damage + hitEvent.BonusDamage + attackedEvent.BonusDamage, hitEvent.ModifiersList);
 
-        if (Damageable.TryChangeDamage(target.Value, modifiedDamage, out var damageResult, origin:user, ignoreResistances:resistanceBypass))
+        var damageResult = Damageable.TryChangeDamage(target.Value, modifiedDamage, ignoreResistances: resistanceBypass, origin: user, partMultiplier: component.ClickPartDamageMultiplier); // Shitmed Change
+        if (damageResult is { Empty: false })
         {
             // If the target has stamina and is taking blunt damage, they should also take stamina damage based on their blunt to stamina factor
             if (damageResult.DamageDict.TryGetValue("Blunt", out var bluntDamage))
@@ -576,7 +578,7 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
 
         _meleeSound.PlayHitSound(target.Value, user, GetHighestDamageSound(modifiedDamage, _protoManager), hitEvent.HitSoundOverride, component);
 
-        if (damageResult.GetTotal() > FixedPoint2.Zero && !TerminatingOrDeleted(target.Value))
+        if (damageResult != null && damageResult.GetTotal() > FixedPoint2.Zero && !TerminatingOrDeleted(target.Value)) // Shitmed Change
         {
             DoDamageEffect(targets, user, targetXform);
         }
@@ -709,9 +711,17 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
             RaiseLocalEvent(entity, attackedEvent);
             var modifiedDamage = DamageSpecifier.ApplyModifierSets(damage + hitEvent.BonusDamage + attackedEvent.BonusDamage, hitEvent.ModifiersList);
 
-            var damageResult = Damageable.ChangeDamage(entity, modifiedDamage, origin: user, ignoreResistances: resistanceBypass);
+            // Shitmed Change Start
+            foreach (var type in modifiedDamage.DamageDict.Keys)
+            {
+                if (!modifiedDamage.WoundSeverityMultipliers.TryAdd(type, component.HeavyAttackWoundMultiplier))
+                    modifiedDamage.WoundSeverityMultipliers[type] *= component.HeavyAttackWoundMultiplier;
+            }
+            // Shitmed Change End
 
-            if (damageResult.GetTotal() > FixedPoint2.Zero)
+            var damageResult = Damageable.TryChangeDamage(entity, modifiedDamage, ignoreResistances: resistanceBypass, origin: user, partMultiplier: component.HeavyPartDamageMultiplier); // Shitmed Change
+
+            if (damageResult != null && damageResult.GetTotal() > FixedPoint2.Zero) // Shitmed Change
             {
                 // If the target has stamina and is taking blunt damage, they should also take stamina damage based on their blunt to stamina factor
                 if (damageResult.DamageDict.TryGetValue("Blunt", out var bluntDamage))
