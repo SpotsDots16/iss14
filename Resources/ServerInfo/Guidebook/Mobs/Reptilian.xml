@@ -1,8 +1,8 @@
-<Document>
+﻿<Document>
   # Reptilians
 
   <Box>
-    <GuideEntityEmbed Entity="AppearanceReptilian" Caption=""/>
+    <GuideEntityEmbed Entity="MobReptilian" Caption=""/>
   </Box>
 
   They can ONLY eat fruits and meat, but can eat raw meat and drink blood without any ill effects.
