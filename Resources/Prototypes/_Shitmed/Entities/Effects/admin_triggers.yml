@@ -1,0 +1,11 @@
+# iss14: needed by the Shitmed SpawnEmpComponent status effect (spawns this on init).
+# Ported from Goob-Station (_NF/Mail/Items/misc.yml).
+- type: entity
+  id: AdminInstantEffectEMP7
+  categories: [ HideSpawnMenu ]
+  suffix: EMP, 7 meters
+  parent: AdminInstantEffectBase
+  components:
+  - type: EmpOnTrigger
+    range: 7
+    energyConsumption: 50000

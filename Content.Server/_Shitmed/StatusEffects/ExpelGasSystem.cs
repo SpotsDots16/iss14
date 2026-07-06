@@ -7,6 +7,8 @@
 using Content.Shared._Shitmed.StatusEffects;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Chat.Systems;
+using Content.Shared.Chat.Prototypes; // iss14
+using Robust.Shared.Prototypes; // iss14
 using Robust.Shared.Random;
 
 namespace Content.Server._Shitmed.StatusEffects;
@@ -16,6 +18,9 @@ public sealed partial class ExpelGasEffectSystem : EntitySystem
     [Dependency] private AtmosphereSystem _atmos = default!;
     [Dependency] private ChatSystem _chat = default!;
     [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private IPrototypeManager _proto = default!; // iss14
+
+    private static readonly ProtoId<EmotePrototype> FartEmote = "Fart"; // iss14: RA0033
 
     public override void Initialize()
     {
@@ -26,7 +31,9 @@ public sealed partial class ExpelGasEffectSystem : EntitySystem
         var mix = _atmos.GetContainingMixture((uid, Transform(uid)), true, true) ?? new();
         var gas = _random.Pick(component.PossibleGases);
         mix.AdjustMoles(gas, 60);
-        _chat.TryEmoteWithChat(uid, "Fart");
+        // iss14: the Goob "Fart" emote prototype isn't ported to this fork; guard so the effect still works without it.
+        if (_proto.HasIndex(FartEmote))
+            _chat.TryEmoteWithChat(uid, FartEmote);
     }
 
 

@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 using System.Linq;
 using Content.IntegrationTests.Fixtures;
 using Content.Shared._Shitmed.Medical.Surgery;
@@ -15,6 +15,8 @@ namespace Content.IntegrationTests.Tests._Shitmed;
 [TestFixture]
 public sealed class SurgeryTargetTest : GameTest
 {
+    private static readonly Robust.Shared.Prototypes.ProtoId<Content.Shared.Damage.Prototypes.DamageTypePrototype> SlashDamage = "Slash";
+
     [Test]
     public async Task HumanIsSurgeryTarget()
     {
@@ -139,7 +141,7 @@ public sealed class SurgeryTargetTest : GameTest
             Assert.That(head, Is.Not.Null, "Patient has no head.");
 
             var slash = new Content.Shared.Damage.DamageSpecifier(
-                server.ProtoMan.Index<Content.Shared.Damage.Prototypes.DamageTypePrototype>("Slash"), 30);
+                server.ProtoMan.Index(SlashDamage), 30);
 
             var dealt = damageable.TryChangeDamage((EntityUid?) patient, slash,
                 ignoreResistances: true,
@@ -221,7 +223,7 @@ public sealed class SurgeryTargetTest : GameTest
             var wounds = server.System<Content.Shared._Shitmed.Medical.Surgery.Wounds.Systems.WoundSystem>();
 
             var slash = new Content.Shared.Damage.DamageSpecifier(
-                server.ProtoMan.Index<Content.Shared.Damage.Prototypes.DamageTypePrototype>("Slash"), 15);
+                server.ProtoMan.Index(SlashDamage), 15);
 
             // No targetPart passed - exactly how melee and projectiles call it. The part
             // must come from the attacker's TargetingComponent via origin.
