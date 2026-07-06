@@ -1,0 +1,13 @@
+# Goobstation - MartialArts (ported from Goob-Station; storage whitelist kept vanilla to avoid missing tags)
+
+- type: entity
+  parent: ClothingBeltSecurity
+  id: ClothingBeltCorporateJudo
+  name: Corporate Judo Belt
+  description: Teaches the wearer NT Corporate Judo.
+  components:
+  - type: Sprite
+    sprite: _Goobstation/Clothing/Belt/judobelt.rsi
+  - type: Clothing
+    sprite: _Goobstation/Clothing/Belt/judobelt.rsi
+  - type: GrantCorporateJudo

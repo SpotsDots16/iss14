@@ -1,6 +1,8 @@
+using Content.Goobstation.Common.Grab; // Goobstation - Grab
 using Content.Shared.ActionBlocker;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Alert;
+using Content.Shared.CombatMode; // Goobstation - Grab
 using Content.Shared.Buckle.Components;
 using Content.Shared.Cuffs;
 using Content.Shared.Cuffs.Components;
@@ -23,6 +25,7 @@ using Content.Shared.Popups;
 using Content.Shared.Pulling.Events;
 using Content.Shared.Standing;
 using Content.Shared.Verbs;
+using Content.Shared.Weapons.Melee; // Goobstation - Grab
 using Robust.Shared.Containers;
 using Robust.Shared.Input.Binding;
 using Robust.Shared.Physics;
@@ -53,6 +56,7 @@ public sealed partial class PullingSystem : EntitySystem
     [Dependency] private HeldSpeedModifierSystem _clothingMoveSpeed = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private SharedVirtualItemSystem _virtual = default!;
+    [Dependency] private SharedCombatModeSystem _combatMode = default!; // Goobstation - Grab
 
     public override void Initialize()
     {
@@ -116,6 +120,13 @@ public sealed partial class PullingSystem : EntitySystem
         if (TryComp(args.PullerUid, out PullerComponent? pullerComp) && !pullerComp.NeedsHands)
             return;
 
+        // Goobstation - Grab start
+        var grabItemEv = new FindGrabbingItemEvent(args.PulledUid);
+        RaiseLocalEvent(uid, ref grabItemEv);
+        if (grabItemEv.GrabbingItem != null)
+            return;
+        // Goobstation - Grab end
+
         if (!_virtual.TrySpawnVirtualItemInHand(args.PulledUid, uid))
         {
             DebugTools.Assert("Unable to find available hand when starting pulling??");
@@ -137,6 +148,11 @@ public sealed partial class PullingSystem : EntitySystem
             _handsSystem.TryDrop((args.PullerUid, component), held);
             break;
         }
+
+        // Goobstation - Grab start
+        var ev = new StopGrabbingItemPullEvent(args.PulledUid);
+        RaiseLocalEvent(uid, ref ev);
+        // Goobstation - Grab end
     }
 
     private void OnStateChanged(EntityUid uid, PullerComponent component, ref MobStateChangedEvent args)
@@ -204,12 +220,12 @@ public sealed partial class PullingSystem : EntitySystem
         if (!TryComp(ent.Comp.Pulling.Value, out PullableComponent? pulling))
             return;
 
-        TryStopPull(ent.Comp.Pulling.Value, pulling, ent.Owner);
+        TryStopPull(ent.Comp.Pulling.Value, pulling, ent.Owner, true); // Goobstation - Grab
     }
 
     private void OnPullableContainerInsert(Entity<PullableComponent> ent, ref EntGotInsertedIntoContainerMessage args)
     {
-        TryStopPull(ent.Owner, ent.Comp);
+        TryStopPull(ent.Owner, ent.Comp, ignoreGrab: true); // Goobstation - Grab
     }
 
     private void OnModifyUncuffDuration(Entity<PullableComponent> ent, ref ModifyUncuffDurationEvent args)
@@ -228,6 +244,11 @@ public sealed partial class PullingSystem : EntitySystem
     {
         if (args.Handled)
             return;
+
+        // Goobstation - Grab start
+        if (!_blocker.CanInteract(ent, null))
+            return;
+        // Goobstation - Grab end
 
         args.Handled = TryStopPull(ent, ent, ent);
     }
@@ -292,6 +313,10 @@ public sealed partial class PullingSystem : EntitySystem
 
     private void OnRefreshMovespeed(EntityUid uid, PullerComponent component, RefreshMovementSpeedModifiersEvent args)
     {
+        // Goobstation - Grab: grab-capable pullers get their pull/grab speed handled by GrabIntentSystem instead.
+        if (HasComp<Content.Goobstation.Shared.GrabIntent.GrabIntentComponent>(uid))
+            return;
+
         if (TryComp<HeldSpeedModifierComponent>(component.Pulling, out var heldMoveSpeed) && component.Pulling.HasValue)
         {
             var (walkMod, sprintMod) =
@@ -305,6 +330,10 @@ public sealed partial class PullingSystem : EntitySystem
 
     private void OnPullableMoveInput(EntityUid uid, PullableComponent component, ref MoveInputEvent args)
     {
+        // Goobstation - Grab: grabbable entities have their escape-by-moving handled by GrabIntentSystem instead.
+        if (HasComp<Content.Goobstation.Shared.GrabIntent.GrabbableComponent>(uid))
+            return;
+
         // If someone moves then break their pulling.
         if (!component.BeingPulled)
             return;
@@ -428,7 +457,7 @@ public sealed partial class PullingSystem : EntitySystem
             return;
         }
 
-        TryStopPull(pullerComp.Pulling.Value, pullableComp, user: player);
+        TryStopPull(pullerComp.Pulling.Value, pullableComp, user: player, true); // Goobstation - Grab
     }
 
     public bool CanPull(EntityUid puller, EntityUid pullableUid, PullerComponent? pullerComp = null)
@@ -442,7 +471,12 @@ public sealed partial class PullingSystem : EntitySystem
             && !_handsSystem.TryGetEmptyHand(puller, out _)
             && pullerComp.Pulling == null)
         {
-            return false;
+            // Goobstation - Grab start
+            var grabItemEv = new FindGrabbingItemEvent(pullableUid);
+            RaiseLocalEvent(puller, ref grabItemEv);
+            if (grabItemEv.GrabbingItem == null)
+                return false;
+            // Goobstation - Grab end
         }
 
         if (!_blocker.CanInteract(puller, pullableUid))
@@ -482,12 +516,17 @@ public sealed partial class PullingSystem : EntitySystem
         if (!Resolve(pullable, ref pullable.Comp, false))
             return false;
 
-        if (pullable.Comp.Puller == pullerUid)
-        {
-            return TryStopPull(pullable, pullable.Comp);
-        }
+        // Goobstation - Grab start
+        if (pullable.Comp.Puller != pullerUid)
+            return TryStartPull(pullerUid, pullable, pullableComp: pullable.Comp);
 
-        return TryStartPull(pullerUid, pullable, pullableComp: pullable);
+        var grabAttemptEv = new GrabAttemptEvent(pullerUid);
+        RaiseLocalEvent(pullable, ref grabAttemptEv);
+        if (grabAttemptEv.Grabbed)
+            return true;
+
+        return !_combatMode.IsInCombatMode(pullable) && TryStopPull(pullable, pullable.Comp, ignoreGrab: true);
+        // Goobstation - Grab end
     }
 
     public bool TogglePull(EntityUid pullerUid, PullerComponent puller)
@@ -499,7 +538,10 @@ public sealed partial class PullingSystem : EntitySystem
     }
 
     public bool TryStartPull(EntityUid pullerUid, EntityUid pullableUid,
-        PullerComponent? pullerComp = null, PullableComponent? pullableComp = null)
+        PullerComponent? pullerComp = null, PullableComponent? pullableComp = null,
+        GrabStage? grabStageOverride = null, // Goobstation - Grab
+        float escapeAttemptModifier = 1.0f, // Goobstation - Grab
+        bool force = false) // Goobstation - Grab
     {
         if (!Resolve(pullerUid, ref pullerComp, false) ||
             !Resolve(pullableUid, ref pullableComp, false))
@@ -516,9 +558,15 @@ public sealed partial class PullingSystem : EntitySystem
         if (!TryComp(pullerUid, out PhysicsComponent? pullerPhysics) || !TryComp(pullableUid, out PhysicsComponent? pullablePhysics))
             return false;
 
+        // Goobstation - Grab start
+        if (!force && TryComp<MeleeWeaponComponent>(pullerUid, out var meleeWeaponComponent)
+                   && _timing.CurTime < meleeWeaponComponent.NextAttack)
+            return false;
+        // Goobstation - Grab end
+
         // Ensure that the puller is not currently pulling anything.
         if (TryComp<PullableComponent>(pullerComp.Pulling, out var oldPullable)
-            && !TryStopPull(pullerComp.Pulling.Value, oldPullable, pullerUid))
+            && !TryStopPull(pullerComp.Pulling.Value, oldPullable, pullerUid, true)) // Goobstation - Grab
             return false;
 
         // Stop anyone else pulling the entity we want to pull
@@ -528,8 +576,41 @@ public sealed partial class PullingSystem : EntitySystem
             if (pullableComp.Puller == pullerUid)
                 return false;
 
-            if (!TryStopPull(pullableUid, pullableComp, pullableComp.Puller))
+            // Goobstation - Grab start
+            var currentPuller = pullableComp.Puller.Value;
+
+            if (!TryStopPull(pullableUid, pullableComp, currentPuller))
+            {
+                // Did not succeed in retaking the grabbed entity
+                _popup.PopupPredicted(Loc.GetString("popup-grab-retake-fail",
+                        ("puller", Identity.Entity(currentPuller, EntityManager)),
+                        ("pulled", Identity.Entity(pullableUid, EntityManager))),
+                    pullerUid,
+                    pullerUid,
+                    PopupType.MediumCaution);
+                _popup.PopupPredicted(Loc.GetString("popup-grab-retake-fail-puller",
+                        ("puller", Identity.Entity(pullerUid, EntityManager)),
+                        ("pulled", Identity.Entity(pullableUid, EntityManager))),
+                    currentPuller,
+                    currentPuller,
+                    PopupType.MediumCaution);
                 return false;
+            }
+
+            // Successful retake
+            _popup.PopupPredicted(Loc.GetString("popup-grab-retake-success",
+                    ("puller", Identity.Entity(currentPuller, EntityManager)),
+                    ("pulled", Identity.Entity(pullableUid, EntityManager))),
+                pullerUid,
+                pullerUid,
+                PopupType.MediumCaution);
+            _popup.PopupPredicted(Loc.GetString("popup-grab-retake-success-puller",
+                    ("puller", Identity.Entity(pullerUid, EntityManager)),
+                    ("pulled", Identity.Entity(pullableUid, EntityManager))),
+                currentPuller,
+                currentPuller,
+                PopupType.MediumCaution);
+            // Goobstation - Grab end
         }
 
         var pullAttempt = new PullAttemptEvent(pullerUid, pullableUid);
@@ -580,8 +661,8 @@ public sealed partial class PullingSystem : EntitySystem
         // Messaging
         var message = new PullStartedMessage(pullerUid, pullableUid);
         _modifierSystem.RefreshMovementSpeedModifiers(pullerUid);
-        _alertsSystem.ShowAlert(pullerUid, pullerComp.PullingAlert);
-        _alertsSystem.ShowAlert(pullableUid, pullableComp.PulledAlert);
+        _alertsSystem.ShowAlert(pullerUid, pullerComp.PullingAlert, 0); // Goobstation - Grab
+        _alertsSystem.ShowAlert(pullableUid, pullableComp.PulledAlert, 0); // Goobstation - Grab
 
         RaiseLocalEvent(pullerUid, message);
         RaiseLocalEvent(pullableUid, message);
@@ -595,10 +676,15 @@ public sealed partial class PullingSystem : EntitySystem
 
         _adminLogger.Add(LogType.Action, LogImpact.Low,
             $"{ToPrettyString(pullerUid):user} started pulling {ToPrettyString(pullableUid):target}");
+
+        // Goobstation - Grab start
+        var grabEv = new GrabAttemptEvent(pullerUid, GrabStageOverride: grabStageOverride, EscapeAttemptModifier: escapeAttemptModifier);
+        RaiseLocalEvent(pullableUid, ref grabEv);
+        // Goobstation - Grab end
         return true;
     }
 
-    public bool TryStopPull(EntityUid pullableUid, PullableComponent pullable, EntityUid? user = null)
+    public bool TryStopPull(EntityUid pullableUid, PullableComponent pullable, EntityUid? user = null, bool ignoreGrab = false) // Goobstation - Grab
     {
         var pullerUidNull = pullable.Puller;
 
@@ -610,6 +696,16 @@ public sealed partial class PullingSystem : EntitySystem
 
         if (msg.Cancelled)
             return false;
+
+        // Goobstation - Grab start
+        if (!ignoreGrab)
+        {
+            var tryReleaseEv = new GrabAttemptReleaseEvent(user, pullerUidNull.Value);
+            RaiseLocalEvent(pullableUid, ref tryReleaseEv);
+            if (!tryReleaseEv.Released)
+                return false;
+        }
+        // Goobstation - Grab end
 
         StopPulling(pullableUid, pullable);
         return true;

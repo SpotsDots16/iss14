@@ -8,9 +8,11 @@ using Content.Shared.Body.Systems; // Shitmed Change
 using Content.Shared.CombatMode;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Explosion;
+using Content.Shared.Hands; // Goobstation - Grab
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Input;
+using Content.Shared.Inventory.VirtualItem; // Goobstation - Grab
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.Stacks;
@@ -181,6 +183,18 @@ namespace Content.Server.Hands.Systems
                 !_actionBlockerSystem.CanThrow(player, throwEnt.Value))
                 return false;
 
+            // Goobstation - Grab start: added throwing for grabbed mobs, moved direction computation up.
+            var direction = _transformSystem.ToMapCoordinates(coordinates).Position - _transformSystem.GetWorldPosition(player);
+
+            if (TryComp<VirtualItemComponent>(throwEnt, out var virt))
+            {
+                var userEv = new VirtualItemThrownEvent(virt.BlockingEntity, player, throwEnt.Value, direction);
+                RaiseLocalEvent(player, ref userEv);
+                var targEv = new VirtualItemThrownEvent(virt.BlockingEntity, player, throwEnt.Value, direction);
+                RaiseLocalEvent(virt.BlockingEntity, ref targEv);
+            }
+            // Goobstation - Grab end
+
             if (_timing.CurTime < hands.NextThrowTime)
                 return false;
             hands.NextThrowTime = _timing.CurTime + hands.ThrowCooldown;
@@ -195,7 +209,6 @@ namespace Content.Server.Hands.Systems
                 throwEnt = splitStack.Value;
             }
 
-            var direction = _transformSystem.ToMapCoordinates(coordinates).Position - _transformSystem.GetWorldPosition(player);
             if (direction == Vector2.Zero)
                 return true;
 
@@ -209,6 +222,7 @@ namespace Content.Server.Hands.Systems
             // or the throw strength.
             var ev = new BeforeThrowEvent(throwEnt.Value, direction, throwSpeed, player);
             RaiseLocalEvent(player, ref ev);
+            RaiseLocalEvent(throwEnt.Value, ref ev); // Goobstation - Grab
 
             if (ev.Cancelled)
                 return true;
@@ -217,7 +231,8 @@ namespace Content.Server.Hands.Systems
             if (IsHolding((player, hands), throwEnt, out _) && !TryDrop(player, throwEnt.Value))
                 return false;
 
-            _throwingSystem.TryThrow(ev.ItemUid, ev.Direction, ev.ThrowSpeed, ev.PlayerUid, compensateFriction: !HasComp<LandAtCursorComponent>(ev.ItemUid));
+            if (!ev.GrabThrow) // Goobstation - Grab/MartialArts: grab throws are handled by GrabThrownSystem
+                _throwingSystem.TryThrow(ev.ItemUid, ev.Direction, ev.ThrowSpeed, ev.PlayerUid, compensateFriction: !HasComp<LandAtCursorComponent>(ev.ItemUid));
 
             return true;
         }

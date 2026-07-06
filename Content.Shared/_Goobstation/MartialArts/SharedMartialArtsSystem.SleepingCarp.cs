@@ -1,0 +1,175 @@
+// Goobstation - MartialArts (ported from Goob-Station)
+using System.Linq;
+using Content.Goobstation.Shared.MartialArts.Components;
+using Content.Goobstation.Shared.MartialArts.Events;
+using Content.Shared.IdentityManagement;
+using Content.Shared.Interaction.Events;
+using Content.Shared.Movement.Pulling.Components;
+using Content.Shared.Popups;
+using Content.Shared.Weapons.Reflect;
+using Robust.Shared.Audio;
+
+namespace Content.Goobstation.Shared.MartialArts;
+
+public partial class SharedMartialArtsSystem
+{
+    private void InitializeSleepingCarp()
+    {
+        SubscribeLocalEvent<CanPerformComboComponent, SleepingCarpGnashingTeethPerformedEvent>(OnSleepingCarpGnashing);
+        SubscribeLocalEvent<CanPerformComboComponent, SleepingCarpKneeHaulPerformedEvent>(OnSleepingCarpKneeHaul);
+        SubscribeLocalEvent<CanPerformComboComponent, SleepingCarpCrashingWavesPerformedEvent>(OnSleepingCarpCrashingWaves);
+
+        SubscribeLocalEvent<GrantSleepingCarpComponent, UseInHandEvent>(OnGrantSleepingCarp);
+    }
+
+    #region Generic Methods
+
+    private void OnGrantSleepingCarp(Entity<GrantSleepingCarpComponent> ent, ref UseInHandEvent args)
+    {
+        if (!_netManager.IsServer)
+            return;
+
+        if (ent.Comp.MaximumUses <= ent.Comp.CurrentUses)
+        {
+            _popupSystem.PopupEntity(Loc.GetString("cqc-fail-used", ("manual", Identity.Entity(ent, EntityManager))),
+            args.User,
+            args.User);
+            return;
+        }
+
+        // iss14: Changeling check stripped (no changeling content).
+
+        var studentComp = EnsureComp<SleepingCarpStudentComponent>(args.User);
+
+        if (studentComp.UseAgainTime == TimeSpan.Zero)
+        {
+            CarpScrollDelay((args.User, studentComp));
+            return;
+        }
+
+        if (_timing.CurTime < studentComp.UseAgainTime)
+        {
+            _popupSystem.PopupEntity(
+                Loc.GetString("carp-scroll-waiting"),
+                ent,
+                args.User,
+                PopupType.MediumCaution);
+            return;
+        }
+
+        switch (studentComp.Stage)
+        {
+            case < 3:
+                CarpScrollDelay((args.User, studentComp));
+                break;
+            case >= 3:
+                if (!TryGrantMartialArt(args.User, ent.Comp))
+                    return;
+                _faction.AddFaction(args.User, ent.Comp.FactionToAdd);
+                // iss14: CustomFactionIcons (Goob) not ported; faction icon skipped.
+                var userReflect = EnsureComp<ReflectComponent>(args.User);
+                userReflect.ReflectProb = 1;
+                userReflect.Spread = Angle.FromDegrees(60);
+                Dirty(args.User, userReflect);
+                _popupSystem.PopupEntity(
+                    Loc.GetString("carp-scroll-complete"),
+                    ent,
+                    args.User,
+                    PopupType.LargeCaution);
+                ent.Comp.CurrentUses++;
+                break;
+        }
+    }
+
+    private void CarpScrollDelay(Entity<SleepingCarpStudentComponent> ent)
+    {
+        var time = new Random().Next(ent.Comp.MinUseDelay, ent.Comp.MaxUseDelay);
+        ent.Comp.UseAgainTime = _timing.CurTime + TimeSpan.FromSeconds(time);
+        ent.Comp.Stage++;
+        _popupSystem.PopupEntity(
+            Loc.GetString("carp-scroll-advance"),
+            ent,
+            ent,
+            PopupType.Medium);
+    }
+
+    #endregion
+
+    #region Combo Methods
+
+    private void OnSleepingCarpGnashing(Entity<CanPerformComboComponent> ent,
+        ref SleepingCarpGnashingTeethPerformedEvent args)
+    {
+        if (!_proto.TryIndex(ent.Comp.BeingPerformed, out var proto)
+            || !_proto.TryIndex<MartialArtPrototype>(proto.MartialArtsForm.ToString(), out var martialArtProto)
+            || !TryUseMartialArt(ent, proto, out var target, out var downed))
+            return;
+
+        DoDamage(ent, target, proto.DamageType, proto.ExtraDamage + ent.Comp.ConsecutiveGnashes * 5, out _);
+        ent.Comp.ConsecutiveGnashes++;
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/Weapons/genhit1.ogg"), target);
+        if (!downed)
+        {
+            var saying =
+                Enumerable.ElementAt(martialArtProto.RandomSayings, _random.Next(martialArtProto.RandomSayings.Count));
+            var ev = new SleepingCarpSaying(saying);
+            RaiseLocalEvent(ent, ev);
+        }
+        else
+        {
+            var saying =
+                Enumerable.ElementAt(martialArtProto.RandomSayingsDowned, _random.Next(martialArtProto.RandomSayingsDowned.Count));
+            var ev = new SleepingCarpSaying(saying);
+            RaiseLocalEvent(ent, ev);
+        }
+        ent.Comp.LastAttacks.Clear();
+    }
+
+    private void OnSleepingCarpKneeHaul(Entity<CanPerformComboComponent> ent,
+        ref SleepingCarpKneeHaulPerformedEvent args)
+    {
+        if (!_proto.TryIndex(ent.Comp.BeingPerformed, out var proto)
+            || !TryUseMartialArt(ent, proto, out var target, out var downed))
+            return;
+
+        if (!downed)
+        {
+            DoDamage(ent, target, proto.DamageType, proto.ExtraDamage, out _);
+            _stamina.TakeStaminaDamage(target, proto.StaminaDamage); // iss14: resistances apply by default
+            _stun.TryKnockdown(target, TimeSpan.FromSeconds(proto.ParalyzeTime), true, true, proto.DropItems);
+        }
+        else
+        {
+            DoDamage(ent, target, proto.DamageType, proto.ExtraDamage / 2, out _);
+            _stamina.TakeStaminaDamage(target, proto.StaminaDamage - 20); // iss14: resistances apply by default
+            _hands.TryDrop(target);
+        }
+        if (TryComp<PullableComponent>(target, out var pullable))
+            _pulling.TryStopPull(target, pullable, ent, true);
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/Weapons/genhit3.ogg"), target);
+        ComboPopup(ent, target, proto.Name);
+        ent.Comp.LastAttacks.Clear();
+    }
+
+    private void OnSleepingCarpCrashingWaves(Entity<CanPerformComboComponent> ent,
+        ref SleepingCarpCrashingWavesPerformedEvent args)
+    {
+        if (!_proto.TryIndex(ent.Comp.BeingPerformed, out var proto)
+            || !TryUseMartialArt(ent, proto, out var target, out var downed)
+            || downed)
+            return;
+
+        DoDamage(ent, target, proto.DamageType, proto.ExtraDamage, out var damage);
+        var mapPos = _transform.GetMapCoordinates(ent).Position;
+        var hitPos = _transform.GetMapCoordinates(target).Position;
+        var dir = hitPos - mapPos;
+        if (TryComp<PullableComponent>(target, out var pullable))
+            _pulling.TryStopPull(target, pullable, ent, true);
+        _grabThrowing.Throw(target, ent, dir, proto.ThrownSpeed, damage, proto.DropItems);
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/Weapons/genhit2.ogg"), target);
+        ComboPopup(ent, target, proto.Name);
+        ent.Comp.LastAttacks.Clear();
+    }
+
+    #endregion
+}

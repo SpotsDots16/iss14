@@ -246,6 +246,8 @@
         Slash: -0.05
   - type: Fingerprint
   - type: Blindable
+  - type: GrabIntent # Goobstation - Grab
+  - type: Grabbable # Goobstation - Grab
   # Other
   - type: Temperature
     currentTemperature: 310.15

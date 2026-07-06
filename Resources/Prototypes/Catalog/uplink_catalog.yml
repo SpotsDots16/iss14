@@ -2299,3 +2299,61 @@
     blacklist:
       components:
       - SurplusBundle
+
+# Goobstation - MartialArts start (ported from Goob-Station, costs rescaled to iss14 TC economy)
+- type: listing
+  id: UplinkCQCManual
+  name: uplink-cqc-name
+  description: uplink-cqc-desc
+  productEntity: CQCManual
+  cost:
+    Telecrystal: 12
+  categories:
+  - UplinkWeaponry
+  conditions:
+  - !type:StoreWhitelistCondition
+    whitelist:
+      tags:
+      - NukeOpsUplink
+
+- type: listing
+  id: UplinkCQCManualChef
+  name: uplink-cqc-name
+  description: uplink-cqc-desc
+  productEntity: CQCManual
+  cost:
+    Telecrystal: 12
+  categories:
+  - UplinkJob
+  conditions:
+  - !type:ListingLimitedStockCondition
+    stock: 1
+  - !type:BuyerJobCondition
+    whitelist:
+    - Chef
+
+- type: listing
+  id: UplinkCapoeiraManual
+  name: uplink-capoeira-name
+  description: uplink-capoeira-desc
+  productEntity: CapoeiraManual
+  cost:
+    Telecrystal: 7
+  categories:
+  - UplinkWeaponry
+
+- type: listing
+  id: UplinkMysteriousScroll
+  name: uplink-sleeping-carp-name
+  description: uplink-sleeping-carp-desc
+  productEntity: SleepingCarpScroll
+  cost:
+    Telecrystal: 14
+  categories:
+  - UplinkWeaponry
+  conditions:
+  - !type:StoreWhitelistCondition
+    blacklist:
+      tags:
+      - NukeOpsUplink
+# Goobstation - MartialArts end

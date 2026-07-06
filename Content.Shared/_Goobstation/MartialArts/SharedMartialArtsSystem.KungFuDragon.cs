@@ -1,0 +1,94 @@
+// Goobstation - MartialArts (ported from Goob-Station)
+using Content.Goobstation.Common.MartialArts;
+using Content.Goobstation.Shared.MartialArts.Components;
+using Content.Goobstation.Shared.MartialArts.Events;
+using Content.Shared.Interaction.Events;
+using Content.Shared.Weapons.Melee.Events;
+
+namespace Content.Goobstation.Shared.MartialArts;
+
+public abstract partial class SharedMartialArtsSystem
+{
+    private void InitializeDragon()
+    {
+        SubscribeLocalEvent<CanPerformComboComponent, DragonClawPerformedEvent>(OnDragonClaw);
+        SubscribeLocalEvent<CanPerformComboComponent, DragonTailPerformedEvent>(OnDragonTail);
+        SubscribeLocalEvent<CanPerformComboComponent, DragonStrikePerformedEvent>(OnDragonStrike);
+
+        SubscribeLocalEvent<GrantKungFuDragonComponent, UseInHandEvent>(OnGrantCQCUse);
+
+        SubscribeLocalEvent<DragonPowerBuffComponent, AttackedEvent>(OnAttacked);
+    }
+
+    private void OnAttacked(Entity<DragonPowerBuffComponent> ent, ref AttackedEvent args)
+    {
+        if (_hands.TryGetActiveItem(ent.Owner, out _) // Only unarmed
+            || !_blocker.CanInteract(ent, null)) // Should be able to interact
+            return;
+
+        args.ModifiersList.Add(ent.Comp.ModifierSet);
+
+        // Works for both armed and unarmed attacks
+        ApplyMultiplier(ent,
+            ent.Comp.DamageMultiplier,
+            0f,
+            ent.Comp.AttackDamageBuffDuration,
+            MartialArtModifierType.Damage);
+    }
+
+    private void OnDragonStrike(Entity<CanPerformComboComponent> ent, ref DragonStrikePerformedEvent args)
+    {
+        if (!_proto.TryIndex(ent.Comp.BeingPerformed, out var proto)
+            || !TryUseMartialArt(ent, proto, out var target, out var downed))
+            return;
+
+        if (!downed)
+        {
+            _popupSystem.PopupEntity(Loc.GetString("martial-arts-fail-target-standing"), ent, ent);
+            return;
+        }
+
+        // Paralyze, not knockdown
+        _stun.TryUpdateParalyzeDuration(target, TimeSpan.FromSeconds(proto.ParalyzeTime));
+        DoDamage(ent, target, proto.DamageType, proto.ExtraDamage, out _);
+        _audio.PlayPvs(args.Sound, target);
+        ComboPopup(ent, target, proto.Name);
+        ent.Comp.LastAttacks.Clear();
+    }
+
+    private void OnDragonTail(Entity<CanPerformComboComponent> ent, ref DragonTailPerformedEvent args)
+    {
+        if (!_proto.TryIndex(ent.Comp.BeingPerformed, out var proto)
+            || !TryUseMartialArt(ent, proto, out var target, out var downed))
+            return;
+
+        if (TryComp<Content.Shared.Movement.Pulling.Components.PullableComponent>(target, out var pullable))
+            _pulling.TryStopPull(target, pullable, ent, true);
+
+        if (downed)
+            _stun.TryUpdateStunDuration(target, args.DownedParalyzeTime); // No stunlocks
+        else
+        {
+            _stamina.TakeStaminaDamage(target, proto.StaminaDamage); // iss14: resistances apply by default
+            _stun.TryKnockdown(target, TimeSpan.FromSeconds(proto.ParalyzeTime), true, true, proto.DropItems);
+            DoDamage(ent, target, proto.DamageType, proto.ExtraDamage, out _);
+        }
+
+        _audio.PlayPvs(args.Sound, target);
+        ComboPopup(ent, target, proto.Name);
+        ent.Comp.LastAttacks.Clear();
+    }
+
+    private void OnDragonClaw(Entity<CanPerformComboComponent> ent, ref DragonClawPerformedEvent args)
+    {
+        if (!_proto.TryIndex(ent.Comp.BeingPerformed, out var proto)
+            || !TryUseMartialArt(ent, proto, out var target, out _))
+            return;
+        _movementMod.TryUpdateMovementSpeedModDuration(target, MartsGenericSlow, args.SlowdownTime, args.WalkSpeedModifier, args.SprintSpeedModifier);
+        _stamina.TakeStaminaDamage(target, proto.StaminaDamage); // iss14: resistances apply by default
+        DoDamage(ent, target, proto.DamageType, proto.ExtraDamage, out _);
+        _audio.PlayPvs(args.Sound, target);
+        ComboPopup(ent, target, proto.Name);
+        ent.Comp.LastAttacks.Clear();
+    }
+}

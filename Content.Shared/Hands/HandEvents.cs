@@ -347,6 +347,23 @@ namespace Content.Shared.Hands
         public EntityUid Sender { get; }
     }
 
+    /// <summary>
+    ///     Goobstation - Grab: Raised directed on both the blocking entity and user when
+    ///     a virtual hand item is thrown (at least attempted to).
+    /// </summary>
+    [ByRefEvent]
+    public record struct VirtualItemThrownEvent(
+        EntityUid BlockingEntity,
+        EntityUid User,
+        EntityUid VirtualItem,
+        Vector2 Direction)
+    {
+        public EntityUid BlockingEntity = BlockingEntity;
+        public EntityUid User = User;
+        public EntityUid VirtualItem = VirtualItem;
+        public Vector2 Direction = Direction;
+    }
+
     [ByRefEvent]
     public sealed class HeldRelayedEvent<TEvent> : EntityEventArgs
     {

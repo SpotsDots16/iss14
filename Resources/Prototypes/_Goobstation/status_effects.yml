@@ -1,0 +1,12 @@
+# Goobstation - MartialArts (ported from Goob-Station)
+# Legacy status effects used by martial arts (alwaysAllowed so mob allow-lists don't need edits).
+
+- type: statusEffect
+  id: DragonPower
+  alert: DragonPower
+  alwaysAllowed: true
+
+- type: statusEffect
+  id: LossOfSurprise
+  alert: LossOfSurprise
+  alwaysAllowed: true

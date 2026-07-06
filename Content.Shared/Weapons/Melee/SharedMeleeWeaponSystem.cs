@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Content.Goobstation.Common.MartialArts; // Goobstation - MartialArts
 using System.Linq;
 using System.Numerics;
 using Content.Shared.ActionBlocker;
@@ -434,7 +435,7 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
         DirtyField(weaponUid, weapon, nameof(MeleeWeaponComponent.NextAttack));
 
         // Do this AFTER attack so it doesn't spam every tick
-        var ev = new AttemptMeleeEvent(user, weaponUid, weapon); // Shitmed Change - Added Weapon and WeaponComponent
+        var ev = new AttemptMeleeEvent(user, weaponUid, weapon, attack is HeavyAttackEvent); // Shitmed Change - Added Weapon and WeaponComponent // Goobstation - Grab: IsHeavyAttack
         RaiseLocalEvent(weaponUid, ref ev);
         RaiseLocalEvent(user, ref ev); // Shitmed Change
 
@@ -530,6 +531,13 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
             return;
         }
 
+        // Goobstation - MartialArts start
+        var beforeEvent = new BeforeHarmfulActionEvent(user, HarmfulActionType.Harm);
+        RaiseLocalEvent(target.Value, beforeEvent);
+        if (beforeEvent.Cancelled)
+            return;
+        // Goobstation - MartialArts end
+
         // Sawmill.Debug($"Melee damage is {damage.Total} out of {component.Damage.Total}");
 
         // Raise event before doing damage so we can cancel damage if the event is handled
@@ -558,8 +566,15 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
         RaiseLocalEvent(target.Value, attackedEvent);
 
         var modifiedDamage = DamageSpecifier.ApplyModifierSets(damage + hitEvent.BonusDamage + attackedEvent.BonusDamage, hitEvent.ModifiersList);
+        modifiedDamage = DamageSpecifier.ApplyModifierSets(modifiedDamage, attackedEvent.ModifiersList); // Goobstation - MartialArts
 
         var damageResult = Damageable.TryChangeDamage(target.Value, modifiedDamage, ignoreResistances: resistanceBypass, origin: user, partMultiplier: component.ClickPartDamageMultiplier); // Shitmed Change
+
+        // Goobstation - MartialArts start
+        var comboEv = new ComboAttackPerformedEvent(user, target.Value, meleeUid, ComboAttackType.Harm);
+        RaiseLocalEvent(user, comboEv);
+        // Goobstation - MartialArts end
+
         if (damageResult is { Empty: false })
         {
             // If the target has stamina and is taking blunt damage, they should also take stamina damage based on their blunt to stamina factor
@@ -673,6 +688,13 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
                 !_damageQuery.HasComponent(entity))
                 continue;
 
+            // Goobstation - MartialArts start
+            var beforeEvent = new BeforeHarmfulActionEvent(user, HarmfulActionType.Harm);
+            RaiseLocalEvent(entity, beforeEvent);
+            if (beforeEvent.Cancelled)
+                continue;
+            // Goobstation - MartialArts end
+
             targets.Add(entity);
         }
 
@@ -717,6 +739,7 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
             var attackedEvent = new AttackedEvent(meleeUid, user, GetCoordinates(ev.Coordinates));
             RaiseLocalEvent(entity, attackedEvent);
             var modifiedDamage = DamageSpecifier.ApplyModifierSets(damage + hitEvent.BonusDamage + attackedEvent.BonusDamage, hitEvent.ModifiersList);
+            modifiedDamage = DamageSpecifier.ApplyModifierSets(modifiedDamage, attackedEvent.ModifiersList); // Goobstation - MartialArts
 
             // Shitmed Change Start
             foreach (var type in modifiedDamage.DamageDict.Keys)
@@ -727,6 +750,11 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
             // Shitmed Change End
 
             var damageResult = Damageable.TryChangeDamage(entity, modifiedDamage, ignoreResistances: resistanceBypass, origin: user, partMultiplier: component.HeavyPartDamageMultiplier); // Shitmed Change
+
+            // Goobstation - MartialArts start
+            var comboEv = new ComboAttackPerformedEvent(user, entity, meleeUid, ComboAttackType.HarmLight);
+            RaiseLocalEvent(user, comboEv);
+            // Goobstation - MartialArts end
 
             if (damageResult != null && damageResult.GetTotal() > FixedPoint2.Zero) // Shitmed Change
             {
@@ -867,11 +895,18 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
     {
         var target = GetEntity(ev.Target);
 
-        if (Deleted(target) ||
-            user == target)
+        if (Deleted(target))
+            return false;
+
+        // Goobstation - MartialArts start: self-targeted disarms count for combos (e.g. Capoeira Kick Up)
+        if (user == target)
         {
+            _meleeSound.PlaySwingSound(user, meleeUid, component);
+            var selfComboEv = new ComboAttackPerformedEvent(user, user, meleeUid, ComboAttackType.Disarm);
+            RaiseLocalEvent(user, selfComboEv);
             return false;
         }
+        // Goobstation - MartialArts end
 
 
         if (MobState.IsIncapacitated(target.Value))
@@ -922,6 +957,16 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
 
         if (attemptEvent.Cancelled)
             return false;
+
+        // Goobstation - MartialArts start
+        var beforeEvent = new BeforeHarmfulActionEvent(user, HarmfulActionType.Disarm);
+        RaiseLocalEvent(target.Value, beforeEvent);
+        if (beforeEvent.Cancelled)
+            return false;
+
+        var comboEv = new ComboAttackPerformedEvent(user, target.Value, meleeUid, ComboAttackType.Disarm);
+        RaiseLocalEvent(user, comboEv);
+        // Goobstation - MartialArts end
 
         var chance = CalculateDisarmChance(user, target.Value, inTargetHand, combatMode);
 

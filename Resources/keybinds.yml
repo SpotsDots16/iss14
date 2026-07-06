@@ -170,6 +170,9 @@ binds:
   type: State
   key: X
   mod1: Shift
+- function: ResistGrab # Goobstation - Grab
+  type: State
+  key: B
 - function: MoveStoredItem
   type: State
   key: MouseLeft

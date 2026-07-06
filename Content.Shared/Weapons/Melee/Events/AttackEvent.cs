@@ -40,6 +40,11 @@ namespace Content.Shared.Weapons.Melee.Events
 
         public DamageSpecifier BonusDamage = new();
 
+        /// <summary>
+        ///     Goobstation - MartialArts: modifier sets applied to the final damage of the attack.
+        /// </summary>
+        public List<DamageModifierSet> ModifiersList = new();
+
         public AttackedEvent(EntityUid used, EntityUid user, EntityCoordinates clickLocation)
         {
             Used = used;
@@ -47,4 +52,20 @@ namespace Content.Shared.Weapons.Melee.Events
             ClickLocation = clickLocation;
         }
     }
+
+    // Goobstation - Grab start
+    public sealed class BeforeHarmfulActionEvent(EntityUid user, HarmfulActionType type) : CancellableEntityEventArgs
+    {
+        public EntityUid User { get; } = user;
+
+        public HarmfulActionType Type { get; } = type;
+    }
+
+    public enum HarmfulActionType : byte
+    {
+        Harm,
+        Disarm,
+        Grab,
+    }
+    // Goobstation - Grab end
 }

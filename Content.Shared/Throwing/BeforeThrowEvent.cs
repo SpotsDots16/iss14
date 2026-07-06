@@ -19,4 +19,10 @@ public struct BeforeThrowEvent
     public EntityUid PlayerUid { get; }
 
     public bool Cancelled = false;
+
+    /// <summary>
+    /// Goobstation - Grab/MartialArts
+    /// Whether it should use GrabThrownSystem to throw
+    /// </summary>
+    public bool GrabThrow { get; set; }
 }

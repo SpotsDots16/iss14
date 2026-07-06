@@ -17,6 +17,11 @@
   extendedAccess:
   - Hydroponics
   - Bar
+  special: # Goobstation - MartialArts
+  - !type:AddComponentSpecial
+    components:
+    - type: GrantCqc
+      isBlocked: true
 
 - type: startingGear
   id: ChefGear
