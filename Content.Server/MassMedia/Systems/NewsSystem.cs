@@ -3,6 +3,7 @@ using Content.Server.CartridgeLoader.Cartridges;
 using Content.Server.CartridgeLoader;
 using Content.Server.Chat.Managers;
 using Content.Server.Discord;
+using DiscordLinkManager = Content.Server.Discord.DiscordLink.DiscordLink; // iss14: news to discord channel
 using Content.Server.GameTicking;
 using Content.Server.MassMedia.Components;
 using Content.Server.Popups;
@@ -44,6 +45,7 @@ public sealed partial class NewsSystem : SharedNewsSystem
     [Dependency] private GameTicker _ticker = default!;
     [Dependency] private IChatManager _chatManager = default!;
     [Dependency] private DiscordWebhook _discord = default!;
+    [Dependency] private DiscordLinkManager _discordLink = default!; // iss14: news to discord channel
     [Dependency] private IConfigurationManager _cfg = default!;
     [Dependency] private IBaseServer _baseServer = default!;
     [Dependency] private IdentitySystem _identity = default!;
@@ -51,6 +53,7 @@ public sealed partial class NewsSystem : SharedNewsSystem
     private WebhookIdentifier? _webhookId = null;
     private Color _webhookEmbedColor;
     private bool _webhookSendDuringRound;
+    private ulong? _discordNewsChannelId; // iss14: news to discord channel
 
     public override void Initialize()
     {
@@ -72,6 +75,11 @@ public sealed partial class NewsSystem : SharedNewsSystem
             }, true);
 
         _cfg.OnValueChanged(CCVars.DiscordNewsWebhookSendDuringRound, value => _webhookSendDuringRound = value, true);
+
+        // iss14: relay published articles to a discord channel via the bot
+        _cfg.OnValueChanged(CCVars.DiscordNewsChannelId,
+            value => _discordNewsChannelId = ulong.TryParse(value, out var id) ? id : null, true);
+
         SubscribeLocalEvent<RoundEndMessageEvent>(OnRoundEndMessageEvent);
 
         // News writer
@@ -239,6 +247,8 @@ public sealed partial class NewsSystem : SharedNewsSystem
 
         if (_webhookSendDuringRound)
             AddNewsSendWebhook(article.Value);
+
+        SendArticleToDiscordChannel(article.Value); // iss14: relay to public discord channel
 
         UpdateWriterDevices();
 
@@ -417,6 +427,36 @@ public sealed partial class NewsSystem : SharedNewsSystem
         {
             await Task.Delay(TimeSpan.FromSeconds(1)); // TODO: proper discord rate limit handling
             await SendArticleToDiscordWebhook(article);
+        }
+    }
+
+    /// <summary>
+    /// iss14: Relays a published article to the configured public Discord channel via the bot.
+    /// </summary>
+    private async void SendArticleToDiscordChannel(NewsArticle article)
+    {
+        if (_discordNewsChannelId is not { } channelId)
+            return;
+
+        try
+        {
+            var footer = Loc.GetString("news-discord-footer",
+                ("server", _baseServer.ServerName),
+                ("round", _ticker.RoundId),
+                ("author", article.Author ?? Loc.GetString("news-discord-unknown-author")),
+                ("time", article.ShareTime.ToString(@"hh\:mm\:ss")));
+
+            await _discordLink.SendEmbedAsync(channelId,
+                article.Title,
+                FormattedMessage.RemoveMarkupPermissive(article.Content),
+                footer,
+                _webhookEmbedColor.ToArgb() & 0xFFFFFF);
+
+            Log.Info("Sent news article to Discord channel");
+        }
+        catch (Exception e)
+        {
+            Log.Error($"Error while sending news article to Discord channel:\n{e}");
         }
     }
 

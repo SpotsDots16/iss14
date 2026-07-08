@@ -114,4 +114,11 @@ public sealed partial class CCVars
     public static readonly CVarDef<bool> DiscordNewsWebhookSendDuringRound =
         CVarDef.Create("discord.news_webhook_send_during_round", false, CVar.SERVERONLY);
 
+    /// <summary>
+    ///     iss14: The Discord channel ID to relay published station news articles to via the Discord bot.
+    ///     Articles are sent as soon as a reporter publishes them. Requires the Discord bot
+    ///     (discord.token, discord.guild_id, discord.prefix) to be configured. If left empty, disables the relay.
+    /// </summary>
+    public static readonly CVarDef<string> DiscordNewsChannelId =
+        CVarDef.Create("discord.news_channel_id", string.Empty, CVar.SERVERONLY);
 }

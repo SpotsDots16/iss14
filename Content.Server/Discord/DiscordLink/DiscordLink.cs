@@ -249,5 +249,40 @@ public sealed partial class DiscordLink : IPostInjectInit
         });
     }
 
+    /// <summary>
+    /// iss14: Sends an embed to a Discord channel with the specified ID. Without any mentions.
+    /// </summary>
+    public async Task SendEmbedAsync(ulong channelId, string title, string description, string? footerText = null, int? colorRgb = null)
+    {
+        if (_client == null)
+        {
+            return;
+        }
+
+        if (await _client.Rest.GetChannelAsync(channelId) is not TextChannel channel)
+        {
+            _sawmill.Error($"Tried to send an embed to Discord but the channel {channelId} was not found.");
+            return;
+        }
+
+        var embed = new EmbedProperties()
+        {
+            Title = title,
+            Description = description,
+        };
+
+        if (footerText != null)
+            embed.Footer = new EmbedFooterProperties { Text = footerText };
+
+        if (colorRgb != null)
+            embed.Color = new NetCord.Color(colorRgb.Value);
+
+        await channel.SendMessageAsync(new MessageProperties()
+        {
+            AllowedMentions = AllowedMentionsProperties.None,
+            Embeds = [embed],
+        });
+    }
+
     #endregion
 }
