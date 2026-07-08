@@ -66,6 +66,8 @@ internal static class ServerContentIoC
         deps.Register<RoleRequirementOverrideManager>();
         deps.Register<VoteConfigManager>();
         deps.Register<NewLifeManager>();
+        deps.Register<AutoRestartManager>(); // iss14: scheduled auto-restart admin config
+        deps.Register<RoundEndAdManager>(); // iss14: round-end advertisement admin config
         deps.Register<UserMigrationManager>();
         deps.Register<UserDbDataManager>();
         deps.Register<ServerInfoManager>();

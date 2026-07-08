@@ -1,0 +1,27 @@
+<controls:FancyWindow xmlns="https://spacestation14.io"
+                      xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+                      Title="{Loc round-end-ad-config-title}"
+                      Resizable="True"
+                      MinSize="380 320"
+                      SetSize="480 400">
+    <PanelContainer StyleClasses="BackgroundDark">
+        <BoxContainer Orientation="Vertical" Margin="8" HorizontalExpand="True" VerticalExpand="True">
+
+            <CheckBox Name="EnabledCheck" Text="{Loc round-end-ad-config-enabled}" />
+
+            <Label Text="{Loc round-end-ad-config-message}" StyleClasses="LabelHeading" Margin="0 8 0 2" />
+            <TextEdit Name="MessageEdit" HorizontalExpand="True" VerticalExpand="True" MinHeight="120" />
+
+            <BoxContainer Orientation="Horizontal" Margin="0 6 0 0">
+                <Button Name="SaveButton" Text="{Loc round-end-ad-config-save}" />
+                <Label Name="SavedLabel" Margin="8 0 0 0" />
+            </BoxContainer>
+
+            <Label Text="{Loc round-end-ad-config-preview}" StyleClasses="LabelHeading" Margin="0 10 0 2" />
+            <Label Name="PreviewLabel" />
+
+            <Label Text="{Loc round-end-ad-config-hint}" Margin="0 10 0 0" StyleClasses="LabelSubText" />
+
+        </BoxContainer>
+    </PanelContainer>
+</controls:FancyWindow>

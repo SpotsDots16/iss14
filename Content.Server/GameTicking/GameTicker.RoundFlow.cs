@@ -523,6 +523,14 @@ namespace Content.Server.GameTicking
             {
                 Log.Error($"Error while sending round end Discord message: {e}");
             }
+
+            // iss14: remind everyone that the scheduled restart happens once this round fully wraps up.
+            if (_serverUpdates.AutoRestartPending)
+                _chatManager.DispatchServerAnnouncement(Loc.GetString("server-updates-scheduled-restart-round-end"));
+
+            // iss14: round-end advertisement (adconfig admin window).
+            if (_roundEndAd.GetBroadcastMessage() is { } ad)
+                _chatManager.DispatchServerAnnouncement(ad);
         }
 
         public void ShowRoundEndScoreboard(string text = "")

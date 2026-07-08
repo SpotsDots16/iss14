@@ -16,3 +16,5 @@ admin-player-actions-window-migrations = User Migrations
 admin-player-actions-window-server-perf = Server Performance
 admin-player-actions-window-conn-quality = Connections
 admin-player-actions-window-entity-census = Entity Census
+admin-player-actions-window-auto-restart-config = Auto Restart
+admin-player-actions-window-ad-config = Round End Ad

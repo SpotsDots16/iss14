@@ -3,6 +3,25 @@ Order: 3
 AdminOnly: true
 Entries:
 - author: issyman182
+  version: iss14:1.7.0
+  time: '2026-07-08'
+  changes:
+  - message: New Auto Restart panel (autorestartconfig, Host flag) — schedule a daily automatic server restart at a set time (e.g. 3 AM). Shows the live server clock and a countdown; the restart happens gracefully at round end with chat warnings.
+    type: Add
+  - message: New Round End Ad panel (adconfig, Admin flag) — configure a chat advertisement broadcast at every round end (e.g. a Discord invite). Supports multi-line messages via Enter or literal "\n".
+    type: Add
+  - message: New Server Performance panel (serverperf) — live tick time graphs and server health metrics, also exported as iss14_* Prometheus gauges.
+    type: Add
+  - message: New Connections panel (connquality) — per-player ping and connection quality overview.
+    type: Add
+  - message: New Entity Census panel (entitycensus) — entity counts and growth over the round.
+    type: Add
+  - message: New server.rounds_before_restart CVar — gracefully restart the server after N completed rounds.
+    type: Add
+  - message: The reporter news Discord relay is configured via discord.news_channel_id in server_config.toml (uses the Discord bot, no webhook needed).
+    type: Add
+  id: 10
+- author: issyman182
   version: iss14:1.6.1
   time: '2026-06-30'
   changes:

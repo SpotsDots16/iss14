@@ -77,6 +77,8 @@ namespace Content.Server.Entry
         [Dependency] private RoleRequirementOverrideManager _roleReqOverride = default!;
         [Dependency] private VoteConfigManager _voteConfig = default!;
         [Dependency] private NewLifeManager _newLife = default!;
+        [Dependency] private AutoRestartManager _autoRestart = default!; // iss14: scheduled auto-restart admin config
+        [Dependency] private RoundEndAdManager _roundEndAd = default!; // iss14: round-end advertisement admin config
         [Dependency] private PlayerRateLimitManager _rateLimit = default!;
         [Dependency] private RecipeManager _recipe = default!;
         [Dependency] private RulesManager _rules = default!;
@@ -140,6 +142,8 @@ namespace Content.Server.Entry
             _roleReqOverride.Initialize();
             _voteConfig.Initialize();
             _newLife.Initialize();
+            _autoRestart.Initialize(); // iss14: scheduled auto-restart admin config
+            _roundEndAd.Initialize(); // iss14: round-end advertisement admin config
             _watchlistWebhookManager.Initialize();
             _job.Initialize();
             _rateLimit.Initialize();
@@ -182,6 +186,8 @@ namespace Content.Server.Entry
             _roleReqOverride.PostInitialize();
             _voteConfig.PostInitialize();
             _newLife.PostInitialize();
+            _autoRestart.PostInitialize(); // iss14: scheduled auto-restart admin config
+            _roundEndAd.PostInitialize(); // iss14: round-end advertisement admin config
         }
 
         public override void Update(ModUpdateLevel level, FrameEventArgs frameEventArgs)

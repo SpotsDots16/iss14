@@ -42,6 +42,20 @@ public sealed partial class ServerUpdateManager : IPostInjectInit
     [ViewVariables]
     private int _roundsCompleted;
 
+    // iss14: scheduled daily restart at a configured time of day (autorestartconfig admin window).
+    private bool _autoRestartEnabled;
+    private TimeSpan? _autoRestartTimeOfDay;
+    [ViewVariables]
+    private bool _autoRestartPending;
+    [ViewVariables]
+    private DateTime? _nextAutoRestart;
+
+    /// <summary>iss14: Whether the scheduled restart time has been reached and a restart will happen at round end.</summary>
+    public bool AutoRestartPending => _autoRestartPending;
+
+    /// <summary>iss14: The next scheduled restart moment (server local time), or null if disabled/unset.</summary>
+    public DateTime? NextAutoRestart => _autoRestartEnabled ? _nextAutoRestart : null;
+
     public void Initialize()
     {
         _watchdog.UpdateReceived += WatchdogOnUpdateReceived;
@@ -56,10 +70,43 @@ public sealed partial class ServerUpdateManager : IPostInjectInit
             CCVars.ServerRoundsBeforeRestart,
             rounds => _roundsBeforeRestart = rounds,
             true);
+
+        // iss14: scheduled daily restart
+        _cfg.OnValueChanged(
+            CCVars.ServerAutoRestartEnabled,
+            enabled =>
+            {
+                _autoRestartEnabled = enabled;
+                if (!enabled)
+                    _autoRestartPending = false;
+                RecomputeNextAutoRestart();
+            },
+            true);
+
+        _cfg.OnValueChanged(
+            CCVars.ServerAutoRestartTime,
+            time =>
+            {
+                _autoRestartTimeOfDay = Administration.AutoRestartManager.TryParseTimeOfDay(time, out var parsed)
+                    ? parsed
+                    : null;
+                _autoRestartPending = false;
+                RecomputeNextAutoRestart();
+            },
+            true);
     }
 
     public void Update()
     {
+        // iss14: scheduled daily restart - mark pending once the configured time of day passes.
+        if (_autoRestartEnabled && !_autoRestartPending && _nextAutoRestart != null && DateTime.Now >= _nextAutoRestart)
+        {
+            _autoRestartPending = true;
+            _sawmill.Info("Scheduled restart time reached, restarting at round end.");
+            _chatManager.DispatchServerAnnouncement(Loc.GetString("server-updates-scheduled-restart-pending"));
+            ServerEmptyUpdateRestartCheck("scheduled restart time");
+        }
+
         if (_restartTime != null)
         {
             if (_restartTime < _gameTiming.RealTime)
@@ -84,7 +131,7 @@ public sealed partial class ServerUpdateManager : IPostInjectInit
     {
         _roundsCompleted += 1;
 
-        if (_updateOnRoundEnd || ShouldShutdownDueToUptime() || ShouldShutdownDueToRounds())
+        if (_updateOnRoundEnd || ShouldShutdownDueToUptime() || ShouldShutdownDueToRounds() || _autoRestartPending) // iss14: scheduled restart
         {
             DoShutdown();
             return true;
@@ -126,7 +173,7 @@ public sealed partial class ServerUpdateManager : IPostInjectInit
         // before PlayerStatusChanged gets fired.
         // So in the disconnect handler we'd still see a single player otherwise.
         var playersOnline = _playerManager.Sessions.Any(p => p.Status != SessionStatus.Disconnected);
-        if (playersOnline || !(_updateOnRoundEnd || ShouldShutdownDueToUptime()))
+        if (playersOnline || !(_updateOnRoundEnd || ShouldShutdownDueToUptime() || _autoRestartPending)) // iss14: scheduled restart
         {
             // Still somebody online.
             return;
@@ -152,9 +199,28 @@ public sealed partial class ServerUpdateManager : IPostInjectInit
             reason = "server-updates-shutdown";
         else if (ShouldShutdownDueToRounds())
             reason = "server-updates-shutdown-rounds";
+        else if (_autoRestartPending) // iss14: scheduled restart
+            reason = "server-updates-shutdown-scheduled";
         else
             reason = "server-updates-shutdown-uptime";
         _server.Shutdown(Loc.GetString(reason));
+    }
+
+    /// <summary>iss14: Computes the next occurrence (server local time) of the configured restart time of day.</summary>
+    private void RecomputeNextAutoRestart()
+    {
+        if (_autoRestartTimeOfDay is not { } timeOfDay)
+        {
+            _nextAutoRestart = null;
+            return;
+        }
+
+        var now = DateTime.Now;
+        var candidate = now.Date + timeOfDay;
+        if (candidate <= now)
+            candidate = candidate.AddDays(1);
+
+        _nextAutoRestart = candidate;
     }
 
     private bool ShouldShutdownDueToUptime()

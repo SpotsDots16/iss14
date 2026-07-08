@@ -57,6 +57,7 @@ namespace Content.Server.GameTicking
         [Dependency] private PlayTimeTrackingSystem _playTimeTrackings = default!;
         [Dependency] private PvsOverrideSystem _pvsOverride = default!;
         [Dependency] private ServerUpdateManager _serverUpdates = default!;
+        [Dependency] private Administration.RoundEndAdManager _roundEndAd = default!; // iss14: round-end advertisement
         [Dependency] private SharedAudioSystem _audio = default!;
         [Dependency] private StationJobsSystem _stationJobs = default!;
         [Dependency] private StationSpawningSystem _stationSpawning = default!;

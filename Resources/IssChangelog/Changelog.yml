@@ -2,6 +2,23 @@ Name: Changelog
 Order: 0
 Entries:
 - author: issyman182
+  version: iss14:1.7.0
+  time: '2026-07-08'
+  changes:
+  - message: Surgery! Bodies are now made of real parts and organs (Shitmed port). Perform surgery at operating tables — amputate and reattach limbs, transplant organs, install implants and augments — and target individual body parts with the new targeting doll. Includes the Autodoc for automated procedures.
+    type: Add
+  - message: Grabbing and martial arts (ported from Goobstation). Grab people with escalating grip strength, shove them around or throw them, and fight with martial arts techniques.
+    type: Add
+  - message: News articles published by station reporters are now posted to our Discord server as soon as they go out.
+    type: Add
+  - message: Fixed cyborg module items (like the medical borg's beakers) permanently disappearing.
+    type: Fix
+  - message: Fixed spider venom never regenerating.
+    type: Fix
+  - message: Fixed broken species pages in the guidebook.
+    type: Fix
+  id: 11
+- author: issyman182
   version: iss14:1.6.1
   time: '2026-06-30'
   changes:
