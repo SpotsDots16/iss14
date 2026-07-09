@@ -60,7 +60,11 @@ public sealed partial class ToggleableClothingSystem : EntitySystem
         if (!args.CanAccess || !args.CanInteract || args.Hands == null || component.ClothingUid == null || component.Container == null)
             return;
 
-        var text = component.VerbText ?? (component.ActionEntity == null ? null : Name(component.ActionEntity.Value));
+        // iss14: only VerbText is a loc id; the action-name fallback is already final text,
+        // localizing it too spams "Unknown messageId" warnings.
+        var text = component.VerbText is { } verbText
+            ? Loc.GetString(verbText)
+            : (component.ActionEntity == null ? null : Name(component.ActionEntity.Value));
         if (text == null)
             return;
 
@@ -74,7 +78,7 @@ public sealed partial class ToggleableClothingSystem : EntitySystem
         var verb = new EquipmentVerb()
         {
             Icon = new SpriteSpecifier.Texture(new("/Textures/Interface/VerbIcons/outfit.svg.192dpi.png")),
-            Text = Loc.GetString(text),
+            Text = text,
         };
 
         if (args.User == wearer)

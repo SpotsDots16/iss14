@@ -66,55 +66,10 @@ namespace Content.Shared.Body.Systems
             ent.Comp.Solution = null;
         }
 
-        public override void Update(float frameTime)
-        {
-            var query = EntityQueryEnumerator<StomachComponent, OrganComponent, SolutionManagerComponent>();
-            while (query.MoveNext(out var uid, out var stomach, out var organ, out var sol))
-            {
-                if (_gameTiming.CurTime < stomach.NextUpdate)
-                    continue;
-
-                stomach.NextUpdate += stomach.AdjustedUpdateInterval;
-
-                // Get our solutions
-                if (!_solutionContainerSystem.ResolveSolution((uid, sol), DefaultSolutionName, ref stomach.Solution, out var stomachSolution))
-                    continue;
-
-                if (organ.Body is not { } body || !_solutionContainerSystem.TryGetSolution(body, stomach.BodySolutionName, out var bodySolution))
-                    continue;
-
-                var transferSolution = new Solution();
-
-                var queue = new RemQueue<StomachComponent.ReagentDelta>();
-                foreach (var delta in stomach.ReagentDeltas)
-                {
-                    delta.Increment(stomach.AdjustedUpdateInterval);
-                    if (delta.Lifetime > stomach.DigestionDelay)
-                    {
-                        if (stomachSolution.TryGetReagent(delta.ReagentQuantity.Reagent, out var reagent))
-                        {
-                            if (reagent.Quantity > delta.ReagentQuantity.Quantity)
-                                reagent = new(reagent.Reagent, delta.ReagentQuantity.Quantity);
-
-                            stomachSolution.RemoveReagent(reagent);
-                            transferSolution.AddReagent(reagent);
-                        }
-
-                        queue.Add(delta);
-                    }
-                }
-
-                foreach (var item in queue)
-                {
-                    stomach.ReagentDeltas.Remove(item);
-                }
-
-                _solutionContainerSystem.UpdateChemicals(stomach.Solution.Value);
-
-                // Transfer everything to the body solution!
-                _solutionContainerSystem.TryAddSolution(bodySolution.Value, transferSolution);
-            }
-        }
+        // iss14: Goob's digestion-delay Update loop is intentionally NOT ported. It dumped stomach
+        // contents into the body's "chemicals" solution after DigestionDelay, but in the
+        // metabolism-stages architecture no stage reads "chemicals" - the stomach organ's Digestion
+        // metabolizer is the sole digestion path (matches upstream's stages-era StomachSystem).
 
         private void OnApplyMetabolicMultiplier(Entity<StomachComponent> ent, ref ApplyMetabolicMultiplierEvent args)
         {
@@ -147,12 +102,6 @@ namespace Content.Shared.Body.Systems
             }
 
             _solutionContainerSystem.TryAddSolution(stomach.Solution.Value, solution);
-            // Add each reagent to ReagentDeltas. Used to track how long each reagent has been in the stomach
-            foreach (var reagent in solution.Contents)
-            {
-                stomach.ReagentDeltas.Add(new StomachComponent.ReagentDelta(reagent));
-            }
-
             return true;
         }
     }

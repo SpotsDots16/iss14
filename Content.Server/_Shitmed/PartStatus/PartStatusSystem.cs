@@ -205,7 +205,8 @@ public sealed partial class PartStatusSystem : EntitySystem
             titlestring += "-styleless";
         }
 
-        message.AddText(Loc.GetString(titlestring, ("entity", Identity.Name(entity, EntityManager))));
+        // iss14: the loc strings contain markup ([font], [color], [bold]) - AddText renders the tags literally
+        message.AddMarkupPermissive(Loc.GetString(titlestring, ("entity", Identity.Name(entity, EntityManager))));
         message.PushNewline();
         AddLine(message);
         CreateBodyPartMessage(partStatusSet, entity == examiner, ref message, !styling);
@@ -244,7 +245,7 @@ public sealed partial class PartStatusSystem : EntitySystem
                 locString += "-styleless";
             }
 
-            message.AddText("    " + Loc.GetString(locString,
+            message.AddMarkupPermissive("    " + Loc.GetString(locString,
                 ("possessive", possessive),
                 ("part", partStatus.PartName),
                 ("status", statusDescription)));

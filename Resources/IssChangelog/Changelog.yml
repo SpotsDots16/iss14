@@ -2,6 +2,27 @@ Name: Changelog
 Order: 0
 Entries:
 - author: issyman182
+  version: iss14:1.7.1
+  time: '2026-07-09'
+  changes:
+  - message: Fixed everyone spawning without blood — drawing blood and injecting meds with syringes, hyposprays and jet injectors works again.
+    type: Fix
+  - message: Fixed food, drinks and pills having no effect. Eating restores hunger again, ingested medicine and poisons work, and the stomach no longer clogs up with "You can't eat any more!".
+    type: Fix
+  - message: Fixed blood-restoring items (like blood packs) being refused on bleeding patients — and an exploit where they restored blood without being used up.
+    type: Fix
+  - message: Chemicals in your bloodstream no longer mask real blood loss.
+    type: Fix
+  - message: Suffocating grabs and the Krav Maga breath block now actually stop the victim from breathing.
+    type: Fix
+  - message: Fixed the body inspection window and self-examine showing raw text markup instead of formatted text.
+    type: Fix
+  - message: Fixed missing text in several places — the character editor markings tab, examining yourself, drained surgical multitools and the Autodoc menu.
+    type: Fix
+  - message: Ephedrine's pain suppression was twice as strong as intended.
+    type: Tweak
+  id: 12
+- author: issyman182
   version: iss14:1.7.0
   time: '2026-07-08'
   changes:

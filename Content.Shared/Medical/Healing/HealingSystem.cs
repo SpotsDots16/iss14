@@ -398,7 +398,7 @@ public sealed partial class HealingSystem : EntitySystem
 
                 if (canHeal)
                 {
-                    if (healing.BloodlossModifier == 0 && healing.ModifyBloodLevel >= 0 && woundableComp2.Bleeds > 0)  // If the healing item has no bleeding heals, and its bleeding, we raise the alert. Goobstation edit
+                    if (healing.BloodlossModifier == 0 && healing.ModifyBloodLevel <= 0 && woundableComp2.Bleeds > 0)  // If the healing item has no bleeding heals, and its bleeding, we raise the alert. Goobstation edit (iss14: <= under our positive-restores-blood sign convention; Goob compared >= with negated values)
                     {
                         leftoverHealAndBleed = true;
                         continue;
@@ -534,7 +534,9 @@ public sealed partial class HealingSystem : EntitySystem
             healing.Comp.ModifyBloodLevel > 0 // Special case if healing item can restore lost blood... Goobstation edit (iss14: positive = restore)
                 && TryComp<BloodstreamComponent>(target, out var bloodstream)
                 && _solutionContainerSystem.ResolveSolution(target.Owner, bloodstream.BloodSolutionName, ref bloodstream.BloodSolution, out var bloodSolution)
-                && bloodSolution.Volume < bloodSolution.MaxVolume; // ...and there is lost blood to restore.
+                // iss14: count the blood reagent against BloodMaxVolume - solution capacity includes
+                // chem headroom and volume includes injected chems, so Volume < MaxVolume is always true.
+                && bloodSolution.GetTotalPrototypeQuantity(bloodstream.BloodReagent) < bloodstream.BloodMaxVolume; // ...and there is lost blood to restore.
 
         if (!anythingToDo)
         {

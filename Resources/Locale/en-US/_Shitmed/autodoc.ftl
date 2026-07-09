@@ -109,3 +109,4 @@ autodoc-body-symmetry-Left = Left
 autodoc-body-symmetry-Right = Right
 
 autodoc-submit = Submit
+autodoc-body-part-Vital = Vital

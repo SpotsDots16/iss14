@@ -151,23 +151,28 @@ public sealed class BloodstreamSystem : SharedBloodstreamSystem
     // a second MapInitEvent subscription in the same system chain is a duplicate).
     protected override void OnBloodstreamMapInitServer(Entity<BloodstreamComponent> entity)
     {
-        if (!SolutionContainer.EnsureSolution(entity.Owner,
-                entity.Comp.ChemicalSolutionName,
-                out var chemicalSolution) ||
-            !SolutionContainer.EnsureSolution(entity.Owner,
-                entity.Comp.BloodSolutionName,
-                out var bloodSolution) ||
-            !SolutionContainer.EnsureSolution(entity.Owner,
-                entity.Comp.BloodTemporarySolutionName,
-                out var tempSolution) ||
-            !SolutionContainer.EnsureSolution(entity.Owner,
-                BloodstreamComponent.DefaultMetabolitesSolutionName,
-                out var metabolitesSolution)) // iss14: metabolism-stages sink (liver reads it, heart transfers into it)
-            return;
+        // EnsureSolution's bool means "solution already existed", not "success" - it returns false
+        // after creating the solution (the normal case for a fresh mob) with a valid out param,
+        // so it must not be treated as a failure here.
+        SolutionContainer.EnsureSolution(entity.Owner,
+            entity.Comp.ChemicalSolutionName,
+            out var chemicalSolution);
+        SolutionContainer.EnsureSolution(entity.Owner,
+            entity.Comp.BloodSolutionName,
+            out var bloodSolution);
+        SolutionContainer.EnsureSolution(entity.Owner,
+            entity.Comp.BloodTemporarySolutionName,
+            out var tempSolution);
+        SolutionContainer.EnsureSolution(entity.Owner,
+            BloodstreamComponent.DefaultMetabolitesSolutionName,
+            out var metabolitesSolution); // iss14: metabolism-stages sink (liver reads it, heart transfers into it)
 
         // iss14: newer Wizden solution API - EnsureSolution returns Entity<SolutionComponent>, mutate via SolutionContainer
         SolutionContainer.SetCapacity(chemicalSolution, entity.Comp.ChemicalMaxVolume);
-        SolutionContainer.SetCapacity(bloodSolution, entity.Comp.BloodMaxVolume);
+        // The blood solution doubles as the chemstream (InjectableSolution targets it and the
+        // Bloodstream metabolism stage reads it), so it needs headroom beyond the blood fill -
+        // at exactly BloodMaxVolume, injectors fail with "target is full".
+        SolutionContainer.SetCapacity(bloodSolution, entity.Comp.BloodMaxVolume + entity.Comp.ChemicalMaxVolume);
         SolutionContainer.SetCapacity(tempSolution, entity.Comp.BleedPuddleThreshold * 4); // give some leeway, for chemstream as well
         SolutionContainer.SetCapacity(metabolitesSolution, entity.Comp.BloodMaxVolume); // iss14: matches upstream metabolism-stages init
 

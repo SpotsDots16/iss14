@@ -108,6 +108,10 @@ using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
+// Goobstation - grab + martial arts breath blocking
+using Content.Goobstation.Common.Grab;
+using Content.Goobstation.Common.MartialArts;
+using Content.Goobstation.Shared.GrabIntent;
 // Shitmed Change
 using Content.Shared._Shitmed.Targeting;
 using Content.Shared._Shitmed.Body.Components;
@@ -166,7 +170,12 @@ public sealed partial class RespiratorSystem : EntitySystem
         if (respirator.Saturation < respirator.SuffocationThreshold)
             return false;
 
-        return true;
+        // iss14: restored from Goob - suffocate-stage grabs and Krav Maga breath blocks stop breathing
+        if (TryComp<GrabbableComponent>(uid, out var grabbable)
+            && grabbable.GrabStage == GrabStage.Suffocate)
+            return false;
+
+        return !HasComp<KravMagaBlockedBreathingComponent>(uid);
     }
     // Goobstation end
     private void OnMapInit(Entity<RespiratorComponent> ent, ref MapInitEvent args)

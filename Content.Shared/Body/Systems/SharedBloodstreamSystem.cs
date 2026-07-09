@@ -89,7 +89,10 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
                 continue;
 
             // Adds blood to their blood level if it is below the maximum; Blood regeneration. Must be alive.
-            if (bloodSolution.Volume < bloodSolution.MaxVolume && !_mobStateSystem.IsDead(uid))
+            // iss14: compare the blood reagent against BloodMaxVolume, not solution volume against capacity -
+            // the solution has chem headroom above the blood fill that regeneration must not consume.
+            if (bloodSolution.GetTotalPrototypeQuantity(bloodstream.BloodReagent) < bloodstream.BloodMaxVolume
+                && !_mobStateSystem.IsDead(uid))
             {
                 TryModifyBloodLevel((uid, bloodstream), bloodstream.BloodRefreshAmount);
             }
@@ -177,7 +180,10 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
                 }
             }
 
-            var missingBlood = bloodstream.BloodMaxVolume - bloodstream.BloodSolution.Value.Comp.Solution.Volume;
+            // iss14: count only the blood reagent - solution volume includes injected chems, which
+            // would mask real blood loss (or turn into a consciousness buff when volume > max).
+            var missingBlood = FixedPoint2.Max(FixedPoint2.Zero,
+                bloodstream.BloodMaxVolume - bloodstream.BloodSolution.Value.Comp.Solution.GetTotalPrototypeQuantity(bloodstream.BloodReagent));
 
             bloodstream.BleedAmountFromWounds = (float) total; // why was it ever divided by 4? Goobstation
 
@@ -476,16 +482,18 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
     /// </summary>
     public bool FlushChemicals(Entity<BloodstreamComponent?> ent, ProtoId<ReagentPrototype>? excludedReagentID, FixedPoint2 quantity)
     {
+        // iss14: chems live in the blood solution (InjectableSolution and the Bloodstream metabolism
+        // stage both target it), so flush that - never the blood reagent itself.
         if (!Resolve(ent, ref ent.Comp, logMissing: false)
-            || !SolutionContainer.ResolveSolution(ent.Owner, ent.Comp.ChemicalSolutionName, ref ent.Comp.ChemicalSolution, out var chemSolution))
+            || !SolutionContainer.ResolveSolution(ent.Owner, ent.Comp.BloodSolutionName, ref ent.Comp.BloodSolution, out var bloodSolution))
             return false;
 
-        for (var i = chemSolution.Contents.Count - 1; i >= 0; i--)
+        for (var i = bloodSolution.Contents.Count - 1; i >= 0; i--)
         {
-            var (reagentId, _) = chemSolution.Contents[i];
-            if (reagentId.Prototype != excludedReagentID)
+            var (reagentId, _) = bloodSolution.Contents[i];
+            if (reagentId.Prototype != excludedReagentID && reagentId.Prototype != ent.Comp.BloodReagent)
             {
-                SolutionContainer.RemoveReagent(ent.Comp.ChemicalSolution.Value, reagentId, quantity);
+                SolutionContainer.RemoveReagent(ent.Comp.BloodSolution.Value, reagentId, quantity);
             }
         }
 
@@ -498,12 +506,19 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
     public bool TryModifyBloodLevel(Entity<BloodstreamComponent?> ent, FixedPoint2 amount)
     {
         if (!Resolve(ent, ref ent.Comp, logMissing: false)
-            || !SolutionContainer.ResolveSolution(ent.Owner, ent.Comp.BloodSolutionName, ref ent.Comp.BloodSolution))
+            || !SolutionContainer.ResolveSolution(ent.Owner, ent.Comp.BloodSolutionName, ref ent.Comp.BloodSolution, out var bloodSol))
             return false;
 
         //  SHITMED CHANGE: We dont really care if the reagent was added in its entirety, just whether or not it could take more blood.
         if (amount >= 0)
         {
+            // iss14: cap blood at BloodMaxVolume - the solution's spare capacity is chem headroom,
+            // not room for extra blood.
+            amount = FixedPoint2.Min(amount, ent.Comp.BloodMaxVolume - bloodSol.GetTotalPrototypeQuantity(ent.Comp.BloodReagent));
+
+            if (amount <= 0)
+                return false;
+
             SolutionContainer.TryAddReagent(ent.Comp.BloodSolution.Value, ent.Comp.BloodReagent, amount, out var acceptedAmount, null, GetEntityBloodData(ent.Owner));
             return acceptedAmount > 0;
         }

@@ -87,12 +87,12 @@ public sealed partial class LungSystem : EntitySystem
 
     private void OnLungMapInit(Entity<LungComponent> entity, ref MapInitEvent args)
     {
-        if (_solutionContainerSystem.EnsureSolution(entity.Owner, entity.Comp.SolutionName, out var solution))
-        {
-            // iss14: newer Wizden solution API - mutate via SharedSolutionContainerSystem
-            _solutionContainerSystem.SetCapacity(solution, 100.0f);
-            _solutionContainerSystem.SetCanReact(solution, false); // No dexalin lungs
-        }
+        // EnsureSolution's bool means "solution already existed", not "success" - the out param
+        // is valid either way, so configure the solution unconditionally.
+        _solutionContainerSystem.EnsureSolution(entity.Owner, entity.Comp.SolutionName, out var solution);
+        // iss14: newer Wizden solution API - mutate via SharedSolutionContainerSystem
+        _solutionContainerSystem.SetCapacity(solution, 100.0f);
+        _solutionContainerSystem.SetCanReact(solution, false); // No dexalin lungs
     }
 
     // Goobstation - Update component state on component toggle

@@ -122,8 +122,8 @@
           reagent: Ephedrine
           min: 15
       - !type:SuppressPain # Shitmed Change
-        amount: 1.2
-        time: 10 # it accumulated 1.2*quantity and then exists for 30 seconds.
+        amount: 0.6 # iss14: Goob's 1.2 was multiplied by units metabolized (0.5/tick); the new effect API applies the full amount per tick, so the rate is baked in here.
+        time: 10
 
 - type: reagent
   id: Stimulants
