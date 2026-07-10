@@ -663,17 +663,30 @@ public sealed partial class DamageableSystem
 
                 goto case SplitDamageBehavior.SplitEnsureAll;
             case SplitDamageBehavior.SplitEnsureAllOrganic:
+                // iss14: prefer organic parts, but fall back to all parts for fully inorganic
+                // bodies (skeletons) - otherwise chem and reactive heals are zeroed entirely
+                // (e.g. splashing milk on a skeleton healed nothing).
                 var organicParts = parts.Where(part =>
                     part.Component.PartComposition == BodyPartComposition.Organic).ToList();
 
-                parts.Clear();
-                parts.AddRange(organicParts);
+                if (organicParts.Count > 0)
+                {
+                    parts.Clear();
+                    parts.AddRange(organicParts);
+                }
 
                 goto case SplitDamageBehavior.SplitEnsureAll;
             case SplitDamageBehavior.SplitEnsureAllDamagedAndOrganic:
+                // iss14: same fallback as above; damaged parts are still required.
                 var compatableParts = parts.Where(part =>
                     part.Damageable.TotalDamage > FixedPoint2.Zero &&
                     part.Component.PartComposition == BodyPartComposition.Organic).ToList();
+
+                if (compatableParts.Count == 0)
+                {
+                    compatableParts = parts.Where(part =>
+                        part.Damageable.TotalDamage > FixedPoint2.Zero).ToList();
+                }
 
                 parts.Clear();
                 parts.AddRange(compatableParts);

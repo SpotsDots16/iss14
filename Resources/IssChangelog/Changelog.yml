@@ -11,7 +11,7 @@ Entries:
     type: Fix
   - message: Aimed shots with guns now drift toward the chest beyond point-blank range — headshots require getting close.
     type: Tweak
-  - message: Skeletons can be healed with medical items again.
+  - message: Skeletons can be healed with medical items again — and splashing milk on them restores their calcium once more.
     type: Fix
   - message: Fixed the health analyzer showing about half blood on perfectly healthy patients.
     type: Fix
