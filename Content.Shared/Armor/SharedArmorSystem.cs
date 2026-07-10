@@ -56,13 +56,18 @@ public abstract partial class SharedArmorSystem : EntitySystem
             return;
 
         // Shitmed Change Start - armor only protects the body parts it covers
+		// Armor with no coverage configured will apply protection to all body parts
         if (args.Args.TargetPart == null)
             return;
 
         var (partType, _) = _body.ConvertTargetBodyPart(args.Args.TargetPart);
 
-        if (component.ArmorCoverage.Contains(partType))
-            args.Args.Damage = DamageSpecifier.ApplyModifierSet(args.Args.Damage, component.Modifiers);
+        if (component.ArmorCoverage.Count == 0 ||
+			component.ArmorCoverage.Contains(partType))
+	{
+		args.Args.Damage =
+			DamageSpecifier.ApplyModifierSet(args.Args.Damage, component.Modifiers);
+	}
         // Shitmed Change End
     }
 
