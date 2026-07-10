@@ -55,14 +55,22 @@ public abstract partial class SharedArmorSystem : EntitySystem
         if (TryComp<MaskComponent>(uid, out var mask) && mask.IsToggled)
             return;
 
-        // Shitmed Change Start - armor only protects the body parts it covers
-        if (args.Args.TargetPart == null)
+        // Shitmed Change Start - armor only protects the body parts it covers.
+        // Armor with no coverage configured protects all parts (upstream clothing yaml sets no
+        // coverage), and non-part damage (mobs without complex bodies, e.g. animals wearing
+        // armor) is always protected. Goob semantics: armor penetration weakens the modifiers.
+        var modifiers = DamageSpecifier.PenetrateArmor(component.Modifiers, args.Args.Damage.ArmorPenetration);
+
+        if (args.Args.TargetPart is not { } targetPart)
+        {
+            args.Args.Damage = DamageSpecifier.ApplyModifierSet(args.Args.Damage, modifiers);
             return;
+        }
 
-        var (partType, _) = _body.ConvertTargetBodyPart(args.Args.TargetPart);
+        var (partType, _) = _body.ConvertTargetBodyPart(targetPart);
 
-        if (component.ArmorCoverage.Contains(partType))
-            args.Args.Damage = DamageSpecifier.ApplyModifierSet(args.Args.Damage, component.Modifiers);
+        if (component.ArmorCoverage.Count == 0 || component.ArmorCoverage.Contains(partType))
+            args.Args.Damage = DamageSpecifier.ApplyModifierSet(args.Args.Damage, modifiers);
         // Shitmed Change End
     }
 
@@ -72,7 +80,9 @@ public abstract partial class SharedArmorSystem : EntitySystem
         if (TryComp<MaskComponent>(uid, out var mask) && mask.IsToggled)
             return;
 
-        args.Args.Damage = DamageSpecifier.ApplyModifierSet(args.Args.Damage, component.Modifiers);
+        // Goob semantics: armor penetration applies to borg module armor too.
+        args.Args.Damage = DamageSpecifier.ApplyModifierSet(args.Args.Damage,
+            DamageSpecifier.PenetrateArmor(component.Modifiers, args.Args.Damage.ArmorPenetration));
     }
 
     private void OnArmorVerbExamine(EntityUid uid, ArmorComponent component, GetVerbsEvent<ExamineVerb> args)
@@ -107,7 +117,7 @@ public abstract partial class SharedArmorSystem : EntitySystem
         var coverage = component.ArmorCoverage;
         var armorModifiers = component.Modifiers;
 
-        if (!component.ArmourCoverageHidden)
+        if (!component.ArmourCoverageHidden && coverage.Count > 0) // iss14: empty coverage = protects everywhere, no line to show
         {
             var coveredParts = coverage.Where(coveragePart => coveragePart != BodyPartType.Other).ToList();
             List<string> coverageText = [];
