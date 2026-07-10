@@ -9,19 +9,24 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.Database;
 using Content.Shared.FixedPoint;
 using Content.Shared.Projectiles;
+using Content.Goobstation.Shared.Projectiles; // Goobstation - ranged aim-miss falloff
+using Content.Shared._Shitmed.Targeting; // Goobstation - ranged aim-miss falloff
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Player;
+using Robust.Shared.Random; // Goobstation - ranged aim-miss falloff
 
 namespace Content.Server.Projectiles;
 
 public sealed partial class ProjectileSystem : SharedProjectileSystem
 {
     [Dependency] private IAdminLogManager _adminLogger = default!;
+    [Dependency] private IRobustRandom _random = default!; // Goobstation - ranged aim-miss falloff
     [Dependency] private ColorFlashEffectSystem _color = default!;
     [Dependency] private DamageableSystem _damageableSystem = default!;
     [Dependency] private DestructibleSystem _destructibleSystem = default!;
     [Dependency] private GunSystem _guns = default!;
     [Dependency] private SharedCameraRecoilSystem _sharedCameraRecoil = default!;
+    [Dependency] private SharedTransformSystem _transform = default!; // Goobstation - ranged aim-miss falloff
 
     public override void Initialize()
     {
@@ -58,7 +63,22 @@ public sealed partial class ProjectileSystem : SharedProjectileSystem
         }
         var deleted = Deleted(target);
 
-        if (_damageableSystem.TryChangeDamage((target, damageableComponent), ev.Damage, out var damage, component.IgnoreResistances, origin: component.Shooter) && Exists(component.Shooter))
+        // Goobstation - ranged aim-miss falloff: the aimed body part only lands close-up; the
+        // chance falls off with shot distance and the hit degrades to the chest.
+        TargetBodyPart? targetPart = null;
+        if (TryComp(uid, out ProjectileMissTargetPartChanceComponent? missComp)
+            && missComp.FireCoordinates is { } fireCoords)
+        {
+            var targetCoords = _transform.GetMapCoordinates(target);
+            var missChance = fireCoords.MapId != targetCoords.MapId
+                ? 1f
+                : Math.Clamp((fireCoords.Position - targetCoords.Position).Length() / 2f, 0f, 1f);
+
+            if (_random.Prob(missChance))
+                targetPart = TargetBodyPart.Chest;
+        }
+
+        if (_damageableSystem.TryChangeDamage((target, damageableComponent), ev.Damage, out var damage, component.IgnoreResistances, origin: component.Shooter, targetPart: targetPart) && Exists(component.Shooter))
         {
             if (!deleted)
             {

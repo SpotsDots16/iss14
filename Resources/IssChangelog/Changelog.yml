@@ -2,6 +2,21 @@ Name: Changelog
 Order: 0
 Entries:
 - author: issyman182
+  version: iss14:1.7.2
+  time: '2026-07-10'
+  changes:
+  - message: Fixed armor not reducing damage from attacks — every vest, helmet and hardsuit was silently providing no protection in combat.
+    type: Fix
+  - message: Armor-piercing ammunition actually penetrates armor now.
+    type: Fix
+  - message: Aimed shots with guns now drift toward the chest beyond point-blank range — headshots require getting close.
+    type: Tweak
+  - message: Skeletons can be healed with medical items again.
+    type: Fix
+  - message: Fixed the health analyzer showing about half blood on perfectly healthy patients.
+    type: Fix
+  id: 13
+- author: issyman182
   version: iss14:1.7.1
   time: '2026-07-09'
   changes:

@@ -69,7 +69,7 @@ public abstract partial class SharedArmorSystem : EntitySystem
 
         var (partType, _) = _body.ConvertTargetBodyPart(targetPart);
 
-        if (component.ArmorCoverage.Count == 0 || component.ArmorCoverage.Contains(partType))
+        if (component.CoversPart(partType))
             args.Args.Damage = DamageSpecifier.ApplyModifierSet(args.Args.Damage, modifiers);
         // Shitmed Change End
     }

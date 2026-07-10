@@ -20,7 +20,10 @@
     damageContainer: Biological
     damageModifierSet: Skeleton
   - type: Injurable
-    damageContainer: BiologicalMetaphysical
+    # iss14: Biological, matching Goob (skeletons there have no container override) - the ported
+    # HealingSystem gates topicals on this container, and BiologicalMetaphysical made skeletons
+    # unhealable by any medical item.
+    damageContainer: Biological
 # Shitmed: DamageVisuals replaced by part-based woundable visuals.
 #  - type: DamageVisuals
 #    damageOverlayGroups:

@@ -202,6 +202,16 @@ public sealed partial class GunSystem : SharedGunSystem
             Dirty(uid, targeted);
         }
 
+        // Goobstation - ranged aim-miss falloff: remember where aimed shots were fired from so
+        // the hit can degrade to the chest with distance (see ProjectileSystem).
+        if (user != null
+            && HasComp<Content.Shared._Shitmed.Targeting.TargetingComponent>(user.Value)
+            && HasComp<ProjectileComponent>(uid))
+        {
+            var miss = EnsureComp<Content.Goobstation.Shared.Projectiles.ProjectileMissTargetPartChanceComponent>(uid);
+            miss.FireCoordinates = TransformSystem.GetMapCoordinates(user.Value);
+        }
+
         // Do a throw
         if (!HasComp<ProjectileComponent>(uid))
         {

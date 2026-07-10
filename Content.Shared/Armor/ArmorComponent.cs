@@ -57,6 +57,16 @@ public sealed partial class ArmorComponent : Component
     public List<BodyPartType> ArmorCoverage = new();
 
     /// <summary>
+    /// Whether this armor protects the given body part. Armor with no coverage configured
+    /// protects everything - upstream clothing yaml sets no coverage, so an empty list must
+    /// not mean "covers nothing". Single source of truth for every coverage check.
+    /// </summary>
+    public bool CoversPart(BodyPartType part)
+    {
+        return ArmorCoverage.Count == 0 || ArmorCoverage.Contains(part);
+    }
+
+    /// <summary>
     /// Shitmed Change: The amount of dismemberment chance deduction.
     /// </summary>
     [DataField, Access(Other = AccessPermissions.ReadExecute)]

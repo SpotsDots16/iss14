@@ -314,7 +314,9 @@ public partial class TraumaSystem
             if (!inflicter.Comp.AllowArmourDeduction.Contains(traumaType) && armour.TraumaDeductions[traumaType] >= 0)
                 continue;
 
-            if (armour.ArmorCoverage.Contains(coverage))
+            // iss14: empty coverage protects everything (same rule as damage reduction); the old
+            // Contains-only check silently disabled trauma deductions for all unconfigured armor.
+            if (armour.CoversPart(coverage))
             {
                 deduction += armour.TraumaDeductions[traumaType];
             }

@@ -299,11 +299,11 @@ public sealed partial class HealthAnalyzerSystem : EntitySystem
         var bloodAmount = float.NaN;
         var bloodLow = false; // Goobstation
 
-        if (TryComp<BloodstreamComponent>(target, out var bloodstream) &&
-            _solutionContainerSystem.ResolveSolution(target, bloodstream.BloodSolutionName,
-                ref bloodstream.BloodSolution, out var bloodSolution))
+        if (TryComp<BloodstreamComponent>(target, out var bloodstream))
         {
-            bloodAmount = bloodSolution.FillFraction;
+            // iss14: count the blood reagent against BloodMaxVolume - FillFraction divides by the
+            // solution capacity, which includes chem headroom, so full blood would read ~55%.
+            bloodAmount = _bloodstreamSystem.GetBloodLevelPercentage((target, bloodstream));
             bloodLow = bloodAmount < bloodstream.BloodlossThreshold; // Goobstation
         }
 
