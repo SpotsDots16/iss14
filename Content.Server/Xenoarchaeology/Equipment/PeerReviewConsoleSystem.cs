@@ -1,33 +1,28 @@
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Content.Shared.Xenoarchaeology.Equipment.Components;
+using Content.Shared.UserInterface;
+using Content.Shared.Xenoarchaeology.Equipment;
+using Robust.Server.GameObjects;
 
 namespace Content.Server.Xenoarchaeology.Equipment;
 
 public sealed partial class PeerReviewConsoleSystem : EntitySystem
 {
-    private const int SmallPublicationCost = 4;
-    private const int MediumPublicationCost = 8;
-    private const int LargePublicationCost = 16;
-
     private const string SmallResearchDiskPrototype = "ResearchDisk";
     private const string MediumResearchDiskPrototype = "ResearchDisk5000";
     private const string LargeResearchDiskPrototype = "ResearchDisk10000";
 
-    private enum PublicationTier
-    {
-        Small,
-        Medium,
-        Large,
-    }
-
     [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private UserInterfaceSystem _userInterface = default!;
 
     public override void Initialize()
     {
         base.Initialize();
 
         SubscribeLocalEvent<PeerReviewConsoleComponent, AfterInteractUsingEvent>(OnAfterInteractUsing);
+        SubscribeLocalEvent<PeerReviewConsoleComponent, AfterActivatableUIOpenEvent>(OnUiOpened);
+        SubscribeLocalEvent<PeerReviewConsoleComponent, PeerReviewConsolePublishMessage>(OnPublishMessage);
     }
 
     private void OnAfterInteractUsing(
@@ -47,6 +42,7 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
         ent.Comp.StoredValue += printout.Value;
 
         QueueDel(args.Used);
+        UpdateUi(ent);
 
         _popup.PopupEntity(
             $"Stored research data: {ent.Comp.StoredValue}",
@@ -55,6 +51,21 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
 
         args.Handled = true;
     }
+
+    private void OnUiOpened(
+    Entity<PeerReviewConsoleComponent> ent,
+    ref AfterActivatableUIOpenEvent args)
+{
+    UpdateUi(ent);
+}
+
+private void OnPublishMessage(
+    Entity<PeerReviewConsoleComponent> ent,
+    ref PeerReviewConsolePublishMessage args)
+{
+    TryPublish(ent, args.Actor, args.Tier);
+}
+
     private void TryPublish(
     Entity<PeerReviewConsoleComponent> ent,
     EntityUid user,
@@ -63,13 +74,13 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
         var (cost, diskPrototype) = tier switch
         {
             PublicationTier.Small =>
-                (SmallPublicationCost, SmallResearchDiskPrototype),
+                (PeerReviewConsoleConstants.SmallPublicationCost, SmallResearchDiskPrototype),
 
             PublicationTier.Medium =>
-                (MediumPublicationCost, MediumResearchDiskPrototype),
+                (PeerReviewConsoleConstants.MediumPublicationCost, MediumResearchDiskPrototype),
 
             PublicationTier.Large =>
-                (LargePublicationCost, LargeResearchDiskPrototype),
+                (PeerReviewConsoleConstants.LargePublicationCost, LargeResearchDiskPrototype),
 
             _ => throw new ArgumentOutOfRangeException(nameof(tier), tier, null),
         };
@@ -87,11 +98,22 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
         ent.Comp.StoredValue -= cost;
 
         Spawn(diskPrototype, Transform(ent.Owner).Coordinates);
+        UpdateUi(ent);
 
         _popup.PopupEntity(
             $"Publication completed. Remaining data: {ent.Comp.StoredValue}.",
             ent.Owner,
             user);
+    }
+
+    private void UpdateUi(Entity<PeerReviewConsoleComponent> ent)
+    {
+        var state = new PeerReviewConsoleUiState(ent.Comp.StoredValue);
+
+        _userInterface.SetUiState(
+            ent.Owner,
+            PeerReviewConsoleUiKey.Key,
+            state);
     }
 
 }

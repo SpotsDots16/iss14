@@ -5,3 +5,9 @@
   description: A terminal used to compile and publish artifact research findings.
   components:
   - type: PeerReviewConsole
+  - type: ActivatableUI
+    key: enum.PeerReviewConsoleUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.PeerReviewConsoleUiKey.Key:
+        type: PeerReviewConsoleBoundUserInterface
