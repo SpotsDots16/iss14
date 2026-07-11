@@ -4,6 +4,8 @@ using Content.Shared.Xenoarchaeology.Equipment.Components;
 using Content.Shared.UserInterface;
 using Content.Shared.Xenoarchaeology.Equipment;
 using Robust.Server.GameObjects;
+using Robust.Shared.Audio.Systems;
+using Content.Server.Power.Components;
 
 namespace Content.Server.Xenoarchaeology.Equipment;
 
@@ -15,6 +17,7 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
 
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private UserInterfaceSystem _userInterface = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
 
     public override void Initialize()
     {
@@ -32,6 +35,9 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
         if (args.Handled)
             return;
 
+        if (!IsPowered(ent.Owner))
+            return;
+
         if (!TryComp<ArtifactResearchPrintoutComponent>(
                 args.Used,
                 out var printout))
@@ -40,6 +46,7 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
         }
 
         ent.Comp.StoredValue += printout.Value;
+        _audio.PlayPvs(ent.Comp.InsertSound, ent.Owner);
 
         QueueDel(args.Used);
         UpdateUi(ent);
@@ -55,22 +62,26 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
     private void OnUiOpened(
     Entity<PeerReviewConsoleComponent> ent,
     ref AfterActivatableUIOpenEvent args)
-{
-    UpdateUi(ent);
-}
+    {
+        _audio.PlayPvs(ent.Comp.KeyboardSound, ent.Owner);
+        UpdateUi(ent);
+    }
 
-private void OnPublishMessage(
-    Entity<PeerReviewConsoleComponent> ent,
-    ref PeerReviewConsolePublishMessage args)
-{
-    TryPublish(ent, args.Actor, args.Tier);
-}
+    private void OnPublishMessage(
+        Entity<PeerReviewConsoleComponent> ent,
+        ref PeerReviewConsolePublishMessage args)
+    {
+        TryPublish(ent, args.Actor, args.Tier);
+    }
 
     private void TryPublish(
     Entity<PeerReviewConsoleComponent> ent,
     EntityUid user,
     PublicationTier tier)
     {
+        if (!IsPowered(ent.Owner))
+            return;
+
         var (cost, diskPrototype) = tier switch
         {
             PublicationTier.Small =>
@@ -98,6 +109,7 @@ private void OnPublishMessage(
         ent.Comp.StoredValue -= cost;
 
         Spawn(diskPrototype, Transform(ent.Owner).Coordinates);
+        _audio.PlayPvs(ent.Comp.PublishSound, ent.Owner);
         UpdateUi(ent);
 
         _popup.PopupEntity(
@@ -114,6 +126,12 @@ private void OnPublishMessage(
             ent.Owner,
             PeerReviewConsoleUiKey.Key,
             state);
+    }
+
+    private bool IsPowered(EntityUid uid)
+    {
+        return TryComp<ApcPowerReceiverComponent>(uid, out var powerReceiver) &&
+               powerReceiver.Powered;
     }
 
 }
