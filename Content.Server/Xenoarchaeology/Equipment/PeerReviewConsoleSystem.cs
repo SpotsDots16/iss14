@@ -4,9 +4,24 @@ using Content.Shared.Xenoarchaeology.Equipment.Components;
 
 namespace Content.Server.Xenoarchaeology.Equipment;
 
-public sealed class PeerReviewConsoleSystem : EntitySystem
+public sealed partial class PeerReviewConsoleSystem : EntitySystem
 {
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
+    private const int SmallPublicationCost = 4;
+    private const int MediumPublicationCost = 8;
+    private const int LargePublicationCost = 16;
+
+    private const string SmallResearchDiskPrototype = "ResearchDisk";
+    private const string MediumResearchDiskPrototype = "ResearchDisk5000";
+    private const string LargeResearchDiskPrototype = "ResearchDisk10000";
+
+    private enum PublicationTier
+    {
+        Small,
+        Medium,
+        Large,
+    }
+
+    [Dependency] private SharedPopupSystem _popup = default!;
 
     public override void Initialize()
     {
@@ -40,4 +55,43 @@ public sealed class PeerReviewConsoleSystem : EntitySystem
 
         args.Handled = true;
     }
+    private void TryPublish(
+    Entity<PeerReviewConsoleComponent> ent,
+    EntityUid user,
+    PublicationTier tier)
+    {
+        var (cost, diskPrototype) = tier switch
+        {
+            PublicationTier.Small =>
+                (SmallPublicationCost, SmallResearchDiskPrototype),
+
+            PublicationTier.Medium =>
+                (MediumPublicationCost, MediumResearchDiskPrototype),
+
+            PublicationTier.Large =>
+                (LargePublicationCost, LargeResearchDiskPrototype),
+
+            _ => throw new ArgumentOutOfRangeException(nameof(tier), tier, null),
+        };
+
+        if (ent.Comp.StoredValue < cost)
+        {
+            _popup.PopupEntity(
+                $"Not enough research data. Required: {cost}.",
+                ent.Owner,
+                user);
+
+            return;
+        }
+
+        ent.Comp.StoredValue -= cost;
+
+        Spawn(diskPrototype, Transform(ent.Owner).Coordinates);
+
+        _popup.PopupEntity(
+            $"Publication completed. Remaining data: {ent.Comp.StoredValue}.",
+            ent.Owner,
+            user);
+    }
+
 }
