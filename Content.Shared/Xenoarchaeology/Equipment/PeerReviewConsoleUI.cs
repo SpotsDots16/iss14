@@ -5,7 +5,7 @@ namespace Content.Shared.Xenoarchaeology.Equipment;
 public static class PeerReviewConsoleConstants
 {
     public const int SmallPublicationCost = 4;
-    public const int MediumPublicationCost = 8;
+    public const int MediumPublicationCost = 10;
     public const int LargePublicationCost = 16;
 }
 

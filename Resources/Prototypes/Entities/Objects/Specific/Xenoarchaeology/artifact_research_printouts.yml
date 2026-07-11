@@ -1,26 +1,8 @@
 - type: entity
   parent: PaperArtifactAnalyzer
-  id: ArtifactResearchPrintoutTier1
-  name: basic artifact research printout
-  description: A dot-matrix printout containing basic anomalous research findings.
+  id: ArtifactResearchPrintout
+  name: artifact research printout
+  description: A dot-matrix report containing findings from an anomalous artifact.
   components:
   - type: ArtifactResearchPrintout
     value: 1
-
-- type: entity
-  parent: PaperArtifactAnalyzer
-  id: ArtifactResearchPrintoutTier2
-  name: advanced artifact research printout
-  description: A dot-matrix printout containing advanced anomalous research findings.
-  components:
-  - type: ArtifactResearchPrintout
-    value: 2
-
-- type: entity
-  parent: PaperArtifactAnalyzer
-  id: ArtifactResearchPrintoutTier3
-  name: superior artifact research printout
-  description: A dot-matrix printout containing superior anomalous research findings.
-  components:
-  - type: ArtifactResearchPrintout
-    value: 3

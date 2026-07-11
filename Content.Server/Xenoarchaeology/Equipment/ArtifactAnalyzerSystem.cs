@@ -11,9 +11,11 @@ namespace Content.Server.Xenoarchaeology.Equipment;
 /// <inheritdoc />
 public sealed partial class ArtifactAnalyzerSystem : SharedArtifactAnalyzerSystem
 {
-    private const string Tier1PrintoutPrototype = "ArtifactResearchPrintoutTier1";
-    private const string Tier2PrintoutPrototype = "ArtifactResearchPrintoutTier2";
-    private const string Tier3PrintoutPrototype = "ArtifactResearchPrintoutTier3";
+    private const string ResearchPrintoutPrototype = "ArtifactResearchPrintout";
+
+    // One publication data point represents approximately 10% of
+    // 6,250 extracted research points.
+    private const int ResearchPointsPerData = 6250;
 
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
@@ -28,7 +30,9 @@ public sealed partial class ArtifactAnalyzerSystem : SharedArtifactAnalyzerSyste
         SubscribeLocalEvent<AnalysisConsoleComponent, AnalysisConsoleExtractButtonPressedMessage>(OnExtractButtonPressed);
     }
 
-    private void OnExtractButtonPressed(Entity<AnalysisConsoleComponent> ent, ref AnalysisConsoleExtractButtonPressedMessage args)
+    private void OnExtractButtonPressed(
+        Entity<AnalysisConsoleComponent> ent,
+        ref AnalysisConsoleExtractButtonPressedMessage args)
     {
         if (!TryGetArtifactFromConsole(ent, out var artifact))
             return;
@@ -37,7 +41,7 @@ public sealed partial class ArtifactAnalyzerSystem : SharedArtifactAnalyzerSyste
             return;
 
         var sumResearch = 0;
-        var printoutsToSpawn = new List<string>();
+        var printoutResearchValues = new List<int>();
 
         foreach (var node in _xenoArtifact.GetAllNodes(artifact.Value))
         {
@@ -54,7 +58,7 @@ public sealed partial class ArtifactAnalyzerSystem : SharedArtifactAnalyzerSyste
             if (research <= 0)
                 continue;
 
-            printoutsToSpawn.Add(GetPrintoutPrototype(node.Comp.Depth));
+            printoutResearchValues.Add(research);
         }
 
         // 4-16-25: It's a sad day when a scientist makes negative 5k research
@@ -65,9 +69,29 @@ public sealed partial class ArtifactAnalyzerSystem : SharedArtifactAnalyzerSyste
 
         var printoutCoordinates = Transform(ent.Owner).Coordinates;
 
-        foreach (var prototype in printoutsToSpawn)
+        foreach (var research in printoutResearchValues)
         {
-            Spawn(prototype, printoutCoordinates);
+            var printout = Spawn(
+                ResearchPrintoutPrototype,
+                printoutCoordinates);
+
+            // Integer division rounds down.
+            // Examples:
+            // 8,000 research = 1 data
+            // 24,000 research = 3 data
+            var printoutValue = research / ResearchPointsPerData;
+
+            // Every node that contributes research should produce
+            // a usable printout worth at least one data.
+            if (printoutValue < 1)
+                printoutValue = 1;
+
+            if (TryComp<ArtifactResearchPrintoutComponent>(
+                    printout,
+                    out var printoutComponent))
+            {
+                printoutComponent.Value = printoutValue;
+            }
         }
 
         _audio.PlayPvs(ent.Comp.ExtractSound, artifact.Value);
@@ -75,16 +99,6 @@ public sealed partial class ArtifactAnalyzerSystem : SharedArtifactAnalyzerSyste
             Loc.GetString("analyzer-artifact-extract-popup"),
             artifact.Value,
             PopupType.Large);
-    }
-
-    private static string GetPrintoutPrototype(int depth)
-    {
-        return depth switch
-        {
-            <= 0 => Tier1PrintoutPrototype,
-            1 => Tier2PrintoutPrototype,
-            _ => Tier3PrintoutPrototype,
-        };
     }
 }
 
