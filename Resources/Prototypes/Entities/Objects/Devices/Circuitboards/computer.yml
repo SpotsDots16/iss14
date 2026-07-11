@@ -162,6 +162,17 @@
     prototype: ComputerCargoOrdersService
   - type: StaticPrice
     price: 750
+    
+- type: entity
+  parent: BaseComputerCircuitboard
+  id: ComputerPeerReviewCircuitboard
+  name: peer review console computer board
+  description: A computer printed circuit board for a peer review console.
+  components:
+  - type: Sprite
+    state: cpu_service
+  - type: ComputerBoard
+    prototype: ComputerPeerReview
 
 - type: entity
   parent: BaseComputerCircuitboard
