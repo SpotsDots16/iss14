@@ -2,37 +2,194 @@
     xmlns="https://spacestation14.io"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="Content.Client.Xenoarchaeology.Ui.PeerReviewConsoleWindow"
-    Title="Peer Review Console"
-    MinSize="380 240">
+    Title="SciNet Peer Review Console"
+    MinSize="600 440">
 
     <BoxContainer
         Orientation="Vertical"
-        SeparationOverride="8"
-        Margin="8">
+        SeparationOverride="10"
+        Margin="12">
+
+        <!-- Header -->
+        <PanelContainer Name="HeaderPanel">
+            <BoxContainer
+                Orientation="Vertical"
+                SeparationOverride="2"
+                Margin="12">
+
+                <Label
+                    Text="SCINET PEER REVIEW"
+                    FontColorOverride="#A8E6BC"
+                    HorizontalAlignment="Center" />
+
+                <Label
+                    Text="Station Library Research Publication Service"
+                    FontColorOverride="#B8C8BE"
+                    HorizontalAlignment="Center" />
+
+            </BoxContainer>
+        </PanelContainer>
+
+        <!-- Stored data display -->
+        <PanelContainer Name="StoredDataPanel">
+            <BoxContainer
+                Orientation="Horizontal"
+                SeparationOverride="14"
+                Margin="12">
+
+                <AnimatedTextureRect
+                    Name="StoredDataIcon"
+                    SetSize="56 56"
+                    VerticalAlignment="Center" />
+
+                <BoxContainer
+                    Orientation="Vertical"
+                    HorizontalExpand="True"
+                    VerticalAlignment="Center">
+
+                    <Label
+                        Text="AVAILABLE RESEARCH DATA"
+                        FontColorOverride="#A8E6BC" />
+
+                    <Label
+                        Name="StoredValueLabel"
+                        Text="0 units"
+                        FontColorOverride="#FFFFFF" />
+
+                    <Label
+                        Name="StoredStatusLabel"
+                        Text="Awaiting submitted findings"
+                        FontColorOverride="#AAB8AF" />
+
+                </BoxContainer>
+            </BoxContainer>
+        </PanelContainer>
 
         <Label
-            Name="StoredValueLabel"
-            Text="Stored research data: 0"
-            HorizontalAlignment="Center" />
+            Text="AVAILABLE PUBLICATIONS"
+            FontColorOverride="#A8E6BC" />
+
+        <!-- Minor publication -->
+        <PanelContainer Name="MinorPublicationPanel">
+            <BoxContainer
+                Orientation="Horizontal"
+                SeparationOverride="12"
+                Margin="10"
+                MinHeight="64">
+
+                <AnimatedTextureRect
+                    Name="MinorPublicationIcon"
+                    SetSize="48 48"
+                    VerticalAlignment="Center" />
+
+                <BoxContainer
+                    Orientation="Vertical"
+                    HorizontalExpand="True"
+                    VerticalAlignment="Center">
+
+                    <Label Text="Minor Publication" />
+
+                    <Label
+                        Text="1,000 research points"
+                        FontColorOverride="#C5D1C9" />
+
+                    <Label
+                        Text="Requires 4 research data"
+                        FontColorOverride="#8FA298" />
+
+                </BoxContainer>
+
+                <Button
+                    Name="PublishSmallButton"
+                    Text="Publish"
+                    SetSize="100 38"
+                    VerticalAlignment="Center" />
+
+            </BoxContainer>
+        </PanelContainer>
+
+        <!-- Significant publication -->
+        <PanelContainer Name="SignificantPublicationPanel">
+            <BoxContainer
+                Orientation="Horizontal"
+                SeparationOverride="12"
+                Margin="10"
+                MinHeight="64">
+
+                <AnimatedTextureRect
+                    Name="SignificantPublicationIcon"
+                    SetSize="48 48"
+                    VerticalAlignment="Center" />
+
+                <BoxContainer
+                    Orientation="Vertical"
+                    HorizontalExpand="True"
+                    VerticalAlignment="Center">
+
+                    <Label Text="Significant Publication" />
+
+                    <Label
+                        Text="5,000 research points"
+                        FontColorOverride="#C5D1C9" />
+
+                    <Label
+                        Text="Requires 8 research data"
+                        FontColorOverride="#8FA298" />
+
+                </BoxContainer>
+
+                <Button
+                    Name="PublishMediumButton"
+                    Text="Publish"
+                    SetSize="100 38"
+                    VerticalAlignment="Center" />
+
+            </BoxContainer>
+        </PanelContainer>
+
+        <!-- Major publication -->
+        <PanelContainer Name="MajorPublicationPanel">
+            <BoxContainer
+                Orientation="Horizontal"
+                SeparationOverride="12"
+                Margin="10"
+                MinHeight="64">
+
+                <AnimatedTextureRect
+                    Name="MajorPublicationIcon"
+                    SetSize="48 48"
+                    VerticalAlignment="Center" />
+
+                <BoxContainer
+                    Orientation="Vertical"
+                    HorizontalExpand="True"
+                    VerticalAlignment="Center">
+
+                    <Label Text="Major Publication" />
+
+                    <Label
+                        Text="10,000 research points"
+                        FontColorOverride="#D5E3D9" />
+
+                    <Label
+                        Text="Requires 16 research data"
+                        FontColorOverride="#9BB2A3" />
+
+                </BoxContainer>
+
+                <Button
+                    Name="PublishLargeButton"
+                    Text="Publish"
+                    SetSize="100 38"
+                    VerticalAlignment="Center" />
+
+            </BoxContainer>
+        </PanelContainer>
 
         <Label
-            Text="Compile submitted artifact findings into research publications."
+            Text="Submitted printouts are consumed during compilation."
+            FontColorOverride="#84938A"
             HorizontalAlignment="Center" />
-
-        <Button
-            Name="PublishSmallButton"
-            Text="Publish minor findings — 1,000 points (4 data)"
-            HorizontalExpand="True" />
-
-        <Button
-            Name="PublishMediumButton"
-            Text="Publish significant findings — 5,000 points (8 data)"
-            HorizontalExpand="True" />
-
-        <Button
-            Name="PublishLargeButton"
-            Text="Publish major findings — 10,000 points (16 data)"
-            HorizontalExpand="True" />
 
     </BoxContainer>
 </DefaultWindow>
