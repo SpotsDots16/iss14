@@ -37,3 +37,5 @@
     interfaces:
       enum.PeerReviewConsoleUiKey.Key:
         type: PeerReviewConsoleBoundUserInterface
+  - type: Computer
+    board: ComputerPeerReviewCircuitboard
