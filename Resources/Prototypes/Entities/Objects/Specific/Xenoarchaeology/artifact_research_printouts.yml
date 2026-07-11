@@ -1,0 +1,5 @@
+- type: entity
+  parent: PaperArtifactAnalyzer
+  id: ArtifactResearchPrintoutTier1
+  name: basic artifact research printout
+  description: A dot-matrix printout containing basic anomalous research findings.
