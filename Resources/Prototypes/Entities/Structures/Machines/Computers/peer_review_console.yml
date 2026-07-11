@@ -11,9 +11,9 @@
     - map: ["computerLayerKeyboard"]
       state: generic_keyboard
     - map: ["computerLayerScreen"]
-      state: ai-fixer-empty
+      state: comm_logs
     - map: ["computerLayerKeys"]
-      state: tech_key
+      state: service_keys
     - map: ["enum.WiresVisualLayers.MaintenancePanel"]
       state: generic_panel_open
   - type: Appearance
