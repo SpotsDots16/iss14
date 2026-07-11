@@ -133,7 +133,7 @@
                         FontColorOverride="#C5D1C9" />
 
                     <Label
-                        Text="Requires 8 research data"
+                        Text="Requires 10 research data"
                         FontColorOverride="#8FA298" />
 
                 </BoxContainer>
