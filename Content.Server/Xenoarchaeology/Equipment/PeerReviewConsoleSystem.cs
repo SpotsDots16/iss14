@@ -6,6 +6,8 @@ using Content.Shared.Xenoarchaeology.Equipment;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio.Systems;
 using Content.Server.Power.Components;
+using Content.Shared.Access.Components;
+using Content.Shared.Access.Systems;
 
 namespace Content.Server.Xenoarchaeology.Equipment;
 
@@ -18,6 +20,7 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private UserInterfaceSystem _userInterface = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private AccessReaderSystem _accessReader = default!;
 
     public override void Initialize()
     {
@@ -33,6 +36,9 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
         ref AfterInteractUsingEvent args)
     {
         if (args.Handled)
+            return;
+
+        if (!HasConsoleAccess(args.User, ent.Owner))
             return;
 
         if (!IsPowered(ent.Owner))
@@ -80,6 +86,9 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
     PublicationTier tier)
     {
         if (!IsPowered(ent.Owner))
+            return;
+
+        if (!HasConsoleAccess(user, ent.Owner))
             return;
 
         var (cost, diskPrototype) = tier switch
@@ -132,6 +141,12 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
     {
         return TryComp<ApcPowerReceiverComponent>(uid, out var powerReceiver) &&
                powerReceiver.Powered;
+    }
+
+    private bool HasConsoleAccess(EntityUid user, EntityUid console)
+    {
+        return !TryComp<AccessReaderComponent>(console, out var reader) ||
+               _accessReader.IsAllowed(user, console, reader);
     }
 
 }
