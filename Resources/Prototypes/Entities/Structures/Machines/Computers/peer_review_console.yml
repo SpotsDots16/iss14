@@ -5,8 +5,15 @@
   description: A terminal used to compile and publish artifact research findings.
   components:
   - type: PeerReviewConsole
+    insertSound:
+      path: /Audio/Machines/terminal_insert_disc.ogg
+    publishSound:
+      path: /Audio/Machines/diagnoser_printing.ogg
+    keyboardSound:
+      path: /Audio/Machines/Keyboard/keyboard4.ogg
   - type: ActivatableUI
     key: enum.PeerReviewConsoleUiKey.Key
+  - type: ActivatableUIRequiresPower
   - type: UserInterface
     interfaces:
       enum.PeerReviewConsoleUiKey.Key:
