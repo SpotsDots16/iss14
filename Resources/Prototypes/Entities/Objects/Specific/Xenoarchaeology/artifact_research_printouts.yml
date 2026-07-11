@@ -2,7 +2,7 @@
   parent: PaperArtifactAnalyzer
   id: ArtifactResearchPrintout
   name: artifact research printout
-  description: A dot-matrix report containing findings from an anomalous artifact.
+  description: A dot-matrix report containing findings from an anomalous artifact. Maybe a librarian could use this?
   components:
   - type: ArtifactResearchPrintout
     value: 1

@@ -39,3 +39,6 @@
         type: PeerReviewConsoleBoundUserInterface
   - type: Computer
     board: ComputerPeerReviewCircuitboard
+  - type: AccessReader
+    access: [["Library"]]
+    
