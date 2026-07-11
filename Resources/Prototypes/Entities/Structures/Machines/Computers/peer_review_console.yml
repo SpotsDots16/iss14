@@ -1,0 +1,7 @@
+- type: entity
+  parent: BaseComputer
+  id: ComputerPeerReview
+  name: peer review console
+  description: A terminal used to compile and publish artifact research findings.
+  components:
+  - type: PeerReviewConsole
