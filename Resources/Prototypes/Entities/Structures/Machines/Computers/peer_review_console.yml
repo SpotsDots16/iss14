@@ -4,6 +4,25 @@
   name: peer review console
   description: A terminal used to compile and publish artifact research findings.
   components:
+  - type: Sprite
+    layers:
+    - map: ["computerLayerBody"]
+      state: computer
+    - map: ["computerLayerKeyboard"]
+      state: generic_keyboard
+    - map: ["computerLayerScreen"]
+      state: ai-fixer-empty
+    - map: ["computerLayerKeys"]
+      state: tech_key
+    - map: ["enum.WiresVisualLayers.MaintenancePanel"]
+      state: generic_panel_open
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.ComputerVisuals.Powered:
+        computerLayerScreen:
+          True: { visible: true, shader: unshaded }
+          False: { visible: false }
   - type: PeerReviewConsole
     insertSound:
       path: /Audio/Machines/terminal_insert_disc.ogg
