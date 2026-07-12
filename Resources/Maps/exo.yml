@@ -2,9 +2,9 @@ meta:
   format: 7
   category: Map
   engineVersion: 277.0.0
-  forkId: ""
-  forkVersion: ""
-  time: 05/27/2026 10:45:53
+  forkId: iss14
+  forkVersion: 1.5.0
+  time: 07/12/2026 10:51:39
   entityCount: 20145
 maps:
 - 1
@@ -10259,7 +10259,7 @@ entities:
       pos: 11.5,-30.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -270776.3
+      secondsUntilStateChange: -271019.56
       state: Opening
     - type: DeviceLinkSource
       lastSignals:
@@ -10630,7 +10630,7 @@ entities:
       pos: 34.5,-36.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -46273.984
+      secondsUntilStateChange: -46517.234
       state: Opening
     - type: DeviceLinkSource
       lastSignals:
@@ -13743,17 +13743,17 @@ entities:
   - uid: 2393
     components:
     - type: Transform
-      pos: -0.3586353,-68.36993
+      pos: 0.51683223,-67.72206
       parent: 2
   - uid: 2450
     components:
     - type: Transform
-      pos: -0.05460471,-68.271126
+      pos: 0.40745723,-68.331436
       parent: 2
   - uid: 2451
     components:
     - type: Transform
-      pos: 0.34445727,-68.41368
+      pos: 0.40745723,-68.018936
       parent: 2
 - proto: BooksBag
   entities:
@@ -43293,6 +43293,24 @@ entities:
       rot: -1.5707963267948966 rad
       pos: 27.466145,-45.479877
       parent: 2
+- proto: ChestSkeleton
+  entities:
+  - uid: 7331
+    components:
+    - type: Transform
+      pos: 78.98892,-25.47695
+      parent: 2
+    - type: Damageable
+      damage:
+        woundSeverityMultipliers: {}
+        partDamageVariation: 0
+        armorPenetration: 0
+        types:
+          Heat: 0
+          Shock: 0
+          Blunt: 0
+          Slash: 0
+          Piercing: 0
 - proto: ChurchOrganInstrument
   entities:
   - uid: 11365
@@ -46008,6 +46026,14 @@ entities:
     - type: Transform
       rot: 1.5707963267948966 rad
       pos: -53.5,-41.5
+      parent: 2
+- proto: ComputerPeerReview
+  entities:
+  - uid: 2259
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -0.5,-68.5
       parent: 2
 - proto: ComputerPowerMonitoring
   entities:
@@ -90288,13 +90314,6 @@ entities:
     - type: Transform
       pos: 82.48561,-72.595604
       parent: 2
-- proto: OrganSkeletonPersonTorso
-  entities:
-  - uid: 7331
-    components:
-    - type: Transform
-      pos: 78.98892,-25.47695
-      parent: 2
 - proto: OxygenCanister
   entities:
   - uid: 2306
@@ -107847,11 +107866,6 @@ entities:
     components:
     - type: Transform
       pos: 0.5,-68.5
-      parent: 2
-  - uid: 2259
-    components:
-    - type: Transform
-      pos: -0.5,-68.5
       parent: 2
   - uid: 2262
     components:

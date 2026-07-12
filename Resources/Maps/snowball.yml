@@ -2,9 +2,9 @@ meta:
   format: 7
   category: Map
   engineVersion: 277.0.0
-  forkId: ""
-  forkVersion: ""
-  time: 05/27/2026 14:38:48
+  forkId: iss14
+  forkVersion: 1.5.0
+  time: 07/12/2026 11:41:14
   entityCount: 18268
 maps:
 - 1793
@@ -43351,7 +43351,7 @@ entities:
       desc: These glasses are held together by cheap tape and good (highly intelligent) thoughts.
       name: nerd glasses
     - type: Transform
-      pos: 81.64696,38.61957
+      pos: 80.52382,36.62359
       parent: 1
 - proto: ClothingEyesGlassesMeson
   entities:
@@ -43853,6 +43853,13 @@ entities:
     - type: Transform
       rot: 1.5707963267948966 rad
       pos: 70.5,43.5
+      parent: 1
+- proto: ComputerPeerReview
+  entities:
+  - uid: 4491
+    components:
+    - type: Transform
+      pos: 81.5,38.5
       parent: 1
 - proto: ComputerPowerMonitoring
   entities:
@@ -99905,11 +99912,6 @@ entities:
     components:
     - type: Transform
       pos: 79.5,38.5
-      parent: 1
-  - uid: 4491
-    components:
-    - type: Transform
-      pos: 81.5,38.5
       parent: 1
   - uid: 7117
     components:
