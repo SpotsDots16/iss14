@@ -1,11 +1,11 @@
 meta:
   format: 7
   category: Map
-  engineVersion: 268.0.0
-  forkId: ""
-  forkVersion: ""
-  time: 12/07/2025 22:51:59
-  entityCount: 18708
+  engineVersion: 277.0.0
+  forkId: iss14
+  forkVersion: 1.5.0
+  time: 07/12/2026 11:45:42
+  entityCount: 18709
 maps:
 - 1
 grids:
@@ -10822,6 +10822,8 @@ entities:
     - type: RadiationGridResistance
     - type: ImplicitRoof
     - type: ExplosionAirtightGrid
+    - type: TileHistory
+      chunkHistory: {}
 - proto: AcousticGuitarInstrument
   entities:
   - uid: 15607
@@ -22060,28 +22062,6 @@ entities:
     components:
     - type: Transform
       pos: 49.556282,3.5894375
-      parent: 2
-- proto: BaseChemistryEmptyVial
-  entities:
-  - uid: 4094
-    components:
-    - type: Transform
-      pos: 19.960098,21.84556
-      parent: 2
-  - uid: 4095
-    components:
-    - type: Transform
-      pos: 20.116348,21.62681
-      parent: 2
-  - uid: 8822
-    components:
-    - type: Transform
-      pos: 24.581747,10.684262
-      parent: 2
-  - uid: 15849
-    components:
-    - type: Transform
-      pos: 27.824532,35.632626
       parent: 2
 - proto: BaseComputerAiAccess
   entities:
@@ -51831,6 +51811,28 @@ entities:
     - type: Transform
       pos: 26.385427,37.27761
       parent: 2
+- proto: ChemistryEmptyVial
+  entities:
+  - uid: 4094
+    components:
+    - type: Transform
+      pos: 19.960098,21.84556
+      parent: 2
+  - uid: 4095
+    components:
+    - type: Transform
+      pos: 20.116348,21.62681
+      parent: 2
+  - uid: 8822
+    components:
+    - type: Transform
+      pos: 24.581747,10.684262
+      parent: 2
+  - uid: 15849
+    components:
+    - type: Transform
+      pos: 27.824532,35.632626
+      parent: 2
 - proto: ChemistryHotplate
   entities:
   - uid: 316
@@ -53014,8 +53016,8 @@ entities:
     - type: Transform
       parent: 15428
     - type: Clothing
-      inSlotFlag: HEAD
       inSlot: head
+      inSlotFlag: HEAD
     - type: Physics
       canCollide: False
 - proto: ClothingHeadHatBlacksoft
@@ -53317,8 +53319,8 @@ entities:
     - type: Transform
       parent: 15428
     - type: Clothing
-      inSlotFlag: NECK
       inSlot: neck
+      inSlotFlag: NECK
     - type: Physics
       canCollide: False
 - proto: ClothingNeckCloakTrans
@@ -54042,6 +54044,14 @@ entities:
     - type: Transform
       rot: 3.141592653589793 rad
       pos: 31.5,21.5
+      parent: 2
+- proto: ComputerPeerReview
+  entities:
+  - uid: 18709
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -19.5,-26.5
       parent: 2
 - proto: ComputerPowerMonitoring
   entities:
@@ -89733,6 +89743,8 @@ entities:
       rot: -1.5707963267948966 rad
       pos: 44.5,-28.5
       parent: 2
+    - type: Fixtures
+      fixtures: {}
 - proto: IntercomCommand
   entities:
   - uid: 4470
@@ -90061,6 +90073,17 @@ entities:
     - type: Transform
       pos: -13.835352,13.575135
       parent: 2
+    - type: Damageable
+      damage:
+        woundSeverityMultipliers: {}
+        partDamageVariation: 0
+        armorPenetration: 0
+        types:
+          Heat: 0
+          Shock: 0
+          Blunt: 0
+          Slash: 0
+          Piercing: 0
 - proto: LightBulbBroken
   entities:
   - uid: 8408
@@ -99494,6 +99517,17 @@ entities:
     - type: Transform
       pos: -13.225977,14.12201
       parent: 2
+    - type: Damageable
+      damage:
+        woundSeverityMultipliers: {}
+        partDamageVariation: 0
+        armorPenetration: 0
+        types:
+          Heat: 0
+          Shock: 0
+          Blunt: 0
+          Slash: 0
+          Piercing: 0
 - proto: RiotBulletShield
   entities:
   - uid: 2102
@@ -103808,7 +103842,7 @@ entities:
     - type: Transform
       pos: 28.5,-30.5
       parent: 2
-- proto: SpacemenFigureSpawner
+- proto: SpacemenFigurineSpawner90
   entities:
   - uid: 3089
     components:

@@ -1,11 +1,11 @@
 meta:
   format: 7
   category: Map
-  engineVersion: 271.1.0
-  forkId: ""
-  forkVersion: ""
-  time: 01/22/2026 02:05:58
-  entityCount: 25402
+  engineVersion: 277.0.0
+  forkId: iss14
+  forkVersion: 1.5.0
+  time: 07/12/2026 11:37:05
+  entityCount: 25404
 maps:
 - 943
 grids:
@@ -9562,6 +9562,17 @@ entities:
     - type: Transform
       pos: 31.477634,-79.4623
       parent: 60
+- proto: ActionToggleLight
+  entities:
+  - uid: 1457
+    mapInit: true
+    paused: true
+    components:
+    - type: Transform
+      parent: 14128
+    - type: Action
+      originalIconColor: '#FFFFFFFF'
+      container: 14128
 - proto: AirAlarm
   entities:
   - uid: 105
@@ -16957,7 +16968,7 @@ entities:
   - uid: 23696
     components:
     - type: Transform
-      pos: -7.5117726,20.590528
+      pos: -8.421956,20.524439
       parent: 60
 - proto: BooksBag
   entities:
@@ -61251,7 +61262,7 @@ entities:
   - uid: 14438
     components:
     - type: Transform
-      pos: -8.056467,20.703438
+      pos: -7.750081,20.711939
       parent: 60
   - uid: 14439
     components:
@@ -63001,6 +63012,13 @@ entities:
     - type: Transform
       rot: 1.5707963267948966 rad
       pos: 32.5,-14.5
+      parent: 60
+- proto: ComputerPeerReview
+  entities:
+  - uid: 5955
+    components:
+    - type: Transform
+      pos: -8.5,22.5
       parent: 60
 - proto: ComputerPowerMonitoring
   entities:
@@ -112203,8 +112221,24 @@ entities:
   - uid: 14128
     components:
     - type: Transform
-      pos: -8.397732,20.931147
+      pos: -6.2240996,20.790064
       parent: 60
+    - type: HandheldLight
+      toggleActionEntity: 1457
+    - type: ContainerContainer
+      containers:
+        cell_slot: !type:ContainerSlot
+          showEnts: False
+          occludes: True
+          ent: null
+        actions: !type:Container
+          showEnts: False
+          occludes: True
+          ents:
+          - 1457
+    - type: Physics
+      canCollide: True
+    - type: ActionsContainer
   - uid: 14163
     components:
     - type: Transform
@@ -114604,52 +114638,52 @@ entities:
   - uid: 14198
     components:
     - type: Transform
-      pos: -6.5813313,20.579428
+      pos: -6.8178496,20.571314
       parent: 60
   - uid: 14199
     components:
     - type: Transform
-      pos: -6.5813313,20.579428
+      pos: -6.8803496,20.493189
       parent: 60
   - uid: 14200
     components:
     - type: Transform
-      pos: -6.5813313,20.579428
+      pos: -6.8647246,20.540064
       parent: 60
   - uid: 14201
     components:
     - type: Transform
-      pos: -6.5813313,20.579428
+      pos: -6.7553496,20.555689
       parent: 60
   - uid: 14202
     components:
     - type: Transform
-      pos: -6.5813313,20.579428
+      pos: -6.7709746,20.461939
       parent: 60
   - uid: 14203
     components:
     - type: Transform
-      pos: -6.5813313,20.579428
+      pos: -6.8178496,20.555689
       parent: 60
   - uid: 14204
     components:
     - type: Transform
-      pos: -6.5813313,20.579428
+      pos: -6.8490996,20.555689
       parent: 60
   - uid: 14205
     components:
     - type: Transform
-      pos: -6.5813313,20.579428
+      pos: -6.718831,20.665064
       parent: 60
   - uid: 14206
     components:
     - type: Transform
-      pos: -6.5813313,20.579428
+      pos: -6.8490996,20.586939
       parent: 60
   - uid: 14207
     components:
     - type: Transform
-      pos: -6.5813313,20.579428
+      pos: -6.7397246,20.508814
       parent: 60
   - uid: 17389
     components:

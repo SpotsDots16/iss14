@@ -1,11 +1,11 @@
 meta:
   format: 7
   category: Map
-  engineVersion: 272.0.0
-  forkId: ""
-  forkVersion: ""
-  time: 03/05/2026 17:56:37
-  entityCount: 29072
+  engineVersion: 277.0.0
+  forkId: iss14
+  forkVersion: 1.5.0
+  time: 07/12/2026 11:57:54
+  entityCount: 29073
 maps:
 - 1
 grids:
@@ -69895,6 +69895,24 @@ entities:
     - type: Transform
       pos: 59.52029,13.621224
       parent: 2
+- proto: ChestSkeleton
+  entities:
+  - uid: 4368
+    components:
+    - type: Transform
+      pos: -22.218187,18.553694
+      parent: 2
+    - type: Damageable
+      damage:
+        woundSeverityMultipliers: {}
+        partDamageVariation: 0
+        armorPenetration: 0
+        types:
+          Heat: 0
+          Shock: 0
+          Blunt: 0
+          Slash: 0
+          Piercing: 0
 - proto: ChopSticks
   entities:
   - uid: 4654
@@ -73974,6 +73992,14 @@ entities:
       rot: 1.5707963267948966 rad
       pos: -14.5,39.5
       parent: 2
+- proto: ComputerPeerReview
+  entities:
+  - uid: 5968
+    components:
+    - type: Transform
+      rot: 1.5707963267948966 rad
+      pos: -20.5,-11.5
+      parent: 2
 - proto: ComputerPowerMonitoring
   entities:
   - uid: 7181
@@ -75810,32 +75836,6 @@ entities:
     - type: Transform
       pos: -2.5,-23.5
       parent: 2
-- proto: CrateVendingMachineRestockDonutFilled
-  entities:
-  - uid: 5077
-    components:
-    - type: Transform
-      pos: -9.5,21.5
-      parent: 2
-    - type: EntityStorage
-      air:
-        volume: 200
-        immutable: False
-        temperature: 293.14673
-        moles:
-          Oxygen: 1.7459903
-          Nitrogen: 6.568249
-    - type: ContainerContainer
-      containers:
-        entity_storage: !type:Container
-          showEnts: False
-          occludes: True
-          ents:
-          - 5078
-        paper_label: !type:ContainerSlot
-          showEnts: False
-          occludes: True
-          ent: null
 - proto: CrayonBox
   entities:
   - uid: 6046
@@ -129354,6 +129354,17 @@ entities:
     - type: Transform
       pos: -4.5344005,72.98105
       parent: 2
+    - type: Damageable
+      damage:
+        woundSeverityMultipliers: {}
+        partDamageVariation: 0
+        armorPenetration: 0
+        types:
+          Heat: 0
+          Shock: 0
+          Blunt: 0
+          Slash: 0
+          Piercing: 0
 - proto: LightTubeBroken
   entities:
   - uid: 8557
@@ -133211,13 +133222,6 @@ entities:
     - type: Physics
       canCollide: False
     - type: InsideEntityStorage
-- proto: OrganSkeletonPersonTorso
-  entities:
-  - uid: 4368
-    components:
-    - type: Transform
-      pos: -22.218187,18.553694
-      parent: 2
 - proto: OxygenCanister
   entities:
   - uid: 289
@@ -164071,6 +164075,34 @@ entities:
     - type: Transform
       pos: 5.5,-18.5
       parent: 2
+- proto: VendingMachineRestockDonut
+  entities:
+  - uid: 5077
+    components:
+    - type: Transform
+      pos: -9.5,21.5
+      parent: 2
+    - type: EntityStorage
+      air:
+        volume: 200
+        temperature: 293.14673
+        moles:
+          Oxygen: 1.7459903
+          Nitrogen: 6.568249
+      closeSound: !type:SoundPathSpecifier
+        path: /Audio/Effects/closetclose.ogg
+      openSound: !type:SoundPathSpecifier
+        path: /Audio/Effects/closetopen.ogg
+      whitelist:
+        components:
+        - MobState
+        - Item
+    - type: ContainerContainer
+      containers:
+        entity_storage: !type:Container
+          ents:
+          - 5078
+        paper_label: !type:ContainerSlot {}
 - proto: VendingMachineRestockHotDrinks
   entities:
   - uid: 5078
