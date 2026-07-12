@@ -1,11 +1,11 @@
 meta:
   format: 7
   category: Map
-  engineVersion: 272.0.0
-  forkId: ""
-  forkVersion: ""
-  time: 03/18/2026 17:37:36
-  entityCount: 16015
+  engineVersion: 277.0.0
+  forkId: iss14
+  forkVersion: 1.5.0
+  time: 07/12/2026 09:46:02
+  entityCount: 16016
 maps:
 - 126
 grids:
@@ -6995,6 +6995,15 @@ entities:
       container: 10308
 - proto: ActionToggleLight
   entities:
+  - uid: 304
+    mapInit: true
+    paused: true
+    components:
+    - type: Transform
+      parent: 310
+    - type: Action
+      originalIconColor: '#FFFFFFFF'
+      container: 310
   - uid: 6399
     mapInit: true
     paused: true
@@ -9614,6 +9623,12 @@ entities:
     - type: Transform
       pos: 9.5,8.5
       parent: 2
+    - type: Door
+      secondsUntilStateChange: -288.08612
+      state: Opening
+    - type: DeviceLinkSource
+      lastSignals:
+        DoorStatus: True
   - uid: 1081
     components:
     - type: Transform
@@ -42530,6 +42545,13 @@ entities:
     - type: Transform
       pos: 34.5,46.5
       parent: 2
+- proto: ComputerPeerReview
+  entities:
+  - uid: 16016
+    components:
+    - type: Transform
+      pos: 11.5,4.5
+      parent: 2
 - proto: ComputerPowerMonitoring
   entities:
   - uid: 4042
@@ -43538,7 +43560,7 @@ entities:
       pos: 59.5,39.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -19693.469
+      secondsUntilStateChange: -20151.84
       state: Closing
 - proto: CurtainsWhiteOpen
   entities:
@@ -43601,8 +43623,7 @@ entities:
   - uid: 316
     components:
     - type: Transform
-      rot: 3.141592653589793 rad
-      pos: 11.493689,4.5440345
+      pos: 9.407927,4.2909
       parent: 2
 - proto: DefaultStationBeaconAI
   entities:
@@ -49394,7 +49415,7 @@ entities:
       pos: 26.5,37.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -66987.26
+      secondsUntilStateChange: -67445.625
       state: Closing
   - uid: 9362
     components:
@@ -72428,7 +72449,7 @@ entities:
       pos: 12.5,12.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -5159.2036
+      secondsUntilStateChange: -5617.5747
       state: Closing
   - uid: 5750
     components:
@@ -73005,8 +73026,24 @@ entities:
   - uid: 310
     components:
     - type: Transform
-      pos: 10.438802,4.97286
+      pos: 8.512786,4.6928205
       parent: 2
+    - type: HandheldLight
+      toggleActionEntity: 304
+    - type: ContainerContainer
+      containers:
+        cell_slot: !type:ContainerSlot
+          showEnts: False
+          occludes: True
+          ent: null
+        actions: !type:Container
+          showEnts: False
+          occludes: True
+          ents:
+          - 304
+    - type: Physics
+      canCollide: True
+    - type: ActionsContainer
   - uid: 2722
     components:
     - type: Transform
@@ -74819,8 +74856,14 @@ entities:
   - uid: 1483
     components:
     - type: Transform
-      pos: 8.5,4.5
+      anchored: True
+      rot: 1.5707963267948966 rad
+      pos: 10.5,4.5
       parent: 2
+    - type: Physics
+      bodyType: Static
+    - type: Pullable
+      prevFixedRotation: True
 - proto: PaperBin20
   entities:
   - uid: 5378
@@ -75170,7 +75213,7 @@ entities:
   - uid: 312
     components:
     - type: Transform
-      pos: 11.095052,4.613485
+      pos: 10.721808,4.5678205
       parent: 2
   - uid: 4413
     components:
@@ -75206,7 +75249,7 @@ entities:
   - uid: 11977
     components:
     - type: Transform
-      pos: 10.85696,4.4728694
+      pos: 8.470312,4.1459455
       parent: 2
   - uid: 11978
     components:
@@ -89678,11 +89721,6 @@ entities:
     components:
     - type: Transform
       pos: 13.5,4.5
-      parent: 2
-  - uid: 304
-    components:
-    - type: Transform
-      pos: 11.5,4.5
       parent: 2
   - uid: 305
     components:
