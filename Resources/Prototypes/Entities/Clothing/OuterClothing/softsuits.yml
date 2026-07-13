@@ -131,6 +131,17 @@
     heatingCoefficient: 0.1
     coolingCoefficient: 0.1
   - type: Armor
+    coverage:
+    - Chest
+    - RightArm
+    - LeftArm
+    - RightHand
+    - LeftHand
+    - Groin
+    - RightLeg
+    - LeftLeg
+    - RightFoot
+    - LeftFoot
     modifiers:
       coefficients:
         Heat: 0.90

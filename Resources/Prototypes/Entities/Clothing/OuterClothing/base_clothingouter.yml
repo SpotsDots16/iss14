@@ -139,6 +139,17 @@
   - type: Item
     size: Ginormous
   - type: Armor
+    coverage:
+    - Chest
+    - RightArm
+    - LeftArm
+    - RightHand
+    - LeftHand
+    - Groin
+    - RightLeg
+    - LeftLeg
+    - RightFoot
+    - LeftFoot
     modifiers:
       coefficients:
         Blunt: 0.90
