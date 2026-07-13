@@ -68,8 +68,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.65
@@ -86,8 +87,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.65
@@ -146,8 +148,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Slash: 0.95
@@ -165,8 +168,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Caustic: 0.75
@@ -189,8 +193,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Caustic: 0.75
@@ -213,8 +218,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Caustic: 0.75
@@ -237,8 +243,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Caustic: 0.75
@@ -261,8 +268,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Slash: 0.95
@@ -287,8 +295,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Caustic: 0.75
@@ -311,8 +320,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Caustic: 0.75
@@ -335,8 +345,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Caustic: 0.75
@@ -404,10 +415,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
-    - RightLeg
-    - LeftLeg
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.8
@@ -460,8 +470,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.8
@@ -483,8 +494,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Caustic: 0.75
@@ -507,8 +519,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Caustic: 0.75

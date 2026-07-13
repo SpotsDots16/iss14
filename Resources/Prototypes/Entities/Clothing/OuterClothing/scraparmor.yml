@@ -69,8 +69,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.5

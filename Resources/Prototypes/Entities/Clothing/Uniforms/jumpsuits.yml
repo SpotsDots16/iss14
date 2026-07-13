@@ -220,11 +220,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
     - Groin
-    - RightLeg
-    - LeftLeg
+    - Leg
     modifiers:
       coefficients:
         Radiation: 0.8

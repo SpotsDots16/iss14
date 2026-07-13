@@ -14,15 +14,11 @@
   - type: Armor
     coverage:
     - Chest
-    - RightArm
-    - LeftArm
-    - RightHand
-    - LeftHand
+    - Arm
+    - Hand
     - Groin
-    - RightLeg
-    - LeftLeg
-    - RightFoot
-    - LeftFoot
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Blunt: 0.9
@@ -74,15 +70,11 @@
   - type: Armor
     coverage:
     - Chest
-    - RightArm
-    - LeftArm
-    - RightHand
-    - LeftHand
+    - Arm
+    - Hand
     - Groin
-    - RightLeg
-    - LeftLeg
-    - RightFoot
-    - LeftFoot
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Slash: 0.9
@@ -120,15 +112,11 @@
   - type: Armor
     coverage:
     - Chest
-    - RightArm
-    - LeftArm
-    - RightHand
-    - LeftHand
+    - Arm
+    - Hand
     - Groin
-    - RightLeg
-    - LeftLeg
-    - RightFoot
-    - LeftFoot
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Slash: 0.9
@@ -159,15 +147,11 @@
   - type: Armor
     coverage:
     - Chest
-    - RightArm
-    - LeftArm
-    - RightHand
-    - LeftHand
+    - Arm
+    - Hand
     - Groin
-    - RightLeg
-    - LeftLeg
-    - RightFoot
-    - LeftFoot
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Heat: 0.90
@@ -207,15 +191,9 @@
   - type: Armor
     coverage:
     - Chest
-    - RightArm
-    - LeftArm
-    - RightHand
-    - LeftHand
+    - Arm
     - Groin
-    - RightLeg
-    - LeftLeg
-    - RightFoot
-    - LeftFoot
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.8

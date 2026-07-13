@@ -16,8 +16,8 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
+    - Groin
     modifiers:
       coefficients:
         Slash: 0.95

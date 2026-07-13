@@ -59,6 +59,9 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Armor/bulletproof.rsi
   - type: Armor
+    coverage: 
+    - Chest
+    - Groin
     modifiers:
       coefficients:
         Blunt: 0.9
@@ -157,6 +160,9 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Vests/webvest.rsi
   - type: Armor
+    coverage: 
+    - Chest
+    - Groin
     modifiers:
       coefficients:
         Blunt: 0.6 #ballistic plates = better protection
@@ -181,6 +187,9 @@
     heatingCoefficient: 0.1
     coolingCoefficient: 0.1
   - type: Armor
+    coverage: 
+    - Chest
+    - Groin
     modifiers:
       coefficients:
         Blunt: 0.5
@@ -206,6 +215,9 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Vests/mercwebvest.rsi
   - type: Armor
+    coverage: 
+    - Chest
+    - Groin
     modifiers:
       coefficients:
         Blunt: 0.7 #slightly better overall protection but slightly worse than bulletproof armor against bullets seems sensible
@@ -233,11 +245,9 @@
   - type: Armor
     coverage:
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
     - Groin
-    - RightLeg
-    - LeftLeg
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.35
@@ -312,11 +322,9 @@
   - type: Armor
     coverage: 
     - Chest
-    - RightHand
-    - LeftHand
+    - Hand
     - Groin
-    - RightLeg
-    - LeftLeg
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.4
@@ -341,13 +349,10 @@
   - type: Armor
     coverage:
     - Chest
-    - RightArm
-    - LeftArm
-    - RightHand
-    - LeftHand
+    - Arm
+    - Hand
     - Groin
-    - RightLeg
-    - LeftLeg
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.5
@@ -369,15 +374,11 @@
   - type: Armor
     coverage:
     - Chest
-    - RightArm
-    - LeftArm
-    - RightHand
-    - LeftHand
+    - Arm
+    - Hand
     - Groin
-    - RightLeg
-    - LeftLeg
-    - RightFoot
-    - LeftFoot
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Blunt: 0.2
@@ -448,15 +449,11 @@
     coverage:
     - Head
     - Chest
-    - RightArm
-    - LeftArm
-    - RightHand
-    - LeftHand
+    - Arm
+    - Hand
     - Groin
-    - RightLeg
-    - LeftLeg
-    - RightFoot
-    - LeftFoot
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Blunt: 0.5
@@ -487,13 +484,10 @@
   - type: Armor
     coverage:
     - Chest
-    - RightArm
-    - LeftArm
+    - Arm
     - Groin
-    - RightLeg
-    - LeftLeg
-    - RightFoot
-    - LeftFoot
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Blunt: 0.6
@@ -525,15 +519,11 @@
   - type: Armor
     coverage:
     - Chest
-    - RightArm
-    - LeftArm
-    - RightHand
-    - LeftHand
+    - Arm
+    - Hand
     - Groin
-    - RightLeg
-    - LeftLeg
-    - RightFoot
-    - LeftFoot
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Blunt: 0.5
