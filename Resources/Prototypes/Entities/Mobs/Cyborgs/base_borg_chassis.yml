@@ -255,6 +255,7 @@
     requiredMobState:
     - Critical
     - Dead
+  - type: StationAIShunt # Starlight: allow shunting into all borgs
 
 - type: entity
   abstract: true

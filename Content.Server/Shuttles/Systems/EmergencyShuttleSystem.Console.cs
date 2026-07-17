@@ -85,6 +85,11 @@ public sealed partial class EmergencyShuttleSystem
     /// </summary>
     private bool _announced;
 
+    // iss14: cooldown after an early-launch repeal before authorizations are accepted again,
+    // so authorize/repeal cycling can't spam global announcements.
+    private static readonly TimeSpan RepealAuthorizeCooldown = TimeSpan.FromSeconds(30);
+    private TimeSpan _authorizeCooldownEnd;
+
     private void InitializeEmergencyConsole()
     {
         Subs.CVar(ConfigManager, CCVars.EmergencyShuttleMinTransitTime, SetMinTransitTime, true);
@@ -248,6 +253,7 @@ public sealed partial class EmergencyShuttleSystem
         _logger.Add(LogType.EmergencyShuttle, LogImpact.High, $"Emergency shuttle early launch REPEAL ALL by {args.Actor:user}");
         _chatSystem.DispatchGlobalAnnouncement(Loc.GetString("emergency-shuttle-console-auth-revoked", ("remaining", component.AuthorizationsRequired)));
         component.AuthorizedEntities.Clear();
+        _authorizeCooldownEnd = _timing.CurTime + RepealAuthorizeCooldown; // iss14
         UpdateAllEmergencyConsoles();
     }
 
@@ -267,6 +273,7 @@ public sealed partial class EmergencyShuttleSystem
         _logger.Add(LogType.EmergencyShuttle, LogImpact.High, $"Emergency shuttle early launch REPEAL by {args.Actor:user}");
         var remaining = component.AuthorizationsRequired - component.AuthorizedEntities.Count;
         _chatSystem.DispatchGlobalAnnouncement(Loc.GetString("emergency-shuttle-console-auth-revoked", ("remaining", remaining)));
+        _authorizeCooldownEnd = _timing.CurTime + RepealAuthorizeCooldown; // iss14
         CheckForLaunch(component);
         UpdateAllEmergencyConsoles();
     }
@@ -278,6 +285,14 @@ public sealed partial class EmergencyShuttleSystem
         if (!_idSystem.TryFindIdCard(player, out var idCard) || !_reader.IsAllowed(idCard, uid))
         {
             Popup.PopupCursor(Loc.GetString("emergency-shuttle-console-denied"), args.Actor, PopupType.Medium);
+            return;
+        }
+
+        // iss14: block re-authorization for a while after a repeal to stop announcement spam.
+        if (_timing.CurTime < _authorizeCooldownEnd)
+        {
+            var wait = (int) Math.Ceiling((_authorizeCooldownEnd - _timing.CurTime).TotalSeconds);
+            Popup.PopupCursor(Loc.GetString("emergency-shuttle-console-auth-cooldown", ("seconds", wait)), player, PopupType.Medium);
             return;
         }
 
@@ -307,6 +322,7 @@ public sealed partial class EmergencyShuttleSystem
         // Realistically most of this shit needs moving to a station component so each station has their own emergency shuttle
         // and timer and all that jazz so I don't really care about debugging if it works on cleanup vs start.
         _announced = false;
+        _authorizeCooldownEnd = TimeSpan.Zero; // iss14
         ShuttlesLeft = false;
         _launchedShuttles = false;
         _consoleAccumulator = float.MinValue;

@@ -45,7 +45,7 @@ public sealed partial class VoteConfigEui : BaseEui
     public override EuiStateBase GetNewState() => _state;
 
     private VoteConfigEuiState _state = new(false, true, true, true, false, true,
-        false, 60, 30, 90, 10, 45, new(), "", new(), new(), "", new());
+        false, 60, 30, 90, 10, 45, new(), "", new(), new(), "", new(), new());
 
     public void BuildState()
     {
@@ -65,6 +65,15 @@ public sealed partial class VoteConfigEui : BaseEui
             presets.Add(new VoteConfigItem(preset.ID, Loc.GetString(preset.ModeTitle), _config.IsItemIncluded(false, preset.ID)));
         presets.Sort((a, b) => string.Compare(a.Display, b.Display, StringComparison.OrdinalIgnoreCase));
 
+        var ranges = new List<VoteConfigMapRange>();
+        foreach (var map in _proto.EnumeratePrototypes<GameMapPrototype>())
+        {
+            var hasOverride = _config.TryGetMapPlayerRange(map.ID, out var min, out var max);
+            var protoMax = map.MaxPlayers == uint.MaxValue ? 0 : (int) map.MaxPlayers;
+            ranges.Add(new VoteConfigMapRange(map.ID, Loc.GetString(map.MapName), (int) map.MinPlayers, protoMax, hasOverride, min, max));
+        }
+        ranges.Sort((a, b) => string.Compare(a.Display, b.Display, StringComparison.OrdinalIgnoreCase));
+
         _state = new VoteConfigEuiState(
             CanEdit(),
             _config.GetToggle(VoteToggle.Enabled),
@@ -83,7 +92,8 @@ public sealed partial class VoteConfigEui : BaseEui
             maps,
             _config.PresetProfileNames.ToList(),
             _config.ActivePresetProfile,
-            presets);
+            presets,
+            ranges);
 
         StateDirty();
     }
@@ -117,6 +127,12 @@ public sealed partial class VoteConfigEui : BaseEui
                 break;
             case VoteConfigSetItemMessage m:
                 _config.SetItem(m.IsMap, m.ItemId, m.Included);
+                break;
+            case VoteConfigSetMapRangeMessage m:
+                if (m.Clear)
+                    _config.ClearMapPlayerRange(m.MapId);
+                else
+                    _config.SetMapPlayerRange(m.MapId, m.Min, m.Max);
                 break;
             default:
                 return;

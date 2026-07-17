@@ -34,9 +34,9 @@
   - type: ActionGrant
     actions:
     - ActionJumpToCore
-    - ActionStationAiWarp
-    - ActionStationAiControlShell
     - ActionAIViewLaws
+    - ActionAIShunt # Starlight AI Shunt ability
+    - ActionAIWarp # Starlight
   - type: UserInterface
     interfaces:
       enum.RadarConsoleUiKey.Key:
@@ -49,10 +49,6 @@
         type: SiliconLawBoundUserInterface
       enum.CommunicationsConsoleUiKey.Key:
         type: CommunicationsConsoleBoundUserInterface
-      enum.StationAiWarpUiKey.Key:
-        type: StationAiWarpBoundUserInterface
-      enum.StationAiControlShellUiKey.Key:
-        type: StationAiShellBoundUserInterface
   - type: IntrinsicUI
     uis:
       enum.RadarConsoleUiKey.Key:
@@ -77,6 +73,7 @@
     color: "#5ed7aa"
   - type: ShowJobIcons
   - type: ShowCrewIcons
+  - type: StationAIShuntable # Starlight
   - type: DamagedSiliconAccent
     startPowerCorruptionAtCharIdx: 4
     maxPowerCorruptionAtCharIdx: 20

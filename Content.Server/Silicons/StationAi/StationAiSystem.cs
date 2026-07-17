@@ -79,8 +79,7 @@ public sealed partial class StationAiSystem : SharedStationAiSystem
     {
         base.Initialize();
 
-        InitializeWarp();
-        InitializeShellControl();
+        InitializeWarp(); // Starlight
 
         SubscribeLocalEvent<StationAiCoreComponent, AfterConstructionChangeEntityEvent>(AfterConstructionChangeEntity);
         SubscribeLocalEvent<StationAiCoreComponent, ContainerSpawnEvent>(OnContainerSpawn);

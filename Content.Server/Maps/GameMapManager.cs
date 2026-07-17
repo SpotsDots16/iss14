@@ -37,6 +37,8 @@ public sealed partial class GameMapManager : IGameMapManager
     private IReadOnlySet<string>? _runtimeMapPool;
     // When the runtime pool is active, whether its maps are still filtered by player count.
     private bool _runtimeMapPoolFilterByPlayerCount;
+    // Admin-defined per-map player-count ranges (set by VoteConfigManager); override prototype MinPlayers/MaxPlayers.
+    private IReadOnlyDictionary<string, (int Min, int Max)>? _runtimeMapPlayerRanges;
 
     private ISawmill _log = default!;
 
@@ -128,6 +130,11 @@ public sealed partial class GameMapManager : IGameMapManager
     {
         get => _runtimeMapPoolFilterByPlayerCount;
         set => _runtimeMapPoolFilterByPlayerCount = value;
+    }
+
+    public void SetRuntimeMapPlayerRanges(IReadOnlyDictionary<string, (int Min, int Max)>? ranges)
+    {
+        _runtimeMapPlayerRanges = ranges;
     }
 
     public IEnumerable<GameMapPrototype> AllVotableMaps()
@@ -247,8 +254,14 @@ public sealed partial class GameMapManager : IGameMapManager
 
     private bool IsPlayerCountEligible(GameMapPrototype map)
     {
-        return map.MaxPlayers >= _playerManager.PlayerCount &&
-               map.MinPlayers <= _playerManager.PlayerCount;
+        var count = _playerManager.PlayerCount;
+
+        // Admin-configured range overrides the prototype's MinPlayers/MaxPlayers. Max 0 = unlimited.
+        if (_runtimeMapPlayerRanges != null && _runtimeMapPlayerRanges.TryGetValue(map.ID, out var range))
+            return count >= range.Min && (range.Max <= 0 || count <= range.Max);
+
+        return map.MaxPlayers >= count &&
+               map.MinPlayers <= count;
     }
 
     private bool TryLookupMap(string gameMap, [NotNullWhen(true)] out GameMapPrototype? map)

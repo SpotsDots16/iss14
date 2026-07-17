@@ -26,6 +26,7 @@ emergency-shuttle-console-no-early-launches = Early launch is disabled
 emergency-shuttle-console-auth-left = {$remaining} authorizations needed until shuttle is launched early.
 emergency-shuttle-console-auth-revoked = Early launch authorization revoked, {$remaining} authorizations needed.
 emergency-shuttle-console-denied = Access denied
+emergency-shuttle-console-auth-cooldown = Authorization systems recalibrating after a revocation. Try again in {$seconds} seconds.
 
 # UI
 emergency-shuttle-console-window-title = Emergency Shuttle Console

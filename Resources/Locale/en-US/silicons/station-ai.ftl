@@ -34,17 +34,14 @@ ai-device-no-access = You have no access to this device
 
 ai-consciousness-download-warning = Your consciousness is being downloaded.
 
-# Warp
+# Warp (Starlight)
 station-ai-warp-window-title = Warp
-station-ai-warp-window-search = Search
-station-ai-warp-window-location = Location: {$name}
-
-# Shell control
-station-ai-shell-window-title = Control Shell
-station-ai-shell-window-search = Search
-station-ai-shell-window-in-use = {$name} (in use)
-station-ai-shell-already-controlling = You are already controlling a shell.
-station-ai-shell-unavailable = That shell is no longer available.
+station-ai-warp-search-placeholder = Search crew or locations...
+station-ai-warp-loading = Loading warp destinations...
+station-ai-warp-no-results = No destinations found.
+station-ai-warp-section-crew = Crew
+station-ai-warp-section-locations = Locations
+station-ai-warp-radial-tooltip = Warp
 
 # UI
 station-ai-customization-menu = AI customization

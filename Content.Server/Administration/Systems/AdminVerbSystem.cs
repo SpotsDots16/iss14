@@ -7,6 +7,7 @@ using Content.Server.Mind;
 using Content.Server.Prayer;
 using Content.Server.Silicons.Laws;
 using Content.Server.Station.Systems;
+using Content.Shared.Access.Components;
 using Content.Shared.Administration;
 using Content.Shared.Administration.Systems;
 using Content.Shared.Chemistry.Components.SolutionManager;
@@ -105,6 +106,26 @@ namespace Content.Server.Administration.Systems
                 mark.Act = () => _toolshed.InvokeCommand(player, "=> $marked", new List<EntityUid> {args.Target}, out _);
                 mark.Impact = LogImpact.Low;
                 args.Verbs.Add(mark);
+
+                // iss14: admin editor for ID cards (name/job/access) — right-click any ID card.
+                if (HasComp<IdCardComponent>(args.Target) && _adminManager.HasAdminFlag(player, AdminFlags.Admin))
+                {
+                    var idCardTarget = args.Target;
+                    Verb idPermissions = new()
+                    {
+                        Text = Loc.GetString("admin-verb-id-permissions"),
+                        Category = VerbCategory.Admin,
+                        Icon = new SpriteSpecifier.Rsi(new("/Textures/Objects/Misc/id_cards.rsi"), "default"),
+                        Act = () =>
+                        {
+                            var eui = new IdPermissionsEui(idCardTarget);
+                            _euiManager.OpenEui(eui, player);
+                            eui.BuildState();
+                        },
+                        Impact = LogImpact.High,
+                    };
+                    args.Verbs.Add(idPermissions);
+                }
 
                 if (TryComp(args.Target, out ActorComponent? targetActor))
                 {

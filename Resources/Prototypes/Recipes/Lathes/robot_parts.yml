@@ -105,17 +105,3 @@
     Gold: 100
     Silver: 100
     Plasma: 1000
-
-- type: latheRecipe
-  parent: BaseRoboticsRecipe
-  id: AiVesselCore
-  result: AiVesselCore
-  icon:
-    sprite: Objects/Specific/Robotics/mmi.rsi
-    state: ai_vessel_core
-  materials:
-    Steel: 500
-    Plastic: 500
-    Silver: 100
-    Gold: 200
-    Glass: 100

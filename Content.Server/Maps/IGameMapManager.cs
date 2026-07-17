@@ -34,6 +34,13 @@ public interface IGameMapManager
     bool RuntimeMapPoolFilterByPlayerCount { get; set; }
 
     /// <summary>
+    /// Installs (or clears, when null) admin-defined per-map player-count ranges that override the
+    /// MinPlayers/MaxPlayers baked into the map prototypes wherever player-count eligibility is checked.
+    /// A Max of 0 means unlimited.
+    /// </summary>
+    void SetRuntimeMapPlayerRanges(IReadOnlyDictionary<string, (int Min, int Max)>? ranges);
+
+    /// <summary>
     /// Returns all maps.
     /// </summary>
     /// <returns>enumerator of map prototypes</returns>

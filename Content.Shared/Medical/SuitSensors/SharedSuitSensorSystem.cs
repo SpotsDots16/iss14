@@ -333,6 +333,8 @@ public abstract partial class SharedSuitSensorSystem : EntitySystem
         sensors.Comp.Mode = mode;
         Dirty(sensors);
 
+        RaiseLocalEvent(sensors, new SuitSensorModeChangedEvent(mode)); // Starlight
+
         if (userUid != null)
         {
             var msg = Loc.GetString("suit-sensor-mode-state", ("mode", GetModeName(mode)));
@@ -505,3 +507,15 @@ public abstract partial class SharedSuitSensorSystem : EntitySystem
         return status;
     }
 }
+
+// Starlight-start
+public sealed class SuitSensorModeChangedEvent : EntityEventArgs
+{
+    public SuitSensorMode Mode { get; }
+
+    public SuitSensorModeChangedEvent(SuitSensorMode mode)
+    {
+        Mode = mode;
+    }
+}
+// Starlight-end

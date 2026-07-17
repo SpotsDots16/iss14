@@ -32,6 +32,22 @@ public struct VoteConfigItem(string id, string display, bool included)
     public bool Included = included;
 }
 
+/// <summary>
+/// A per-map player-count range row: prototype defaults plus the admin override, if any.
+/// Max 0 = unlimited.
+/// </summary>
+[Serializable, NetSerializable]
+public struct VoteConfigMapRange(string id, string display, int protoMin, int protoMax, bool hasOverride, int min, int max)
+{
+    public string Id = id;
+    public string Display = display;
+    public int ProtoMin = protoMin;
+    public int ProtoMax = protoMax;
+    public bool HasOverride = hasOverride;
+    public int Min = min;
+    public int Max = max;
+}
+
 /// <summary>State for the voting config admin EUI (<c>votingconfig</c>).</summary>
 [Serializable, NetSerializable]
 public sealed class VoteConfigEuiState(
@@ -52,7 +68,8 @@ public sealed class VoteConfigEuiState(
     List<VoteConfigItem> maps,
     List<string> presetProfiles,
     string activePresetProfile,
-    List<VoteConfigItem> presets)
+    List<VoteConfigItem> presets,
+    List<VoteConfigMapRange> mapRanges)
     : EuiStateBase
 {
     public readonly bool CanEdit = canEdit;
@@ -78,6 +95,8 @@ public sealed class VoteConfigEuiState(
     public readonly List<string> PresetProfiles = presetProfiles;
     public readonly string ActivePresetProfile = activePresetProfile;
     public readonly List<VoteConfigItem> Presets = presets;
+
+    public readonly List<VoteConfigMapRange> MapRanges = mapRanges;
 }
 
 // ---- Client -> server messages ----
@@ -128,4 +147,14 @@ public sealed class VoteConfigSetItemMessage(bool isMap, string itemId, bool inc
     public readonly bool IsMap = isMap;
     public readonly string ItemId = itemId;
     public readonly bool Included = included;
+}
+
+/// <summary>Sets (or clears) a per-map player-count range override. Max 0 = unlimited.</summary>
+[Serializable, NetSerializable]
+public sealed class VoteConfigSetMapRangeMessage(string mapId, int min, int max, bool clear) : EuiMessageBase
+{
+    public readonly string MapId = mapId;
+    public readonly int Min = min;
+    public readonly int Max = max;
+    public readonly bool Clear = clear;
 }

@@ -359,15 +359,6 @@ namespace Content.Server.Ghost
                 _physics.SetLinearVelocity(uid, Vector2.Zero, body: physics);
         }
 
-        /// <summary>
-        /// Builds the combined list of warp targets (warp points + alive/critical players),
-        /// excluding <paramref name="except"/>. Exposed for non-ghost consumers such as the station AI.
-        /// </summary>
-        public List<GhostWarp> GetWarps(EntityUid? except = null)
-        {
-            return GetPlayerWarps(except ?? EntityUid.Invalid).Concat(GetLocationWarps()).ToList();
-        }
-
         private IEnumerable<GhostWarp> GetLocationWarps()
         {
             var allQuery = AllEntityQuery<WarpPointComponent>();
