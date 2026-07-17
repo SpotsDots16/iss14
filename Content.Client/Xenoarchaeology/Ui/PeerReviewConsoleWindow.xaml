@@ -2,7 +2,7 @@
     xmlns="https://spacestation14.io"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="Content.Client.Xenoarchaeology.Ui.PeerReviewConsoleWindow"
-    Title="SciNet Peer Review Console"
+    Title="NTXLabs Peer Review Console"
     MinSize="600 440">
 
     <BoxContainer
@@ -18,7 +18,7 @@
                 Margin="12">
 
                 <Label
-                    Text="SCINET PEER REVIEW"
+                    Text="NTXLABS PEER REVIEW"
                     FontColorOverride="#A8E6BC"
                     HorizontalAlignment="Center" />
 
