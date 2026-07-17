@@ -1,0 +1,39 @@
+<DefaultWindow xmlns="https://spacestation14.io"
+            Title="{Loc id-permissions-title}"
+            MinSize="650 290">
+    <BoxContainer Orientation="Vertical">
+        <BoxContainer Orientation="Horizontal">
+            <Label Text="{Loc id-permissions-target-label}" />
+            <Label Name="TargetNameLabel" Margin="6 0 0 0" StyleClasses="LabelKeyText" />
+        </BoxContainer>
+        <Label Name="InvalidTargetLabel" Text="{Loc id-permissions-invalid-target}" Visible="False" />
+        <Control MinSize="0 8" />
+        <!-- Full name and job title editing. -->
+        <GridContainer Columns="3" HSeparationOverride="4">
+            <Label Text="{Loc id-card-console-window-full-name-label}" />
+            <LineEdit Name="FullNameLineEdit" HorizontalExpand="True" />
+            <Button Name="FullNameSaveButton" Text="{Loc id-card-console-window-save-button}" Disabled="True" />
+
+            <Label Text="{Loc id-card-console-window-job-title-label}" />
+            <LineEdit Name="JobTitleLineEdit" HorizontalExpand="True" />
+            <Button Name="JobTitleSaveButton" Text="{Loc id-card-console-window-save-button}" Disabled="True" />
+        </GridContainer>
+        <Control MinSize="0 8" />
+        <!-- Job preset selection, select/deselect all access buttons. -->
+        <BoxContainer Margin="0 8 0 4">
+            <BoxContainer>
+                <Label Text="{Loc id-card-console-window-job-selection-label}" />
+                <OptionButton Name="JobPresetOptionButton" />
+            </BoxContainer>
+            <Control HorizontalExpand="True"/>
+            <BoxContainer>
+                <Button Name="SelectAllButton" Text="{Loc id-card-console-window-select-all-button}" />
+                <Button Name="DeselectAllButton" Text="{Loc id-card-console-window-deselect-all-button}" />
+            </BoxContainer>
+        </BoxContainer>
+        <!-- Individual access buttons -->
+        <ScrollContainer HScrollEnabled="False" MinSize="0 220" VerticalExpand="True">
+            <Control Name="AccessLevelControlContainer" />
+        </ScrollContainer>
+    </BoxContainer>
+</DefaultWindow>

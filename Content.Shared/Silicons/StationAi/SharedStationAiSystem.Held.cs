@@ -24,9 +24,17 @@ public abstract partial class SharedStationAiSystem
         SubscribeLocalEvent<StationAiHeldComponent, InteractionAttemptEvent>(OnHeldInteraction);
         SubscribeLocalEvent<StationAiHeldComponent, AttemptRelayActionComponentChangeEvent>(OnHeldRelay);
         SubscribeLocalEvent<StationAiHeldComponent, JumpToCoreEvent>(OnCoreJump);
+        SubscribeLocalEvent<StationAiHeldComponent, StationAiOpenWarpActionEvent>(OnOpenWarpAction); // Starlight
 
         SubscribeLocalEvent<StationAiHeldComponent, TryGetIdentityShortInfoEvent>(OnTryGetIdentityShortInfo);
     }
+
+    // Starlight-start
+    protected virtual void OnOpenWarpAction(Entity<StationAiHeldComponent> ent, ref StationAiOpenWarpActionEvent args)
+    {
+        args.Handled = true;
+    }
+    // Starlight-end
 
     private void OnTryGetIdentityShortInfo(Entity<StationAiHeldComponent> ent, ref TryGetIdentityShortInfoEvent args)
     {

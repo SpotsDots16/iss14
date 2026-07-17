@@ -51,9 +51,6 @@
 		},
 		{
 			"name": "warp"
-		},
-		{
-			"name": "control_shell"
 		}
 	]
 }

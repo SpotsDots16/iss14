@@ -279,6 +279,16 @@ public sealed partial class SiliconLawSystem : SharedSiliconLawSystem
         return laws;
     }
 
+    // Starlight: replace an entity's active lawset wholesale (used by AI shunting).
+    public override void SetLawset(EntityUid entity, SiliconLawset? laws)
+    {
+        if (!TryComp<SiliconLawProviderComponent>(entity, out var provider))
+            return;
+
+        provider.Lawset = laws;
+        NotifyLawsChanged(entity);
+    }
+
     /// <summary>
     /// Set the laws of a silicon entity while notifying the player.
     /// </summary>

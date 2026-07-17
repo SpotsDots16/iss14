@@ -5,10 +5,10 @@ namespace Content.Shared.Chat;
 /// </summary>
 public static class ChatIconTokens
 {
-    /// <summary>Builds the job-icon markup for a player's job, to prepend before their name in radio.</summary>
-    public static string JobIconMarkup(string jobId)
+    /// <summary>Builds the job-icon markup for a JobIconPrototype id, to prepend before a speaker's name in radio.</summary>
+    public static string JobIconMarkup(string jobIconId)
     {
         // Markup attribute values must be quoted (the parser only accepts quoted strings/numbers/colors).
-        return $"[chaticon kind=\"job\" key=\"{jobId}\"]";
+        return $"[chaticon kind=\"jobicon\" key=\"{jobIconId}\"]";
     }
 }

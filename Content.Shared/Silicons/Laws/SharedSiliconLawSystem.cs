@@ -68,6 +68,12 @@ public abstract partial class SharedSiliconLawSystem : EntitySystem
 
     }
 
+    // Starlight: replace an entity's active lawset wholesale (used by AI shunting).
+    // Server-side override applies it; no-op on the client.
+    public virtual void SetLawset(EntityUid entity, SiliconLawset? laws)
+    {
+    }
+
     protected virtual void EnsureSubvertedSiliconRole(EntityUid mindId)
     {
         if (TryComp<MindComponent>(mindId, out var mind))

@@ -18,6 +18,7 @@ public sealed partial class VoteConfigWindow : FancyWindow
     public event Action<bool, string>? OnCreateProfile;
     public event Action<bool>? OnDeleteProfile;
     public event Action<bool, string, bool>? OnSetItem;
+    public event Action<string, int, int, bool>? OnSetMapRange;
 
     private List<string> _mapProfiles = new();
     private List<string> _presetProfiles = new();
@@ -135,6 +136,82 @@ public sealed partial class VoteConfigWindow : FancyWindow
 
         BuildItems(MapList, state.Maps, true, state.CanEdit, state.ActiveMapProfile.Length != 0);
         BuildItems(PresetList, state.Presets, false, state.CanEdit, state.ActivePresetProfile.Length != 0);
+        BuildMapRanges(state.MapRanges, state.CanEdit);
+    }
+
+    private void BuildMapRanges(List<VoteConfigMapRange> ranges, bool canEdit)
+    {
+        // Guard: disposing a focused LineEdit fires OnFocusExit, which would re-commit mid-rebuild.
+        _updating = true;
+        MapRangeList.RemoveAllChildren();
+        _updating = false;
+
+        foreach (var range in ranges)
+        {
+            var row = new BoxContainer { Orientation = BoxContainer.LayoutOrientation.Horizontal };
+            var label = new Label { Text = range.Display, MinWidth = 180, ClipText = true, HorizontalExpand = true };
+
+            // Placeholders show the prototype defaults; an override fills the fields.
+            var protoMax = range.ProtoMax <= 0 ? Loc.GetString("vote-config-map-range-unlimited") : range.ProtoMax.ToString();
+            var minEdit = new LineEdit
+            {
+                MinWidth = 70,
+                PlaceHolder = range.ProtoMin.ToString(),
+                Text = range.HasOverride ? range.Min.ToString() : string.Empty,
+                Editable = canEdit,
+            };
+            var maxEdit = new LineEdit
+            {
+                MinWidth = 70,
+                PlaceHolder = protoMax,
+                Text = range.HasOverride && range.Max > 0 ? range.Max.ToString() : string.Empty,
+                Editable = canEdit,
+            };
+
+            var id = range.Id;
+            var lastMin = minEdit.Text;
+            var lastMax = maxEdit.Text;
+
+            void Commit()
+            {
+                if (_updating)
+                    return;
+
+                var minText = minEdit.Text.Trim();
+                var maxText = maxEdit.Text.Trim();
+
+                // Nothing changed since the last known state; don't spam the server on focus changes.
+                if (minText == lastMin && maxText == lastMax)
+                    return;
+
+                lastMin = minText;
+                lastMax = maxText;
+
+                // Both fields empty -> clear the override, fall back to prototype values.
+                if (minText.Length == 0 && maxText.Length == 0)
+                {
+                    OnSetMapRange?.Invoke(id, 0, 0, true);
+                    return;
+                }
+
+                var min = int.TryParse(minText, out var minVal) && minVal >= 0 ? minVal : 0;
+                // Empty or invalid max means unlimited (0).
+                var max = int.TryParse(maxText, out var maxVal) && maxVal > 0 ? maxVal : 0;
+                OnSetMapRange?.Invoke(id, min, max, false);
+            }
+
+            minEdit.OnTextEntered += _ => Commit();
+            minEdit.OnFocusExit += _ => Commit();
+            maxEdit.OnTextEntered += _ => Commit();
+            maxEdit.OnFocusExit += _ => Commit();
+
+            row.AddChild(label);
+            row.AddChild(new Label { Text = Loc.GetString("vote-config-map-range-min"), Margin = new Thickness(8, 0, 4, 0) });
+            row.AddChild(minEdit);
+            row.AddChild(new Label { Text = Loc.GetString("vote-config-map-range-max"), Margin = new Thickness(8, 0, 4, 0) });
+            row.AddChild(maxEdit);
+            MapRangeList.AddChild(row);
+        }
     }
 
     private void SetTimerField(LineEdit edit, VoteTimer timer, int value, bool canEdit)

@@ -13,8 +13,9 @@ using Robust.Shared.Utility;
 namespace Content.Client.UserInterface.RichText;
 
 /// <summary>
-/// Renders an inline job icon: <c>[chaticon kind="job" key="Captain"]</c>. Used to show a speaker's job icon
-/// before their name in radio. Hovering shows the job name.
+/// Renders an inline job icon: <c>[chaticon kind="jobicon" key="JobIconCaptain"]</c>. Used to show a speaker's
+/// job icon before their name in radio. Hovering shows the job name. The key is a JobIconPrototype id (the same
+/// icon an ID card carries); the legacy kind "job" with a JobPrototype key is still accepted for old replays.
 /// </summary>
 [UsedImplicitly]
 public sealed partial class ChatIconTag : IMarkupTagHandler
@@ -31,15 +32,27 @@ public sealed partial class ChatIconTag : IMarkupTagHandler
     {
         control = null;
 
-        if (!node.Attributes.TryGetValue("kind", out var kindParam) || !kindParam.TryGetString(out var kind)
-            || kind != "job")
+        if (!node.Attributes.TryGetValue("kind", out var kindParam) || !kindParam.TryGetString(out var kind))
             return false;
         if (!node.Attributes.TryGetValue("key", out var keyParam) || !keyParam.TryGetString(out var key))
             return false;
 
-        if (!_proto.TryIndex<JobPrototype>(key, out var job)
-            || !_proto.TryIndex<JobIconPrototype>(job.Icon, out var jobIcon))
-            return false;
+        JobIconPrototype? jobIcon;
+
+        switch (kind)
+        {
+            case "jobicon":
+                if (!_proto.TryIndex(key, out jobIcon))
+                    return false;
+                break;
+            case "job": // legacy markup from before icons were read off the ID card
+                if (!_proto.TryIndex<JobPrototype>(key, out var job)
+                    || !_proto.TryIndex(job.Icon, out jobIcon))
+                    return false;
+                break;
+            default:
+                return false;
+        }
 
         Texture texture;
         try
@@ -61,7 +74,7 @@ public sealed partial class ChatIconTag : IMarkupTagHandler
             SetHeight = IconSize,
             Stretch = TextureRect.StretchMode.Scale,
             VerticalAlignment = Control.VAlignment.Center,
-            ToolTip = job.LocalizedName,
+            ToolTip = jobIcon.LocalizedJobName,
             MouseFilter = Control.MouseFilterMode.Stop,
         };
         return true;

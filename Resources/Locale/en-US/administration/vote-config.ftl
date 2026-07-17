@@ -19,6 +19,11 @@ vote-config-timer-alone = When alone (map/preset/restart)
 vote-config-timer-votekick = Votekick
 vote-config-maps = Map pool (active list = random-on-restart + map vote)
 vote-config-map-filter-playercount = Filter map pool by player count
+vote-config-map-ranges = Map player count ranges
+vote-config-map-ranges-hint = Overrides each map's built-in player range. Used by "filter map pool by player count". Empty fields = map default; empty max = unlimited.
+vote-config-map-range-min = Min
+vote-config-map-range-max = Max
+vote-config-map-range-unlimited = unlimited
 vote-config-gamemodes = Gamemode pool (active list = random-on-restart + gamemode vote)
 vote-config-default = (default)
 vote-config-new-name = New profile name...

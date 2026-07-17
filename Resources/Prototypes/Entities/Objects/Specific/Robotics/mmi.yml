@@ -52,6 +52,7 @@
     whitelist:
       components:
       - SecretStash
+  - type: StationAIShunt # Starlight: allow shunting into this brain.
 
 - type: entity
   parent: MMI
@@ -137,22 +138,4 @@
       whitelist:
         components:
         - SecretStash
-
-- type: entity
-  parent: BaseItem
-  id: AiVesselCore
-  name: AI vessel core
-  description: A blank robotic brain-core that lets a station AI project itself into a cyborg. Install it into an opened cyborg's head in place of a brain; the AI can then take remote control of the chassis.
-  components:
-  - type: Sprite
-    sprite: Objects/Specific/Robotics/mmi.rsi
-    layers:
-    - state: ai_vessel_core
-      map: ["base"]
-  - type: BorgBrain
-  - type: AiVesselCore
-  - type: Appearance
-  - type: GuideHelp
-    guides:
-    - Cyborgs
-    - Robotics
+    - type: StationAIShunt # Starlight: allow shunting into this brain.

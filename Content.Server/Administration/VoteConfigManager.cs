@@ -65,6 +65,10 @@ public sealed partial class VoteConfigManager
     private string _activeMapProfile = "";
     private readonly Dictionary<string, List<string>> _mapProfiles = new();
 
+    // Per-map player-count range overrides (map id -> min/max). Max 0 = unlimited. Maps without an
+    // entry fall back to the prototype's MinPlayers/MaxPlayers.
+    private readonly Dictionary<string, MapPlayerRange> _mapPlayerRanges = new();
+
     private string _activePresetProfile = "";
     private readonly Dictionary<string, List<string>> _presetProfiles = new();
 
@@ -90,6 +94,7 @@ public sealed partial class VoteConfigManager
         }
 
         _maps.RuntimeMapPoolFilterByPlayerCount = _filterMapsByPlayerCount;
+        ApplyMapPlayerRanges();
         ApplyMapPool();
     }
 
@@ -245,6 +250,57 @@ public sealed partial class VoteConfigManager
         return isMap ? (_mapProfiles, _activeMapProfile) : (_presetProfiles, _activePresetProfile);
     }
 
+    #endregion
+
+    #region Map player ranges
+
+    public bool TryGetMapPlayerRange(string mapId, out int min, out int max)
+    {
+        if (_mapPlayerRanges.TryGetValue(mapId, out var range))
+        {
+            min = range.Min;
+            max = range.Max;
+            return true;
+        }
+
+        min = 0;
+        max = 0;
+        return false;
+    }
+
+    /// <summary>Sets a per-map player-count range override. Max 0 (or less) means unlimited.</summary>
+    public void SetMapPlayerRange(string mapId, int min, int max)
+    {
+        if (!_proto.HasIndex<GameMapPrototype>(mapId))
+            return;
+
+        min = Math.Max(0, min);
+        max = Math.Max(0, max);
+        if (max != 0 && max < min)
+            max = min;
+
+        _mapPlayerRanges[mapId] = new MapPlayerRange { Min = min, Max = max };
+        ApplyMapPlayerRanges();
+        Save();
+    }
+
+    /// <summary>Removes a per-map override so the map falls back to its prototype MinPlayers/MaxPlayers.</summary>
+    public void ClearMapPlayerRange(string mapId)
+    {
+        if (!_mapPlayerRanges.Remove(mapId))
+            return;
+
+        ApplyMapPlayerRanges();
+        Save();
+    }
+
+    private void ApplyMapPlayerRanges()
+    {
+        _maps.SetRuntimeMapPlayerRanges(_mapPlayerRanges.Count == 0
+            ? null
+            : _mapPlayerRanges.ToDictionary(kv => kv.Key, kv => (kv.Value.Min, kv.Value.Max)));
+    }
+
     private static IReadOnlyList<string> Names(Dictionary<string, List<string>> profiles)
     {
         return profiles.Keys.OrderBy(n => n, StringComparer.OrdinalIgnoreCase).ToList();
@@ -346,6 +402,10 @@ public sealed partial class VoteConfigManager
             foreach (var (k, v) in data.MapProfiles)
                 _mapProfiles[k] = v;
 
+            _mapPlayerRanges.Clear();
+            foreach (var (k, v) in data.MapPlayerRanges)
+                _mapPlayerRanges[k] = v;
+
             _activePresetProfile = data.ActivePresetProfile;
             _presetProfiles.Clear();
             foreach (var (k, v) in data.PresetProfiles)
@@ -376,6 +436,7 @@ public sealed partial class VoteConfigManager
             FilterMapsByPlayerCount = _filterMapsByPlayerCount,
             ActiveMapProfile = _activeMapProfile,
             MapProfiles = _mapProfiles.ToDictionary(kv => kv.Key, kv => kv.Value),
+            MapPlayerRanges = _mapPlayerRanges.ToDictionary(kv => kv.Key, kv => kv.Value),
             ActivePresetProfile = _activePresetProfile,
             PresetProfiles = _presetProfiles.ToDictionary(kv => kv.Key, kv => kv.Value),
         };
@@ -410,8 +471,16 @@ public sealed partial class VoteConfigManager
         public bool FilterMapsByPlayerCount { get; set; }
         public string ActiveMapProfile { get; set; } = "";
         public Dictionary<string, List<string>> MapProfiles { get; set; } = new();
+        public Dictionary<string, MapPlayerRange> MapPlayerRanges { get; set; } = new();
         public string ActivePresetProfile { get; set; } = "";
         public Dictionary<string, List<string>> PresetProfiles { get; set; } = new();
+    }
+
+    /// <summary>A per-map player-count override. Max 0 = unlimited.</summary>
+    public sealed class MapPlayerRange
+    {
+        public int Min { get; set; }
+        public int Max { get; set; }
     }
 
     #endregion
