@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Ported from Trauma-Station, rules list adapted to this fork's preset conventions.
+
+- type: gamePreset
+  id: Insurgency
+  alias:
+  - insurgency
+  - insurgents
+  - greytide
+  name: insurgency-title
+  description: insurgency-description
+  showInVote: false
+  rules:
+  - Insurgency
+  - SubGamemodesRule
+  - BasicStationEventScheduler
+  - MeteorSwarmScheduler

@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Ported from Trauma-Station (RoleEffects/InsurgentSkills omitted — no skills system in this fork).
+
+- type: entity
+  parent: BaseMindRoleAntag
+  id: MindRoleInsurgent
+  name: Insurgent Role
+  components:
+  - type: MindRole
+    roleType: TeamAntagonist
+    subtype: role-subtype-insurgent
+    exclusiveAntag: true # too op for insurgents to also roll syndie or something
+    antagPrototype: Insurgent
+  - type: InsurgentRole

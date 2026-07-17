@@ -10,6 +10,7 @@
   - AllHostile
   - Wizard
   - Xenoborg
+  - Insurgent # Trauma
 
 - type: npcFaction
   id: NanoTrasen
@@ -23,6 +24,7 @@
   - AllHostile
   - Wizard
   - Xenoborg
+  - Insurgent # Trauma
 
 - type: npcFaction
   id: Mouse
@@ -60,6 +62,7 @@
   - AllHostile
   - Wizard
   - Xenoborg
+  - Insurgent # Trauma
 
 - type: npcFaction
   id: SimpleNeutral
@@ -76,6 +79,7 @@
   - AllHostile
   - Wizard
   - Xenoborg
+  - Insurgent # Trauma
 
 - type: npcFaction
   id: Xeno
@@ -90,6 +94,7 @@
   - Wizard
   - Dragon
   - Xenoborg
+  - Insurgent # Trauma
 
 - type: npcFaction
   id: Zombie
@@ -105,6 +110,7 @@
   - Wizard
   - Dragon
   - Xenoborg
+  - Insurgent # Trauma
 
 - type: npcFaction
   id: Revolutionary
@@ -116,6 +122,7 @@
   - AllHostile
   - Wizard
   - Xenoborg
+  - Insurgent # Trauma
 
 - type: npcFaction
   id: AllHostile
@@ -133,6 +140,7 @@
   - Revolutionary
   - Wizard
   - Xenoborg
+  - Insurgent # Trauma
 
 - type: npcFaction
   id: Wizard
@@ -150,10 +158,12 @@
   - Revolutionary
   - AllHostile
   - Xenoborg
+  - Insurgent # Trauma
 
 - type: npcFaction
   id: Xenoborg
   hostile:
+  - Insurgent # Trauma
   # they have brains
   - NanoTrasen
   - Syndicate

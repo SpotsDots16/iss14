@@ -784,6 +784,10 @@ public sealed partial class AntagSelectionSystem : GameRuleSystem<AntagSelection
         // The following is where we apply components, equipment, and other changes to our antagonist entity.
         EntityManager.AddComponents(antag, prototype.Components);
 
+        // Trauma: strip existing gear first when the specifier asks for it (e.g. insurgents re-rolled from crew).
+        if (prototype.UnequipOldGear)
+            UnequipOldGear(antag);
+
         // Equip the entity's RoleLoadout and LoadoutGroup
         List<ProtoId<StartingGearPrototype>> gear = new();
         if (prototype.StartingGear is not null)

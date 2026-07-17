@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Ported from Trauma-Station.
+
+- type: objectiveIssuer
+  id: Insurgents
+  name: objective-issuer-insurgents
+
+- type: entity
+  abstract: true
+  parent: BaseObjective
+  id: BaseInsurgentObjective
+  components:
+  - type: Objective
+    issuer: Insurgents
+  - type: RoleRequirement
+    roles:
+    - InsurgentRole
+
+- type: entity
+  parent: [ BaseInsurgentObjective, BaseLivingObjective]
+  id: InsurgentEscapeObjective
+  name: Escape to centcomm alive and unrestrained.
+  description: For the insurgence to succeed, you must keep your cover and reach Central Command in one piece.
+  components:
+  - type: Objective
+    difficulty: 1
+    icon:
+      sprite: Structures/Furniture/chairs.rsi
+      state: shuttle
+  - type: EscapeShuttleCondition

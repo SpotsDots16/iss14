@@ -80,6 +80,7 @@
   - type: CartridgeLoader
     uiKey: enum.PdaUiKey.Key
     preinstalled:
+      - NanoChatCartridge # DeltaV
       - CrewManifestCartridge
       - NotekeeperCartridge
       - NanoTaskCartridge
@@ -151,6 +152,7 @@
   components:
   - type: CartridgeLoader
     preinstalled:
+    - NanoChatCartridge # DeltaV
     - CrewManifestCartridge
     - NotekeeperCartridge
     - NanoTaskCartridge
@@ -165,6 +167,7 @@
   - type: CartridgeLoader
     uiKey: enum.PdaUiKey.Key
     preinstalled:
+      - NanoChatCartridge # DeltaV
       - CrewManifestCartridge
       - NotekeeperCartridge
       - NanoTaskCartridge
@@ -415,6 +418,7 @@
         components:
         - Cartridge
     preinstalled:
+    - NanoChatCartridge # DeltaV
     - CrewManifestCartridge
     - NewsReaderCartridge
   - type: Appearance
@@ -478,6 +482,7 @@
     state: pda-qm
   - type: CartridgeLoader
     preinstalled:
+    - NanoChatCartridge # DeltaV
     - CrewManifestCartridge
     - NotekeeperCartridge
     - NanoTaskCartridge
@@ -523,6 +528,7 @@
   - type: CartridgeLoader
     uiKey: enum.PdaUiKey.Key
     preinstalled:
+      - NanoChatCartridge # DeltaV
       - CrewManifestCartridge
       - NotekeeperCartridge
       - NanoTaskCartridge
@@ -872,6 +878,7 @@
     state: pda-hos
   - type: CartridgeLoader
     preinstalled:
+    - NanoChatCartridge # DeltaV
     - CrewManifestCartridge
     - NotekeeperCartridge
     - NanoTaskCartridge
@@ -942,6 +949,7 @@
   - type: CartridgeLoader
     uiKey: enum.PdaUiKey.Key
     preinstalled:
+      - NanoChatCartridge # DeltaV
       - CrewManifestCartridge
       - NotekeeperCartridge
       - NanoTaskCartridge
@@ -968,6 +976,7 @@
     uiKey: enum.PdaUiKey.Key
     notificationsEnabled: false
     preinstalled:
+      - NanoChatCartridge # DeltaV
       - CrewManifestCartridge
       - NotekeeperCartridge
       - NanoTaskCartridge
@@ -1092,6 +1101,7 @@
   - type: CartridgeLoader
     uiKey: enum.PdaUiKey.Key
     preinstalled:
+      - NanoChatCartridge # DeltaV
       - NotekeeperCartridge
       - NanoTaskCartridge
 
@@ -1129,6 +1139,7 @@
   - type: CartridgeLoader
     uiKey: enum.PdaUiKey.Key
     preinstalled:
+      - NanoChatCartridge # DeltaV
       - NotekeeperCartridge
       - NanoTaskCartridge
       - MedTekCartridge
@@ -1172,6 +1183,7 @@
   - type: CartridgeLoader
     uiKey: enum.PdaUiKey.Key
     preinstalled:
+      - NanoChatCartridge # DeltaV
       - CrewManifestCartridge
       - NotekeeperCartridge
       - NanoTaskCartridge
@@ -1343,6 +1355,7 @@
     state: pda-detective
   - type: CartridgeLoader
     preinstalled:
+    - NanoChatCartridge # DeltaV
     - CrewManifestCartridge
     - NotekeeperCartridge
     - NanoTaskCartridge
@@ -1371,6 +1384,7 @@
     state: pda-brigmedic
   - type: CartridgeLoader
     preinstalled:
+    - NanoChatCartridge # DeltaV
     - CrewManifestCartridge
     - NotekeeperCartridge
     - NanoTaskCartridge
