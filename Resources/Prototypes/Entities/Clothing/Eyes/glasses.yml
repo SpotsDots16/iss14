@@ -301,3 +301,26 @@
     tags:
     - HamsterWearable
     - WhitelistChameleon
+
+#CentComm glasses (iss14: copy of administration glasses with own sprites)
+- type: entity
+  parent: [ClothingEyesBase, BaseCentcommContraband]
+  id: ClothingEyesGlassesCentcomm
+  name: CentComm glasses
+  description: Green-tinted upgraded sunglasses that provide flash immunity and show ID card status.
+  components:
+  - type: Sprite
+    sprite: Clothing/Eyes/Glasses/centcommglasses.rsi
+  - type: Clothing
+    sprite: Clothing/Eyes/Glasses/centcommglasses.rsi
+  - type: FlashImmunity
+  - type: EyeProtection
+    protectionTime: 5
+  - type: Tag
+    tags:
+    - HamsterWearable
+    - PetWearable
+    - WhitelistChameleon
+  - type: IdentityBlocker
+    coverage: EYES
+  - type: ShowJobIcons
