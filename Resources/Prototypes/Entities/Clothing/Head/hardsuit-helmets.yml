@@ -1004,3 +1004,21 @@
     color: "#f4ffad"
     radius: 5
     energy: 2
+
+#CentComm Hardsuit (iss14)
+- type: entity
+  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightBase ]
+  id: ClothingHeadHelmetHardsuitCentcomm
+  name: CentComm hardsuit helmet
+  description: Special hardsuit helmet, made for Central Command officials.
+  components:
+  - type: Sprite
+    sprite: Clothing/Head/Hardsuits/centcommspace.rsi
+  - type: Clothing
+    sprite: Clothing/Head/Hardsuits/centcommspace.rsi
+  - type: PressureProtection
+    highPressureMultiplier: 0.3
+    lowPressureMultiplier: 1000
+  - type: Tag
+    tags:
+    - WhitelistChameleon

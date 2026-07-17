@@ -60,7 +60,7 @@ public sealed partial class EntityCensusSystem : EntitySystem
     {
         var now = _timing.RealTime;
 
-        if (now - _cachedAt >= CacheAge)
+        if (_cachedAt == TimeSpan.MinValue || now - _cachedAt >= CacheAge)
         {
             _cached = Count(out _cachedTotal);
             _cachedAt = now;
