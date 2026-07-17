@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Ported from Trauma-Station.
+
+- type: entity
+  parent: BaseAntagSpawner
+  id: GhostRoleSpawnerInsurgent
+  name: insurgent ghost role spawner
+  components:
+  - type: GhostRole
+    name: roles-antag-insurgent-name
+    description: roles-antag-insurgent-objective
+    rules: ghost-role-information-rules-team-antagonist
+    mindRoles:
+    - MindRoleInsurgent
+  - type: Sprite
+    sprite: Markers/jobs.rsi
+    layers:
+    - state: green
+    - state: passenger
+    - sprite: Clothing/Mask/gas.rsi
+      state: icon

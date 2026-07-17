@@ -18,6 +18,7 @@
   - type: Access
   - type: IdCard
   - type: StationRecordKeyStorage
+  - type: NanoChatCard # DeltaV
   - type: Tag
     tags:
     - DoorBumpOpener
@@ -951,6 +952,8 @@
   id: NukieAgentIDCard
   suffix: Nukie
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Access
     tags:
     - Maintenance
@@ -962,6 +965,8 @@
   id: SyndicateIDCard
   name: syndicate ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: black
@@ -986,6 +991,8 @@
   id: SyndiOperativeIDCard
   name: syndicate operative ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: black
@@ -1005,6 +1012,8 @@
   id: SyndiCorpsmanIDCard
   name: syndicate corpsman ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: black
@@ -1023,6 +1032,8 @@
   id: SyndiCommanderIDCard
   name: syndicate commander ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: black
@@ -1042,6 +1053,8 @@
   name: ninja ID card
   suffix: Ninja
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: ninja
@@ -1066,6 +1079,8 @@
   id: PirateIDCard
   name: pirate ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: pirate
@@ -1082,6 +1097,8 @@
   id: XenoborgIDCard
   name: xenoborg ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: default
@@ -1094,6 +1111,8 @@
   id: WizardIDCard
   name: wizard ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: wizard
@@ -1117,6 +1136,8 @@
   id: CentcomIDCard
   name: command officer ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: centcom
@@ -1137,6 +1158,8 @@
   id: ERTLeaderIDCard
   name: ERT leader ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: gold
@@ -1157,6 +1180,8 @@
   id: ERTChaplainIDCard
   name: ERT chaplain ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: centcom
@@ -1177,6 +1202,8 @@
   id: ERTEngineerIDCard
   name: ERT engineer ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: centcom
@@ -1197,6 +1224,8 @@
   id: ERTJanitorIDCard
   name: ERT janitor ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: centcom
@@ -1217,6 +1246,8 @@
   id: ERTMedicIDCard
   name: ERT medic ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: centcom
@@ -1237,6 +1268,8 @@
   id: ERTSecurityIDCard
   name: ERT security ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: centcom
@@ -1257,6 +1290,8 @@
   id: CentcomIDCardDeathsquad
   name: death squad ID card
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: centcom
@@ -1276,6 +1311,8 @@
   name: CBURN ID card
   suffix: CBURN
   components:
+  - type: NanoChatCard # DeltaV
+    listNumber: false
   - type: Sprite
     layers:
     - state: centcom
