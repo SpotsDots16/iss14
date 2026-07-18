@@ -1,3 +1,5 @@
+// Ported from Starlight (https://github.com/ss14Starlight/space-station-14).
+// Starlight code is MIT / Starlight License; the Starlight License requires this attribution.
 using System;
 using System.Linq;
 using System.Numerics;

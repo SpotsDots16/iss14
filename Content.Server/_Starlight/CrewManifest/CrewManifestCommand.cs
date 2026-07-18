@@ -1,5 +1,6 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-// Ported from starlight-ss14. iss14 adaptations: Assistant -> Passenger fallback, no CustomSpecieName
+// SPDX-License-Identifier: MIT
+// Ported from Starlight (https://github.com/ss14Starlight/space-station-14);
+// the Starlight License requires this attribution. iss14 adaptations: Assistant -> Passenger fallback, no CustomSpecieName
 // (not in this fork), and CreateGeneralRecord here requires a non-null profile so we pass the
 // player's preference profile (or a species default).
 

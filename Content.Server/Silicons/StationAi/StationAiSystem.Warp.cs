@@ -1,4 +1,5 @@
-// Starlight: AI camera warping, ported from starlight-ss14.
+// Starlight: AI camera warping, ported from Starlight (https://github.com/ss14Starlight/space-station-14).
+// Starlight code is MIT / Starlight License; the Starlight License requires this attribution.
 using System.Collections.Generic;
 using Content.Shared.Follower;
 using Content.Shared.Follower.Components;
