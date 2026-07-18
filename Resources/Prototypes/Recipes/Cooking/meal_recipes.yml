@@ -45,6 +45,48 @@
   solids:
     FoodDoughCottonRope: 1
 
+# Pretzels
+
+- type: microwaveMealRecipe
+  id: RecipePretzel
+  name: plain pretzel recipe
+  result: FoodPretzel
+  time: 10
+  group: Breads
+  solids:
+    FoodDoughRope: 2
+
+- type: microwaveMealRecipe
+  id: RecipePretzelSalted
+  name: salted pretzel recipe
+  result: FoodPretzelSalted
+  time: 10
+  group: Breads
+  reagents:
+    TableSalt: 5
+  solids:
+    FoodDoughRope: 2
+
+- type: microwaveMealRecipe
+  id: RecipePretzelCotton
+  name: cotton pretzel recipe
+  result: FoodPretzelCotton
+  time: 10
+  group: Moth
+  solids:
+    FoodDoughCottonRope: 2
+
+- type: microwaveMealRecipe
+  id: RecipePretzelCottonSalted
+  name: salted cotton pretzel recipe
+  result: FoodPretzelCottonSalted
+  time: 10
+  group: Moth
+  reagents:
+    TableSalt: 5
+  solids:
+    FoodDoughCottonRope: 2
+
 #Burgers
 
 - type: microwaveMealRecipe
