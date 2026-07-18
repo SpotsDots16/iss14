@@ -14,7 +14,7 @@
   - type: Item
     size: Normal
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin

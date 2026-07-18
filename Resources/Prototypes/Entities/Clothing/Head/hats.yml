@@ -1067,7 +1067,7 @@
   - type: Clothing
     sprite: Clothing/Head/Hats/melon.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Head
     modifiers:
       coefficients:
@@ -1084,7 +1084,7 @@
   - type: Clothing
     sprite: Clothing/Head/Hats/holyhatmelon.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Head
     modifiers:
       coefficients:

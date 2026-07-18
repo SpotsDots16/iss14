@@ -314,7 +314,8 @@
     - Trash
   - type: PhysicalComposition
     materialComposition:
-      Steel: 50
+      # Crafted from cardboard, so it must not recycle into steel like the store-bought base.
+      Cardboard: 50
   - type: SpaceGarbage
   - type: Item
     size: Tiny
@@ -323,12 +324,24 @@
   - type: Storage
     grid:
     - 0,0,4,1
+  # Drives the cig1-cig6 fill layers when cigarettes are put back in.
+  - type: ItemCounter
+    count:
+      tags: [Cigarette]
+    composite: true
+    layerStates:
+    - cig1
+    - cig2
+    - cig3
+    - cig4
+    - cig5
+    - cig6
   - type: Appearance
 
 - type: entity
   id: CigPackEmptyGreen
   parent: EmptyCigPackBase
-  name: Empty Spessman's Smokes packet
+  name: empty Spessman's Smokes packet
   description: A packet capable of holding cigarettes.
   components:
   - type: Sprite
@@ -338,11 +351,11 @@
   - type: Construction
     graph: CigPackEmptyGreenGraph
     node: pack
-    
+
 - type: entity
   id: CigPackEmptyRed
   parent: EmptyCigPackBase
-  name: Empty DromedaryCo packet
+  name: empty DromedaryCo packet
   description: A packet capable of holding cigarettes.
   components:
   - type: Sprite
@@ -352,11 +365,11 @@
   - type: Construction
     graph: CigPackEmptyRedGraph
     node: pack
-    
+
 - type: entity
   id: CigPackEmptyBlue
   parent: EmptyCigPackBase
-  name: Empty AcmeCo packet
+  name: empty AcmeCo packet
   description: A packet capable of holding cigarettes.
   components:
   - type: Sprite
@@ -366,11 +379,11 @@
   - type: Construction
     graph: CigPackEmptyBlueGraph
     node: pack
-    
+
 - type: entity
   id: CigPackEmptyBlack
   parent: EmptyCigPackBase
-  name: Empty Nomads packet
+  name: empty Nomads packet
   description: A packet capable of holding cigarettes.
   components:
   - type: Sprite
@@ -380,11 +393,11 @@
   - type: Construction
     graph: CigPackEmptyBlackGraph
     node: pack
-    
+
 - type: entity
   id: CigPackEmptyMixed
   parent: EmptyCigPackBase
-  name: Empty Dan's soaked smokes packet
+  name: empty Dan's soaked smokes packet
   description: A packet capable of holding cigarettes.
   components:
   - type: Sprite

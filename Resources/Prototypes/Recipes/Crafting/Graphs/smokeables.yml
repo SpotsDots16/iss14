@@ -181,7 +181,7 @@
               doAfter: 2
     - node: carton
       entity: CigCartonEmptyMixed
- 
+
 # Empty cig packs
 
 - type: constructionGraph
@@ -197,7 +197,7 @@
               doAfter: 1
     - node: pack
       entity: CigPackEmptyGreen
-      
+
 - type: constructionGraph
   id: CigPackEmptyRedGraph
   start: start
@@ -211,7 +211,7 @@
               doAfter: 1
     - node: pack
       entity: CigPackEmptyRed
-      
+
 - type: constructionGraph
   id: CigPackEmptyBlueGraph
   start: start
@@ -225,7 +225,7 @@
               doAfter: 1
     - node: pack
       entity: CigPackEmptyBlue
-      
+
 - type: constructionGraph
   id: CigPackEmptyBlackGraph
   start: start
@@ -239,7 +239,7 @@
               doAfter: 1
     - node: pack
       entity: CigPackEmptyBlack
-      
+
 - type: constructionGraph
   id: CigPackEmptyMixedGraph
   start: start

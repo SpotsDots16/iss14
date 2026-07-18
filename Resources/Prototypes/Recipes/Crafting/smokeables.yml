@@ -67,9 +67,9 @@
   category: construction-category-misc
 #    color: brown
   objectType: Item
-  
+
 # Empty smoke cartons
-  
+
 - type: construction
   id: CigCartonEmptyGreen
   graph: CigCartonEmptyGreen
@@ -109,9 +109,9 @@
   targetNode: carton
   category: construction-category-misc
   objectType: Item
-  
+
 # Empty smoke packs
-  
+
 - type: construction
   id: CigPackEmptyGreen
   graph: CigPackEmptyGreenGraph
