@@ -1,0 +1,147 @@
+# iss14: Tajaran mob ported from Carpmosia, translated to the classic species format
+# (part-based Shitmed body). Stats taken from Carpmosia's MobTajaran; structure mirrors
+# BaseMobVulpkanin. Carpmosia's footstepModifier (light footfall) has no equivalent
+# MobMover datafield in this fork and was dropped.
+- type: entity
+  abstract: true
+  save: false
+  parent: [BaseMobSpeciesOrganic]
+  id: BaseMobTajaran
+  name: Urist McPurr
+  components:
+  - type: Hunger
+  - type: Thirst
+  - type: Icon
+    sprite: _Carpmosia/Mobs/Species/Tajaran/parts.rsi
+    state: torso_m
+  - type: Body # Shitmed: part-based body
+    prototype: Tajaran
+    requiredLegs: 2
+  - type: Speech
+    speechSounds: Cat
+    speechVerb: Tajaran
+    allowedEmotes: [ 'Mew', 'Hiss', 'Meow', 'Growl', 'Purr', 'Trill' ]
+  - type: Vocal
+    sounds:
+      Male: MaleTajaran
+      Female: FemaleTajaran
+      Unsexed: MaleTajaran
+  - type: Damageable
+    damageContainer: Biological
+    damageModifierSet: Tajaran
+  - type: MeleeWeapon
+    soundHit:
+      collection: AlienClaw
+    animation: WeaponArcClaw
+    damage:
+      types:
+        Slash: 5
+  - type: Temperature
+    currentTemperature: 312
+  - type: TemperatureDamage
+    heatDamageThreshold: 322
+    coldDamageThreshold: 245
+    coldDamage:
+      types:
+        Cold: 0.08 # Per second, scales with temperature & other constants
+    heatDamage:
+      types:
+        Heat: 2.0 # Per second, scales with temperature & other constants
+  - type: ThermalRegulator
+    normalBodyTemperature: 312
+  - type: Wagging
+    action: ActionToggleWaggingVulpkanin
+  - type: Sprite # Drawlayers. Top to bottom in order I believe.
+    netsync: false
+    layers:
+    - map: [ "enum.HumanoidVisualLayers.Chest" ]
+    - map: [ "enum.HumanoidVisualLayers.Head" ]
+    - map: [ "enum.HumanoidVisualLayers.Snout" ]
+    - map: [ "enum.HumanoidVisualLayers.Eyes" ]
+    - map: [ "enum.HumanoidVisualLayers.RArm" ]
+    - map: [ "enum.HumanoidVisualLayers.LArm" ]
+    - map: [ "enum.HumanoidVisualLayers.RLeg" ]
+    - map: [ "enum.HumanoidVisualLayers.LLeg" ]
+    - map: [ "enum.HumanoidVisualLayers.Underwear" ]
+    - map: [ "enum.HumanoidVisualLayers.Undershirt" ]
+    - map: [ "jumpsuit" ]
+    - map: [ "enum.HumanoidVisualLayers.LHand" ]
+    - map: [ "enum.HumanoidVisualLayers.RHand" ]
+    - map: [ "enum.HumanoidVisualLayers.LFoot" ]
+    - map: [ "enum.HumanoidVisualLayers.RFoot" ]
+    - map: [ "enum.HumanoidVisualLayers.Handcuffs" ]
+      color: "#ffffff"
+      sprite: Objects/Misc/handcuffs.rsi
+      state: body-overlay-2
+      visible: false
+    - map: [ "id" ]
+    - map: [ "gloves" ]
+    - map: [ "shoes" ]
+    - map: [ "ears" ]
+    - map: [ "outerClothing" ]
+    - map: [ "eyes" ]
+    - map: [ "belt" ]
+    - map: [ "neck" ]
+    - map: [ "back" ]
+    - map: [ "enum.HumanoidVisualLayers.FacialHair" ]
+    - map: [ "enum.HumanoidVisualLayers.Hair" ]
+    - map: [ "enum.HumanoidVisualLayers.HeadSide" ]
+    - map: [ "enum.HumanoidVisualLayers.HeadTop" ]
+    - map: [ "enum.HumanoidVisualLayers.Tail" ]
+    - map: [ "mask" ]
+    - map: [ "head" ]
+    - map: [ "pocket1" ]
+    - map: [ "pocket2" ]
+  - type: HumanoidAppearance
+    species: Tajaran
+    hideLayersOnEquip:
+    - HeadTop
+    - HeadSide
+    # iss14: no Tajaran displacement maps exist; reuse Vulpkanin's (closest head/body shape).
+    markingsDisplacement:
+      Hair:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: hair
+  - type: Inventory
+    displacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpsuit
+      head:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: head
+
+- type: entity
+  parent: [BaseSpeciesDummy]
+  id: MobTajaranDummy
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: HumanoidAppearance
+    species: Tajaran
+    hideLayersOnEquip:
+    - HeadTop
+    - HeadSide
+    markingsDisplacement:
+      Hair:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: hair
+  - type: Inventory
+    displacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpsuit
+      head:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: head

@@ -1,0 +1,57 @@
+# iss14: Tajaran body for the part-based (Shitmed) body system, modeled on Vulpkanin.
+# Carpmosia gives Tajaran Animal-metabolizer digestion (obligate carnivores).
+- type: body
+  id: Tajaran
+  name: "tajaran"
+  root: chest
+  slots:
+    head:
+      part: HeadTajaran
+      connections:
+      - chest
+      organs:
+        brain: OrganHumanBrain
+        eyes: OrganHumanEyes
+    chest:
+      part: ChestTajaran
+      connections:
+      - groin
+      - right arm
+      - left arm
+      - head # Shitmed
+      organs:
+        heart: OrganAnimalHeart
+        lungs: OrganHumanLungs
+    groin:
+      part: GroinTajaran
+      connections:
+      - right leg
+      - left leg
+      organs:
+        stomach: OrganTajaranStomach
+        liver: OrganAnimalLiver
+        kidneys: OrganHumanKidneys
+    right arm:
+      part: RightArmTajaran
+      connections:
+      - right hand
+    left arm:
+      part: LeftArmTajaran
+      connections:
+      - left hand
+    right hand:
+      part: RightHandTajaran
+    left hand:
+      part: LeftHandTajaran
+    right leg:
+      part: RightLegTajaran
+      connections:
+      - right foot
+    left leg:
+      part: LeftLegTajaran
+      connections:
+      - left foot
+    right foot:
+      part: RightFootTajaran
+    left foot:
+      part: LeftFootTajaran

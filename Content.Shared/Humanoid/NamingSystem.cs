@@ -59,6 +59,11 @@ namespace Content.Shared.Humanoid
                 case SpeciesNaming.FirstDashLast: // Goobstation
                     return Loc.GetString("namepreset-firstdashlast",
                         ("first", GetFirstName(speciesProto, gender)), ("last", GetLastName(speciesProto)));
+                // Carpmosia-start - Tajaran naming
+                case SpeciesNaming.FirstFirst:
+                    return Loc.GetString("namepreset-firstfirst",
+                        ("first1", GetFirstName(speciesProto)), ("first2", GetFirstName(speciesProto, gender).ToLower()));
+                // Carpmosia-end - Tajaran naming
                 case SpeciesNaming.LastFirst: // DeltaV: Rodentia name scheme
                     return Loc.GetString("namepreset-lastfirst",
                         ("last", GetLastName(speciesProto)), ("first", GetFirstName(speciesProto, gender)));

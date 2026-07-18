@@ -262,7 +262,7 @@
   id: UndergarmentBottomBoxersVulpkanin
   bodyPart: Underwear
   markingCategory: Underwear
-  speciesRestriction: [Vulpkanin]
+  speciesRestriction: [Vulpkanin, Tajaran]
   coloring:
     default:
       type:
@@ -277,7 +277,7 @@
   id: UndergarmentBottomBriefsVulpkanin
   bodyPart: Underwear
   markingCategory: Underwear
-  speciesRestriction: [Vulpkanin]
+  speciesRestriction: [Vulpkanin, Tajaran]
   coloring:
     default:
       type:
@@ -292,7 +292,7 @@
   id: UndergarmentBottomSatinVulpkanin
   bodyPart: Underwear
   markingCategory: Underwear
-  speciesRestriction: [Vulpkanin]
+  speciesRestriction: [Vulpkanin, Tajaran]
   coloring:
     default:
       type:
@@ -307,7 +307,7 @@
   id: UndergarmentTopBraVulpkanin
   bodyPart: Undershirt
   markingCategory: Undershirt
-  speciesRestriction: [Vulpkanin]
+  speciesRestriction: [Vulpkanin, Tajaran]
   coloring:
     default:
       type:
@@ -322,7 +322,7 @@
   id: UndergarmentTopSportsbraVulpkanin
   bodyPart: Undershirt
   markingCategory: Undershirt
-  speciesRestriction: [Vulpkanin]
+  speciesRestriction: [Vulpkanin, Tajaran]
   coloring:
     default:
       type:
@@ -337,7 +337,7 @@
   id: UndergarmentTopBinderVulpkanin
   bodyPart: Undershirt
   markingCategory: Undershirt
-  speciesRestriction: [Vulpkanin]
+  speciesRestriction: [Vulpkanin, Tajaran]
   coloring:
     default:
       type:
@@ -352,7 +352,7 @@
   id: UndergarmentTopTanktopVulpkanin
   bodyPart: Undershirt
   markingCategory: Undershirt
-  speciesRestriction: [Vulpkanin]
+  speciesRestriction: [Vulpkanin, Tajaran]
   coloring:
     default:
       type:

@@ -1,0 +1,7 @@
+# Carpmosia: Tajaran damage profile.
+- type: damageModifierSet
+  id: Tajaran
+  coefficients:
+    Piercing: 1.2
+    Cold: 0.95
+    Heat: 1.05

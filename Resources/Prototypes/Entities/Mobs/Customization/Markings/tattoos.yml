@@ -308,7 +308,7 @@
   id: TattooEyeVulpkaninLeft
   bodyPart: Eyes
   markingCategory: Head
-  speciesRestriction: [Vulpkanin]
+  speciesRestriction: [Vulpkanin, Tajaran]
   coloring:
     default:
       type:
@@ -322,7 +322,7 @@
   id: TattooEyeVulpkaninRight
   bodyPart: Eyes
   markingCategory: Head
-  speciesRestriction: [Vulpkanin]
+  speciesRestriction: [Vulpkanin, Tajaran]
   coloring:
     default:
       type:
