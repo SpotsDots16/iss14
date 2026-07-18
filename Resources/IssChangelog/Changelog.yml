@@ -2,6 +2,31 @@ Name: Changelog
 Order: 0
 Entries:
 - author: issyman182
+  version: iss14:1.8.0
+  time: '2026-07-18'
+  changes:
+  - message: New playable species — Tajaran! Cat-people with their own ears, tails and voices — they mew, meow, hiss, purr, growl and trill, wag their tails, fight with claws, and carry compound names like Familygiven. As obligate carnivores they need meat-based food.
+    type: Add
+  - message: NanoChat — a PDA text-messaging cartridge. Get a number, message other crew, mute annoying contacts. Microwaving the card scrambles (or if you're lucky, erases) your message history.
+    type: Add
+  - message: New antagonist — the Insurgency. An armed insurgent cell arrives on its own shuttle with its own gear and objectives.
+    type: Add
+  - message: Station AI rework — the AI can now shunt itself into cyborgs with an AI vassal core and back, and its warp menu was rebuilt. Carrying an intellicarded AI to a cyborg lets you install it as the borg's brain.
+    type: Add
+  - message: New CentComm hardsuit (with helmet) and green CentCom glasses.
+    type: Add
+  - message: Your job icon in radio chat now comes from the ID in your PDA — carry no ID and you show up as unknown.
+    type: Tweak
+  - message: Early evac shuttle launch can no longer be spam-toggled — after unauthorizing it there is a 30 second cooldown.
+    type: Tweak
+  - message: Fixed the peer review console minting research points from worthless papers and spamming a printout per page; it now prints one summary per extraction.
+    type: Fix
+  - message: Cigarette packs show how full they are again, and empty packs recycle into cardboard instead of steel.
+    type: Fix
+  - message: Fixed round start being randomly delayed by 30 seconds when the picked game mode could not start.
+    type: Fix
+  id: 14
+- author: issyman182
   version: iss14:1.7.2
   time: '2026-07-10'
   changes:
