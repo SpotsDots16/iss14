@@ -17,7 +17,9 @@ public sealed partial class ArtifactAnalyzerSystem : SharedArtifactAnalyzerSyste
 {
     private const string ResearchPrintoutPrototype = "ArtifactResearchPrintout";
 
-    // 10% of 6,250 research points = 1 publication data
+    /// <summary>
+    /// How many extracted research points make up one unit of publication data on a printout.
+    /// </summary>
     private const int ResearchPointsPerData = 6250;
 
     [Dependency] private SharedAudioSystem _audio = default!;
@@ -26,11 +28,7 @@ public sealed partial class ArtifactAnalyzerSystem : SharedArtifactAnalyzerSyste
     [Dependency] private ResearchSystem _research = default!;
     [Dependency] private XenoArtifactSystem _xenoArtifact = default!;
 
-    private sealed record PendingPrintout(
-    string NodeId,
-    int Depth,
-    int ExtractedResearch,
-    int DataValue);
+    private sealed record PrintoutNodeLine(string NodeId, int Depth, int ExtractedResearch);
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -51,13 +49,11 @@ public sealed partial class ArtifactAnalyzerSystem : SharedArtifactAnalyzerSyste
             return;
 
         var sumResearch = 0;
-        var printoutsToSpawn = new List<PendingPrintout>();
+        var nodeLines = new List<PrintoutNodeLine>();
 
         foreach (var node in _xenoArtifact.GetAllNodes(artifact.Value))
         {
-
             var research = _xenoArtifact.GetResearchValue(node);
-            var nodeId = _xenoArtifact.GetNodeId(node);
 
             _xenoArtifact.SetConsumedResearchValue(
                 node,
@@ -65,18 +61,11 @@ public sealed partial class ArtifactAnalyzerSystem : SharedArtifactAnalyzerSyste
 
             sumResearch += research;
 
-            // No new research from this node, so no printout.
+            // No new research from this node, so it doesn't appear on the report.
             if (research <= 0)
                 continue;
 
-            // Integer division rounds down.
-            var printoutValue = Math.Max(1, research / ResearchPointsPerData);
-
-            printoutsToSpawn.Add(new PendingPrintout(
-    nodeId,
-    node.Comp.Depth,
-    research,
-    printoutValue));
+            nodeLines.Add(new PrintoutNodeLine(_xenoArtifact.GetNodeId(node), node.Comp.Depth, research));
         }
 
         // No new research extracted.
@@ -94,51 +83,56 @@ public sealed partial class ArtifactAnalyzerSystem : SharedArtifactAnalyzerSyste
             artifact.Value,
             PopupType.Large);
 
+        // Publication data comes from the whole extraction, not per node: this keeps the
+        // points-per-data rate honest for artifacts with many small nodes. Too little research
+        // means no publishable printout at all.
+        var dataValue = sumResearch / ResearchPointsPerData;
+        if (dataValue <= 0)
+            return;
+
         Timer.Spawn(ent.Comp.PrintoutDelay, () =>
         {
             if (Deleted(analyzer))
                 return;
 
-            var printoutCoordinates = Transform(analyzer).Coordinates;
+            var printout = Spawn(ResearchPrintoutPrototype, Transform(analyzer).Coordinates);
 
-            foreach (var printoutData in printoutsToSpawn)
-            {
-                var printout = Spawn(
-                    ResearchPrintoutPrototype,
-                    printoutCoordinates);
+            if (TryComp<ArtifactResearchPrintoutComponent>(printout, out var printoutComponent))
+                printoutComponent.Value = dataValue;
 
-                if (TryComp<ArtifactResearchPrintoutComponent>(
-                        printout,
-                        out var printoutComponent))
-                {
-                    printoutComponent.Value = printoutData.DataValue;
-                }
-
-                WritePrintout(printout, artifactName, printoutData);
-            }
+            WritePrintout(printout, artifactName, sumResearch, dataValue, nodeLines);
 
             _audio.PlayPvs(ent.Comp.PrintoutSound, analyzer);
         });
     }
 
     private void WritePrintout(
-    EntityUid printout,
-    string artifactName,
-    PendingPrintout data)
+        EntityUid printout,
+        string artifactName,
+        int totalResearch,
+        int dataValue,
+        List<PrintoutNodeLine> nodeLines)
     {
         var msg = new FormattedMessage();
 
-        msg.AddText("SCINET XENOARCHAEOLOGICAL ANALYSIS REPORT\n");
+        msg.AddText(Loc.GetString("artifact-report-header") + "\n");
         msg.AddText("========================================\n\n");
-        msg.AddText($"Artifact subject: {artifactName}\n");
-        msg.AddText($"Node ID: {data.NodeId}\n");
-        msg.AddText($"Node depth: {data.Depth}\n");
-        msg.AddText($"Research extracted: {data.ExtractedResearch:N0} points\n");
-        msg.AddText($"Publication data value: {data.DataValue}\n\n");
-        msg.AddText("Status: Awaiting peer review\n");
-        msg.AddText("Origin: Artifact analyzer extraction\n");
+        msg.AddText(Loc.GetString("artifact-report-subject", ("name", artifactName)) + "\n\n");
+
+        foreach (var line in nodeLines)
+        {
+            msg.AddText(Loc.GetString("artifact-report-node-line",
+                ("id", line.NodeId),
+                ("depth", line.Depth),
+                ("points", line.ExtractedResearch)) + "\n");
+        }
+
+        msg.AddText("\n");
+        msg.AddText(Loc.GetString("artifact-report-total", ("points", totalResearch)) + "\n");
+        msg.AddText(Loc.GetString("artifact-report-value", ("value", dataValue)) + "\n\n");
+        msg.AddText(Loc.GetString("artifact-report-status") + "\n");
+        msg.AddText(Loc.GetString("artifact-report-origin") + "\n");
 
         _paper.SetContent(printout, msg.ToMarkup());
     }
 }
-

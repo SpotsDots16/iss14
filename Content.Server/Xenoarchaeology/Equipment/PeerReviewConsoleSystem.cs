@@ -35,19 +35,36 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
         Entity<PeerReviewConsoleComponent> ent,
         ref AfterInteractUsingEvent args)
     {
-        if (args.Handled)
+        if (args.Handled || !args.CanReach)
             return;
 
-        if (!HasConsoleAccess(args.User, ent.Owner))
-            return;
-
-        if (!IsPowered(ent.Owner))
-            return;
-
+        // Only care about clicks with a research printout in hand.
         if (!TryComp<ArtifactResearchPrintoutComponent>(
                 args.Used,
                 out var printout))
         {
+            return;
+        }
+
+        if (!IsPowered(ent.Owner))
+        {
+            _popup.PopupEntity(
+                Loc.GetString("peer-review-console-unpowered"),
+                ent.Owner,
+                args.User);
+
+            args.Handled = true;
+            return;
+        }
+
+        if (!HasConsoleAccess(args.User, ent.Owner))
+        {
+            _popup.PopupEntity(
+                Loc.GetString("peer-review-console-access-denied"),
+                ent.Owner,
+                args.User);
+
+            args.Handled = true;
             return;
         }
 
@@ -58,7 +75,7 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
         UpdateUi(ent);
 
         _popup.PopupEntity(
-            $"Stored research data: {ent.Comp.StoredValue}",
+            Loc.GetString("peer-review-console-stored", ("value", ent.Comp.StoredValue)),
             ent.Owner,
             args.User);
 
@@ -66,8 +83,8 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
     }
 
     private void OnUiOpened(
-    Entity<PeerReviewConsoleComponent> ent,
-    ref AfterActivatableUIOpenEvent args)
+        Entity<PeerReviewConsoleComponent> ent,
+        ref AfterActivatableUIOpenEvent args)
     {
         _audio.PlayPvs(ent.Comp.KeyboardSound, ent.Owner);
         UpdateUi(ent);
@@ -81,15 +98,22 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
     }
 
     private void TryPublish(
-    Entity<PeerReviewConsoleComponent> ent,
-    EntityUid user,
-    PublicationTier tier)
+        Entity<PeerReviewConsoleComponent> ent,
+        EntityUid user,
+        PublicationTier tier)
     {
         if (!IsPowered(ent.Owner))
             return;
 
         if (!HasConsoleAccess(user, ent.Owner))
+        {
+            _popup.PopupEntity(
+                Loc.GetString("peer-review-console-access-denied"),
+                ent.Owner,
+                user);
+
             return;
+        }
 
         var (cost, diskPrototype) = tier switch
         {
@@ -108,7 +132,7 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
         if (ent.Comp.StoredValue < cost)
         {
             _popup.PopupEntity(
-                $"Not enough research data. Required: {cost}.",
+                Loc.GetString("peer-review-console-not-enough", ("cost", cost)),
                 ent.Owner,
                 user);
 
@@ -122,7 +146,7 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
         UpdateUi(ent);
 
         _popup.PopupEntity(
-            $"Publication completed. Remaining data: {ent.Comp.StoredValue}.",
+            Loc.GetString("peer-review-console-published", ("value", ent.Comp.StoredValue)),
             ent.Owner,
             user);
     }
@@ -148,5 +172,4 @@ public sealed partial class PeerReviewConsoleSystem : EntitySystem
         return !TryComp<AccessReaderComponent>(console, out var reader) ||
                _accessReader.IsAllowed(user, console, reader);
     }
-
 }

@@ -2,7 +2,7 @@
     xmlns="https://spacestation14.io"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="Content.Client.Xenoarchaeology.Ui.PeerReviewConsoleWindow"
-    Title="NTXLabs Peer Review Console"
+    Title="{Loc 'peer-review-window-title'}"
     MinSize="600 440">
 
     <BoxContainer
@@ -18,12 +18,12 @@
                 Margin="12">
 
                 <Label
-                    Text="NTXLABS PEER REVIEW"
+                    Text="{Loc 'peer-review-window-header'}"
                     FontColorOverride="#A8E6BC"
                     HorizontalAlignment="Center" />
 
                 <Label
-                    Text="Station Library Research Publication Service"
+                    Text="{Loc 'peer-review-window-subheader'}"
                     FontColorOverride="#B8C8BE"
                     HorizontalAlignment="Center" />
 
@@ -48,17 +48,15 @@
                     VerticalAlignment="Center">
 
                     <Label
-                        Text="AVAILABLE RESEARCH DATA"
+                        Text="{Loc 'peer-review-window-available-data'}"
                         FontColorOverride="#A8E6BC" />
 
                     <Label
                         Name="StoredValueLabel"
-                        Text="0 units"
                         FontColorOverride="#FFFFFF" />
 
                     <Label
                         Name="StoredStatusLabel"
-                        Text="Awaiting submitted findings"
                         FontColorOverride="#AAB8AF" />
 
                 </BoxContainer>
@@ -66,7 +64,7 @@
         </PanelContainer>
 
         <Label
-            Text="AVAILABLE PUBLICATIONS"
+            Text="{Loc 'peer-review-window-publications'}"
             FontColorOverride="#A8E6BC" />
 
         <!-- Minor publication -->
@@ -87,21 +85,21 @@
                     HorizontalExpand="True"
                     VerticalAlignment="Center">
 
-                    <Label Text="Minor Publication" />
+                    <Label Text="{Loc 'peer-review-window-minor'}" />
 
                     <Label
-                        Text="1,000 research points"
+                        Text="{Loc 'peer-review-window-minor-reward'}"
                         FontColorOverride="#C5D1C9" />
 
                     <Label
-                        Text="Requires 4 research data"
+                        Name="MinorRequirementLabel"
                         FontColorOverride="#8FA298" />
 
                 </BoxContainer>
 
                 <Button
                     Name="PublishSmallButton"
-                    Text="Publish"
+                    Text="{Loc 'peer-review-window-publish'}"
                     SetSize="100 38"
                     VerticalAlignment="Center" />
 
@@ -126,21 +124,21 @@
                     HorizontalExpand="True"
                     VerticalAlignment="Center">
 
-                    <Label Text="Significant Publication" />
+                    <Label Text="{Loc 'peer-review-window-significant'}" />
 
                     <Label
-                        Text="5,000 research points"
+                        Text="{Loc 'peer-review-window-significant-reward'}"
                         FontColorOverride="#C5D1C9" />
 
                     <Label
-                        Text="Requires 10 research data"
+                        Name="SignificantRequirementLabel"
                         FontColorOverride="#8FA298" />
 
                 </BoxContainer>
 
                 <Button
                     Name="PublishMediumButton"
-                    Text="Publish"
+                    Text="{Loc 'peer-review-window-publish'}"
                     SetSize="100 38"
                     VerticalAlignment="Center" />
 
@@ -165,21 +163,21 @@
                     HorizontalExpand="True"
                     VerticalAlignment="Center">
 
-                    <Label Text="Major Publication" />
+                    <Label Text="{Loc 'peer-review-window-major'}" />
 
                     <Label
-                        Text="10,000 research points"
+                        Text="{Loc 'peer-review-window-major-reward'}"
                         FontColorOverride="#D5E3D9" />
 
                     <Label
-                        Text="Requires 16 research data"
+                        Name="MajorRequirementLabel"
                         FontColorOverride="#9BB2A3" />
 
                 </BoxContainer>
 
                 <Button
                     Name="PublishLargeButton"
-                    Text="Publish"
+                    Text="{Loc 'peer-review-window-publish'}"
                     SetSize="100 38"
                     VerticalAlignment="Center" />
 
@@ -187,10 +185,9 @@
         </PanelContainer>
 
         <Label
-            Text="Submitted printouts are consumed during compilation."
+            Text="{Loc 'peer-review-window-footer'}"
             FontColorOverride="#84938A"
             HorizontalAlignment="Center" />
 
     </BoxContainer>
 </DefaultWindow>
-

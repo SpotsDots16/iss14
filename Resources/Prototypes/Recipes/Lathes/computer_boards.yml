@@ -86,7 +86,7 @@
   parent: [ BaseCircuitboardRecipe, BaseServiceComputerRecipeCategory ]
   id: MassMediaCircuitboard
   result: ComputerMassMediaCircuitboard
-  
+
 - type: latheRecipe
   parent: [ BaseCircuitboardRecipe, BaseServiceComputerRecipeCategory ]
   id: ComputerPeerReviewCircuitboard
