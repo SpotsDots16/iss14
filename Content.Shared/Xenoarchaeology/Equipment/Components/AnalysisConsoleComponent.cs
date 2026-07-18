@@ -6,25 +6,25 @@ using Robust.Shared.Serialization;
 
 namespace Content.Shared.Xenoarchaeology.Equipment.Components;
 
-/// <summary>
+
 /// The console that is used for artifact analysis
-/// </summary>
+
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true)]
 public sealed partial class AnalysisConsoleComponent : Component
 {
-    /// <summary>
+
     /// The analyzer entity the console is linked.
     /// Can be null if not linked.
-    /// </summary>
+
     [DataField, AutoNetworkedField]
     public EntityUid? AnalyzerEntity;
 
     [DataField]
     public SoundSpecifier? ScanFinishedSound = new SoundPathSpecifier("/Audio/Machines/scan_finish.ogg");
 
-    /// <summary>
+
     /// The sound played when an artifact has points extracted.
-    /// </summary>
+
     [DataField]
     public SoundSpecifier? ExtractSound = new SoundPathSpecifier("/Audio/Effects/radpulse11.ogg")
     {
@@ -34,9 +34,20 @@ public sealed partial class AnalysisConsoleComponent : Component
         }
     };
 
-    /// <summary>
+
+    /// Sound played when the analyzer produces its research printouts.
+
+    [DataField]
+    public SoundSpecifier PrintoutSound = default!;
+
+
+    /// Delay between extracting research and producing the printouts.
+
+    [DataField]
+    public TimeSpan PrintoutDelay = TimeSpan.FromSeconds(0.25);
+
     /// The machine linking port for linking the console with the analyzer.
-    /// </summary>
+
     [DataField]
     public ProtoId<SourcePortPrototype> LinkingPort = "ArtifactAnalyzerSender";
 }

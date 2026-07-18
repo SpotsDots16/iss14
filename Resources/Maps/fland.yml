@@ -2,9 +2,9 @@ meta:
   format: 7
   category: Map
   engineVersion: 277.0.0
-  forkId: ""
-  forkVersion: ""
-  time: 05/27/2026 11:18:32
+  forkId: iss14
+  forkVersion: 1.5.0
+  time: 07/12/2026 12:06:22
   entityCount: 37916
 maps:
 - 1
@@ -38761,12 +38761,6 @@ entities:
       fixtures: {}
 - proto: BaseComputer
   entities:
-  - uid: 6358
-    components:
-    - type: Transform
-      rot: -1.5707963267948966 rad
-      pos: -19.5,57.5
-      parent: 13329
   - uid: 15462
     components:
     - type: Transform
@@ -39751,7 +39745,7 @@ entities:
   - uid: 32367
     components:
     - type: Transform
-      pos: -19.428053,56.613403
+      pos: -19.626514,56.654564
       parent: 13329
   - uid: 32368
     components:
@@ -105977,6 +105971,14 @@ entities:
     components:
     - type: Transform
       pos: 70.5,51.5
+      parent: 13329
+- proto: ComputerPeerReview
+  entities:
+  - uid: 6358
+    components:
+    - type: Transform
+      rot: -1.5707963267948966 rad
+      pos: -19.5,57.5
       parent: 13329
 - proto: ComputerPowerMonitoring
   entities:

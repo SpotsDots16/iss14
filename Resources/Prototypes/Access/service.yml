@@ -15,6 +15,10 @@
   name: id-card-access-level-service
 
 - type: accessLevel
+  id: Library
+  name: id-card-access-level-library
+
+- type: accessLevel
   id: Janitor
   name: id-card-access-level-janitor
 
@@ -38,7 +42,9 @@
   - Kitchen
   - Hydroponics
   - Service
+  - Library
   - Janitor
   - Theatre
   - Chapel
   - Lawyer
+  - Library
