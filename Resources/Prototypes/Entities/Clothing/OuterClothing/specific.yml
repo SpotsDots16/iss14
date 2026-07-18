@@ -18,6 +18,8 @@
       heatingCoefficient: 1.1
       coolingCoefficient: 0.1
     - type: Armor
+      coverage:
+      - Chest
       modifiers:
         coefficients:
           Slash: 0.95

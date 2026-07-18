@@ -15,6 +15,8 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Armor/security.rsi
   - type: Armor #Based on /tg/ but slightly compensated to fit the fact that armor stacks in SS14.
+    coverage:
+    - Chest
     modifiers:
       coefficients:
         Blunt: 0.70
@@ -57,6 +59,9 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Armor/bulletproof.rsi
   - type: Armor
+    coverage: 
+    - Chest
+    - Groin
     modifiers:
       coefficients:
         Blunt: 0.9
@@ -107,6 +112,8 @@
   abstract: true
   components:
   - type: Armor
+    coverage:
+    - Chest
     modifiers:
       coefficients:
         Blunt: 0.5
@@ -153,6 +160,9 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Vests/webvest.rsi
   - type: Armor
+    coverage: 
+    - Chest
+    - Groin
     modifiers:
       coefficients:
         Blunt: 0.6 #ballistic plates = better protection
@@ -177,6 +187,9 @@
     heatingCoefficient: 0.1
     coolingCoefficient: 0.1
   - type: Armor
+    coverage: 
+    - Chest
+    - Groin
     modifiers:
       coefficients:
         Blunt: 0.5
@@ -202,6 +215,9 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Vests/mercwebvest.rsi
   - type: Armor
+    coverage: 
+    - Chest
+    - Groin
     modifiers:
       coefficients:
         Blunt: 0.7 #slightly better overall protection but slightly worse than bulletproof armor against bullets seems sensible
@@ -227,6 +243,11 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Armor/syndie-raid.rsi
   - type: Armor
+    coverage:
+    - Chest
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.35
@@ -299,6 +320,11 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Armor/riot.rsi
   - type: Armor
+    coverage: 
+    - Chest
+    - Hand
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.4
@@ -321,6 +347,12 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Armor/cult_armour.rsi
   - type: Armor
+    coverage:
+    - Chest
+    - Arm
+    - Hand
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.5
@@ -340,6 +372,13 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Armor/heavy.rsi
   - type: Armor
+    coverage:
+    - Chest
+    - Arm
+    - Hand
+    - Groin
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Blunt: 0.2
@@ -407,6 +446,14 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Armor/lingarmor.rsi
   - type: Armor
+    coverage:
+    - Head
+    - Chest
+    - Arm
+    - Hand
+    - Groin
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Blunt: 0.5
@@ -435,6 +482,12 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Armor/bone_armor.rsi
   - type: Armor
+    coverage:
+    - Chest
+    - Arm
+    - Groin
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Blunt: 0.6
@@ -464,6 +517,13 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Armor/podwars_armor.rsi
   - type: Armor
+    coverage:
+    - Chest
+    - Arm
+    - Hand
+    - Groin
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Blunt: 0.5

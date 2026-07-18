@@ -68,6 +68,8 @@
     unequipDelay: 3 #shorter on the helmet.
   - type: IngestionBlocker
   - type: Armor
+    coverage: 
+    - Head
     modifiers:
       coefficients:
         Blunt: 0.9

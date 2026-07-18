@@ -12,6 +12,13 @@
     walkModifier: 0.8
     sprintModifier: 0.8
   - type: Armor
+    coverage:
+    - Chest
+    - Arm
+    - Hand
+    - Groin
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Blunt: 0.9
@@ -61,6 +68,13 @@
   - type: FireProtection
     reduction: 0.65 # doesnt have a full seal so not as good
   - type: Armor
+    coverage:
+    - Chest
+    - Arm
+    - Hand
+    - Groin
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Slash: 0.9
@@ -96,6 +110,13 @@
   - type: FireProtection
     reduction: 0.8 # atmos firesuit offers best protection, hardsuits are a little vulnerable
   - type: Armor
+    coverage:
+    - Chest
+    - Arm
+    - Hand
+    - Groin
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Slash: 0.9
@@ -124,6 +145,13 @@
   - type: Sprite
     sprite: Clothing/OuterClothing/Suits/rad.rsi
   - type: Armor
+    coverage:
+    - Chest
+    - Arm
+    - Hand
+    - Groin
+    - Leg
+    - Foot
     modifiers:
       coefficients:
         Heat: 0.90
@@ -161,6 +189,11 @@
     heatingCoefficient: 0.01
     coolingCoefficient: 0.01
   - type: Armor
+    coverage:
+    - Chest
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Blunt: 0.8
