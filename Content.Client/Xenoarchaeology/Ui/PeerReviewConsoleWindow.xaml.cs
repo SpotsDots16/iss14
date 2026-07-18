@@ -42,6 +42,17 @@ public sealed partial class PeerReviewConsoleWindow : DefaultWindow
         SignificantPublicationPanel.PanelOverride = CreatePanel("#294236");
         MajorPublicationPanel.PanelOverride = CreatePanel("#2D4B3B");
 
+        // Requirement labels come from the shared constants so UI and server can't drift apart.
+        MinorRequirementLabel.Text = Loc.GetString("peer-review-window-requires",
+            ("count", PeerReviewConsoleConstants.SmallPublicationCost));
+        SignificantRequirementLabel.Text = Loc.GetString("peer-review-window-requires",
+            ("count", PeerReviewConsoleConstants.MediumPublicationCost));
+        MajorRequirementLabel.Text = Loc.GetString("peer-review-window-requires",
+            ("count", PeerReviewConsoleConstants.LargePublicationCost));
+
+        StoredValueLabel.Text = Loc.GetString("peer-review-window-units", ("count", 0));
+        StoredStatusLabel.Text = Loc.GetString("peer-review-window-status-waiting");
+
         PublishSmallButton.OnPressed += _ =>
             PublishRequested?.Invoke(PublicationTier.Small);
 
@@ -54,20 +65,20 @@ public sealed partial class PeerReviewConsoleWindow : DefaultWindow
 
     public void UpdateState(PeerReviewConsoleUiState state)
     {
-        StoredValueLabel.Text = $"{state.StoredValue} units";
+        StoredValueLabel.Text = Loc.GetString("peer-review-window-units", ("count", state.StoredValue));
 
         StoredStatusLabel.Text = state.StoredValue switch
         {
             >= PeerReviewConsoleConstants.LargePublicationCost =>
-                "Major publication available",
+                Loc.GetString("peer-review-window-status-major"),
 
             >= PeerReviewConsoleConstants.MediumPublicationCost =>
-                "Significant publication available",
+                Loc.GetString("peer-review-window-status-significant"),
 
             >= PeerReviewConsoleConstants.SmallPublicationCost =>
-                "Minor publication available",
+                Loc.GetString("peer-review-window-status-minor"),
 
-            _ => "Awaiting additional submitted findings",
+            _ => Loc.GetString("peer-review-window-status-waiting"),
         };
 
         PublishSmallButton.Disabled =

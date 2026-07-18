@@ -6,25 +6,25 @@ using Robust.Shared.Serialization;
 
 namespace Content.Shared.Xenoarchaeology.Equipment.Components;
 
-
+/// <summary>
 /// The console that is used for artifact analysis
-
+/// </summary>
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true)]
 public sealed partial class AnalysisConsoleComponent : Component
 {
-
+    /// <summary>
     /// The analyzer entity the console is linked.
     /// Can be null if not linked.
-
+    /// </summary>
     [DataField, AutoNetworkedField]
     public EntityUid? AnalyzerEntity;
 
     [DataField]
     public SoundSpecifier? ScanFinishedSound = new SoundPathSpecifier("/Audio/Machines/scan_finish.ogg");
 
-
+    /// <summary>
     /// The sound played when an artifact has points extracted.
-
+    /// </summary>
     [DataField]
     public SoundSpecifier? ExtractSound = new SoundPathSpecifier("/Audio/Effects/radpulse11.ogg")
     {
@@ -34,20 +34,21 @@ public sealed partial class AnalysisConsoleComponent : Component
         }
     };
 
-
-    /// Sound played when the analyzer produces its research printouts.
-
+    /// <summary>
+    /// Sound played when the analyzer produces its research printout.
+    /// </summary>
     [DataField]
-    public SoundSpecifier PrintoutSound = default!;
+    public SoundSpecifier? PrintoutSound;
 
-
-    /// Delay between extracting research and producing the printouts.
-
+    /// <summary>
+    /// Delay between extracting research and producing the printout.
+    /// </summary>
     [DataField]
     public TimeSpan PrintoutDelay = TimeSpan.FromSeconds(0.25);
 
+    /// <summary>
     /// The machine linking port for linking the console with the analyzer.
-
+    /// </summary>
     [DataField]
     public ProtoId<SourcePortPrototype> LinkingPort = "ArtifactAnalyzerSender";
 }
@@ -60,4 +61,3 @@ public enum ArtifactAnalyzerUiKey : byte
 
 [Serializable, NetSerializable]
 public sealed class AnalysisConsoleExtractButtonPressedMessage : BoundUserInterfaceMessage;
-
