@@ -268,3 +268,129 @@
     - id: CigaretteSaline
       weight: 7
 
+
+#Empty cig pack stuff
+
+- type: entity
+  id: EmptyCigPackBase
+  parent: [ BaseStorageItem, BaseBagOpenClose ]
+  name: cigarette pack
+  abstract: true
+  components:
+  - type: Sprite
+    layers:
+    - state: closed
+      map: ["closeLayer"]
+    - state: open
+      map: ["openLayer"]
+      visible: false
+    - state: cig1
+      map: ["cig1"]
+      sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/visualizer.rsi
+      visible: false
+    - state: cig2
+      map: ["cig2"]
+      sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/visualizer.rsi
+      visible: false
+    - state: cig3
+      map: ["cig3"]
+      sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/visualizer.rsi
+      visible: false
+    - state: cig4
+      map: ["cig4"]
+      sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/visualizer.rsi
+      visible: false
+    - state: cig5
+      map: ["cig5"]
+      sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/visualizer.rsi
+      visible: false
+    - state: cig6
+      map: ["cig6"]
+      sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/visualizer.rsi
+      visible: false
+  - type: Tag
+    tags:
+    - CigPack
+    - Trash
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 50
+  - type: SpaceGarbage
+  - type: Item
+    size: Tiny
+    shape: # Yes, this is cursed, but it breaks otherwise, dont question it.
+    - 0,0,0,1
+  - type: Storage
+    grid:
+    - 0,0,4,1
+  - type: Appearance
+
+- type: entity
+  id: CigPackEmptyGreen
+  parent: EmptyCigPackBase
+  name: Empty Spessman's Smokes packet
+  description: A packet capable of holding cigarettes.
+  components:
+  - type: Sprite
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/green.rsi
+  - type: Item
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/green.rsi
+  - type: Construction
+    graph: CigPackEmptyGreenGraph
+    node: pack
+    
+- type: entity
+  id: CigPackEmptyRed
+  parent: EmptyCigPackBase
+  name: Empty DromedaryCo packet
+  description: A packet capable of holding cigarettes.
+  components:
+  - type: Sprite
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/red.rsi
+  - type: Item
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/red.rsi
+  - type: Construction
+    graph: CigPackEmptyRedGraph
+    node: pack
+    
+- type: entity
+  id: CigPackEmptyBlue
+  parent: EmptyCigPackBase
+  name: Empty AcmeCo packet
+  description: A packet capable of holding cigarettes.
+  components:
+  - type: Sprite
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/blue.rsi
+  - type: Item
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/blue.rsi
+  - type: Construction
+    graph: CigPackEmptyBlueGraph
+    node: pack
+    
+- type: entity
+  id: CigPackEmptyBlack
+  parent: EmptyCigPackBase
+  name: Empty Nomads packet
+  description: A packet capable of holding cigarettes.
+  components:
+  - type: Sprite
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/black.rsi
+  - type: Item
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/black.rsi
+  - type: Construction
+    graph: CigPackEmptyBlackGraph
+    node: pack
+    
+- type: entity
+  id: CigPackEmptyMixed
+  parent: EmptyCigPackBase
+  name: Empty Dan's soaked smokes packet
+  description: A packet capable of holding cigarettes.
+  components:
+  - type: Sprite
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/mixed.rsi
+  - type: Item
+    sprite: Objects/Consumable/Smokeables/Cigarettes/Packs/mixed.rsi
+  - type: Construction
+    graph: CigPackEmptyMixedGraph
+    node: pack

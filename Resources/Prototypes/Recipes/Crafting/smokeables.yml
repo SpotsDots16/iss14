@@ -67,3 +67,87 @@
   category: construction-category-misc
 #    color: brown
   objectType: Item
+  
+# Empty smoke cartons
+  
+- type: construction
+  id: CigCartonEmptyGreen
+  graph: CigCartonEmptyGreen
+  startNode: start
+  targetNode: carton
+  category: construction-category-misc
+  objectType: Item
+
+- type: construction
+  id: CigCartonEmptyRed
+  graph: CigCartonEmptyRed
+  startNode: start
+  targetNode: carton
+  category: construction-category-misc
+  objectType: Item
+
+- type: construction
+  id: CigCartonEmptyBlue
+  graph: CigCartonEmptyBlue
+  startNode: start
+  targetNode: carton
+  category: construction-category-misc
+  objectType: Item
+
+- type: construction
+  id: CigCartonEmptyBlack
+  graph: CigCartonEmptyBlack
+  startNode: start
+  targetNode: carton
+  category: construction-category-misc
+  objectType: Item
+
+- type: construction
+  id: CigCartonEmptyMixed
+  graph: CigCartonEmptyMixed
+  startNode: start
+  targetNode: carton
+  category: construction-category-misc
+  objectType: Item
+  
+# Empty smoke packs
+  
+- type: construction
+  id: CigPackEmptyGreen
+  graph: CigPackEmptyGreenGraph
+  startNode: start
+  targetNode: pack
+  category: construction-category-misc
+  objectType: Item
+
+- type: construction
+  id: CigPackEmptyRed
+  graph: CigPackEmptyRedGraph
+  startNode: start
+  targetNode: pack
+  category: construction-category-misc
+  objectType: Item
+
+- type: construction
+  id: CigPackEmptyBlue
+  graph: CigPackEmptyBlueGraph
+  startNode: start
+  targetNode: pack
+  category: construction-category-misc
+  objectType: Item
+
+- type: construction
+  id: CigPackEmptyBlack
+  graph: CigPackEmptyBlackGraph
+  startNode: start
+  targetNode: pack
+  category: construction-category-misc
+  objectType: Item
+
+- type: construction
+  id: CigPackEmptyMixed
+  graph: CigPackEmptyMixedGraph
+  startNode: start
+  targetNode: pack
+  category: construction-category-misc
+  objectType: Item
