@@ -19,7 +19,7 @@ namespace Content.Shared._DV.NanoChat;
 /// <summary>
 ///     Base system for NanoChat functionality shared between client and server.
 /// </summary>
-public abstract class SharedNanoChatSystem : EntitySystem
+public abstract partial class SharedNanoChatSystem : EntitySystem
 {
     [Dependency] private IGameTiming _timing = default!;
 

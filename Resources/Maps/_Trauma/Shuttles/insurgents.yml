@@ -19,8 +19,8 @@ tilemap:
   5: FloorTechMaint
   4: FloorTechMaint2
   1: Lattice
-  6: LatticeDiagonalSE
-  7: LatticeDiagonalSW
+  6: Lattice
+  7: Lattice
   2: Plating
 entities:
 - proto: ""
@@ -107,19 +107,11 @@ entities:
           - 0
           - 0
           - 0
-          - 0
-          - 0
-          - 0
-          - 0
         - volume: 2500
           temperature: 293.15
           moles:
           - 21.824879
           - 82.10312
-          - 0
-          - 0
-          - 0
-          - 0
           - 0
           - 0
           - 0

@@ -19,6 +19,7 @@ namespace Content.IntegrationTests.Tests._Shitmed;
 public sealed class SkeletonMilkTest : GameTest
 {
     private static readonly Robust.Shared.Prototypes.ProtoId<Content.Shared.Damage.Prototypes.DamageTypePrototype> BluntDamage = "Blunt";
+    private static readonly Robust.Shared.Prototypes.ProtoId<ReagentPrototype> Milk = "Milk";
 
     [Test]
     public async Task MilkSplashHealsSkeleton()
@@ -53,7 +54,7 @@ public sealed class SkeletonMilkTest : GameTest
 
             // Splash 10u of milk, exactly how spills/vapor touch reactions do it.
             var milk = new Solution();
-            milk.AddReagent("Milk", FixedPoint2.New(10));
+            milk.AddReagent(Milk, FixedPoint2.New(10));
             reactive.DoEntityReaction(skeleton, milk, ReactionMethod.Touch);
 
 #pragma warning disable CS0618
