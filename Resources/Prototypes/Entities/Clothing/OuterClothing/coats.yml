@@ -66,7 +66,7 @@
   id: ClothingOuterArmorHoS
   components:
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -85,7 +85,7 @@
   id: ClothingOuterArmorWarden
   components:
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -146,7 +146,7 @@
     heatingCoefficient: 0.1
     coolingCoefficient: 0.1
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -166,7 +166,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/labcoat.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -191,7 +191,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/labcoat_chem.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -216,7 +216,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/labcoat_viro.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -241,7 +241,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/labcoat_gene.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -266,7 +266,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/labcoat_cmo.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -293,7 +293,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/labcoat_sci.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -318,7 +318,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/labcoat_robo.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -343,7 +343,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/labcoat_rd.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -413,7 +413,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/dogi.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -468,7 +468,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/brigmedic.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -492,7 +492,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/labcoat_senior_researcher.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin
@@ -517,7 +517,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Coats/labcoat_senior_physician.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin

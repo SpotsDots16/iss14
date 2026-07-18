@@ -59,7 +59,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Armor/bulletproof.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Groin
     modifiers:
@@ -160,7 +160,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Vests/webvest.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Groin
     modifiers:
@@ -187,7 +187,7 @@
     heatingCoefficient: 0.1
     coolingCoefficient: 0.1
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Groin
     modifiers:
@@ -215,7 +215,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Vests/mercwebvest.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Groin
     modifiers:
@@ -320,7 +320,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Armor/riot.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Hand
     - Groin

@@ -67,7 +67,7 @@
     equipDelay: 5
     unequipDelay: 5 #Its insane more armor/hardsuits don't have equip times tbh?
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin

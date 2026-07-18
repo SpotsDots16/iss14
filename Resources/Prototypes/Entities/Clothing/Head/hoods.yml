@@ -13,7 +13,7 @@
   - type: IngestionBlocker
   - type: GroupExamine
   - type: Armor
-    coverage: 
+    coverage:
     - Head
     modifiers: { }
   - type: ZombificationResistance
@@ -162,7 +162,7 @@
   - type: Clothing
     sprite: Clothing/Head/Hoods/rad.rsi
   - type: Armor
-    coverage: 
+    coverage:
     - Head
     modifiers:
       coefficients:

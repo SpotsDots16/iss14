@@ -218,7 +218,7 @@
     graph: BananaClownJumpsuit
     node: jumpsuit
   - type: Armor
-    coverage: 
+    coverage:
     - Chest
     - Arm
     - Groin

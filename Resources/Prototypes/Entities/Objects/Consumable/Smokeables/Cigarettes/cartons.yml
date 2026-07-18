@@ -97,7 +97,7 @@
 - type: entity
   id: CigCartonEmptyGreen
   parent: [ BoxCardboard, BaseBagOpenClose ]
-  name: Empty Spessman's Smokes carton
+  name: empty Spessman's Smokes carton
   description: A cardboard carton capable of holding cigarette packs.
   components:
   - type: Sprite
@@ -120,7 +120,7 @@
 - type: entity
   id: CigCartonEmptyRed
   parent: CigCartonEmptyGreen
-  name: Empty DromedaryCo carton
+  name: empty DromedaryCo carton
   components:
   - type: Sprite
     sprite: Objects/Consumable/Smokeables/Cigarettes/Cartons/red.rsi
@@ -131,7 +131,7 @@
 - type: entity
   id: CigCartonEmptyBlue
   parent: CigCartonEmptyGreen
-  name: Empty AcmeCo carton
+  name: empty AcmeCo carton
   components:
   - type: Sprite
     sprite: Objects/Consumable/Smokeables/Cigarettes/Cartons/blue.rsi
@@ -142,7 +142,7 @@
 - type: entity
   id: CigCartonEmptyBlack
   parent: CigCartonEmptyGreen
-  name: Empty Nomads carton
+  name: empty Nomads carton
   components:
   - type: Sprite
     sprite: Objects/Consumable/Smokeables/Cigarettes/Cartons/black.rsi
@@ -153,7 +153,7 @@
 - type: entity
   id: CigCartonEmptyMixed
   parent: CigCartonEmptyGreen
-  name: Empty Dan's soaked smokes carton
+  name: empty Dan's soaked smokes carton
   components:
   - type: Sprite
     sprite: Objects/Consumable/Smokeables/Cigarettes/Cartons/mixed.rsi

@@ -163,7 +163,7 @@
     fiberMaterial: fibers-durathread
     fiberColor: fibers-black
   - type: Armor
-    coverage: 
+    coverage:
     - Hand
     modifiers:
       coefficients:
