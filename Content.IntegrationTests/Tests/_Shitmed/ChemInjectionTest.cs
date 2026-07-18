@@ -20,6 +20,7 @@ namespace Content.IntegrationTests.Tests._Shitmed;
 public sealed class ChemInjectionTest : GameTest
 {
     private static readonly Robust.Shared.Prototypes.ProtoId<Content.Shared.Damage.Prototypes.DamageTypePrototype> BluntDamage = "Blunt";
+    private static readonly Robust.Shared.Prototypes.ProtoId<Content.Shared.Chemistry.Reagent.ReagentPrototype> Tricordrazine = "Tricordrazine";
 
     [Test]
     public async Task InjectedTricordrazineMetabolizesAndHeals()
@@ -72,8 +73,8 @@ public sealed class ChemInjectionTest : GameTest
 
             // Inject 15u of tricordrazine, like a syringe would.
             var payload = new Solution();
-            payload.AddReagent("Tricordrazine", FixedPoint2.New(15));
-            Assert.That(solutions.TryAddSolution(injectable.Value, payload),
+            payload.AddReagent(Tricordrazine, FixedPoint2.New(15));
+            Assert.That(solutions.TryAddSolution(injectable!.Value, payload),
                 "TryAddSolution into the injectable solution failed - injection would do nothing.");
 
             var injected = injectableSolution.GetTotalPrototypeQuantity("Tricordrazine");

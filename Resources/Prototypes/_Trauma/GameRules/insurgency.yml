@@ -7,6 +7,10 @@
   components:
   - type: GameRule
     minPlayers: 5
+    # iss14: Insurgency rides along with the Secret preset; below the player minimum it must
+    # quietly skip instead of cancelling the whole preset (which sent round start into the
+    # 30 second delayed-restart fallback loop on low pop).
+    cancelPresetOnTooFewPlayers: false
   - type: NestedRule
     rules: !type:GroupSelector
       children:

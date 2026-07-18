@@ -28,7 +28,7 @@ namespace Content.Server._DV.NanoChat;
 /// <summary>
 ///     Handles NanoChat features that are specific to the server but not related to the cartridge itself.
 /// </summary>
-public sealed class NanoChatSystem : SharedNanoChatSystem
+public sealed partial class NanoChatSystem : SharedNanoChatSystem
 {
     [Dependency] private IAdminLogManager _adminLogger = default!;
     [Dependency] private IRobustRandom _random = default!;

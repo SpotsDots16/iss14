@@ -17,7 +17,6 @@ using Content.Server.Administration.Logs;
 using Content.Server.CartridgeLoader;
 using Content.Server.Power.Components;
 using Content.Server.Radio;
-using Content.Shared.Radio.Components; // iss14: TelecomServerComponent is shared here
 using Content.Server.Station.Systems;
 using Content.Shared.Access.Components;
 using Content.Shared.CartridgeLoader;
@@ -34,7 +33,7 @@ using Robust.Shared.Utility; // Goob
 
 namespace Content.Server._DV.CartridgeLoader.Cartridges;
 
-public sealed class NanoChatCartridgeSystem : EntitySystem
+public sealed partial class NanoChatCartridgeSystem : EntitySystem
 {
     [Dependency] private CartridgeLoaderSystem _cartridge = default!;
     [Dependency] private IAdminLogManager _adminLogger = default!;

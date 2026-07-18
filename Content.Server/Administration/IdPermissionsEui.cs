@@ -22,7 +22,7 @@ namespace Content.Server.Administration;
 /// Server side of the admin ID permissions editor: a privileged version of the ID card console bound to a
 /// specific ID card entity. No privileged-ID or console access-level restrictions apply.
 /// </summary>
-public sealed class IdPermissionsEui : BaseEui
+public sealed partial class IdPermissionsEui : BaseEui
 {
     [Dependency] private IAdminManager _admins = default!;
     [Dependency] private IEntityManager _entities = default!;

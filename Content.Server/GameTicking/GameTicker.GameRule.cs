@@ -431,6 +431,12 @@ public sealed partial class GameTicker
         var query = EntityQueryEnumerator<GameRuleComponent>();
         while (query.MoveNext(out var uid, out var gameRule))
         {
+            // iss14: rules ended by a previous failed attempt this tick still exist until their
+            // queued deletion runs; without this they poison every fallback preset in the same
+            // start attempt (e.g. a cancelled Secret rule failing Extended too).
+            if (HasComp<EndedGameRuleComponent>(uid))
+                continue;
+
             var minPlayers = gameRule.MinPlayers;
             var name = ToPrettyString(uid);
 

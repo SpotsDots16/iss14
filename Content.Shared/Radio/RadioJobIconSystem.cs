@@ -14,7 +14,7 @@ namespace Content.Shared.Radio;
 /// Ported from Goob-Station's RadioJobIconSystem: the icon comes from the ID card the speaker
 /// carries (in hand or inside their PDA), not from their mind's job role.
 /// </summary>
-public sealed class RadioJobIconSystem : EntitySystem
+public sealed partial class RadioJobIconSystem : EntitySystem
 {
     [Dependency] private AccessReaderSystem _accessReader = default!;
     [Dependency] private SharedIdCardSystem _idCardSystem = default!;
