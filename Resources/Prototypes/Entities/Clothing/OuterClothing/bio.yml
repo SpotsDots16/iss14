@@ -13,6 +13,11 @@
     slots:
     - Tail
   - type: Armor
+    coverage:
+    - Chest
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Caustic: 0.75
@@ -78,6 +83,11 @@
     slots:
     - Tail
   - type: Armor
+    coverage:
+    - Chest
+    - Arm
+    - Groin
+    - Leg
     modifiers:
       coefficients:
         Caustic: 0.8

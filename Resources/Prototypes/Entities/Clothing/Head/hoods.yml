@@ -13,6 +13,8 @@
   - type: IngestionBlocker
   - type: GroupExamine
   - type: Armor
+    coverage: 
+    - Head
     modifiers: { }
   - type: ZombificationResistance
     zombificationResistanceCoefficient: 0.9
@@ -160,6 +162,8 @@
   - type: Clothing
     sprite: Clothing/Head/Hoods/rad.rsi
   - type: Armor
+    coverage: 
+    - Head
     modifiers:
       coefficients:
         Heat: 0.95
