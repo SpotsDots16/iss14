@@ -1,0 +1,11 @@
+# iss14: Tajaran organs for the part-based (Shitmed) body system.
+# Animal stomach (obligate carnivore per Carpmosia), same solution setup as Vulpkanin.
+- type: entity
+  id: OrganTajaranStomach
+  parent: OrganAnimalStomach
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: SolutionManager
+    solutions:
+    - SolutionStomach
+    - SolutionOrganFood
