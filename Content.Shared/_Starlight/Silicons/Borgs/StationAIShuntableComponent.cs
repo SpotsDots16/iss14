@@ -1,3 +1,5 @@
+// Ported from Starlight (https://github.com/ss14Starlight/space-station-14).
+// Starlight code is MIT / Starlight License; the Starlight License requires this attribution.
 using Content.Shared.Actions.Components;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
