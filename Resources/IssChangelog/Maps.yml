@@ -2,6 +2,13 @@ Name: Maps
 Order: 2
 Entries:
 - author: issyman182
+  version: iss14:1.8.0
+  time: '2026-07-18'
+  changes:
+  - message: All station maps now have a Peer Review Console.
+    type: Add
+  id: 2
+- author: issyman182
   time: '2026-06-24'
   changes:
   - message: Tab created. Fork map changes will be tracked here.

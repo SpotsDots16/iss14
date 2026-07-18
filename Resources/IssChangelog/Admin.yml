@@ -14,6 +14,8 @@ Entries:
     type: Add
   - message: The variable editor (VV) can now edit enum fields — type a value name, number, or comma-separated flag list — instead of showing them read-only.
     type: Add
+  - message: Fixed a crash in the Entity Census panel.
+    type: Fix
   id: 11
 - author: issyman182
   version: iss14:1.7.0
