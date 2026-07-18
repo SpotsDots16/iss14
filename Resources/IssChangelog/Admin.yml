@@ -3,6 +3,19 @@ Order: 3
 AdminOnly: true
 Entries:
 - author: issyman182
+  version: iss14:1.8.0
+  time: '2026-07-18'
+  changes:
+  - message: ID permissions panel — right-click any ID card and pick the admin "Edit ID / Permissions" verb to edit its accesses, job title and icon directly, no ID card computer needed. Also available as the "idpermissions <username|userId|uid>" command.
+    type: Add
+  - message: Per-map population ranges — the voting config window now has a panel to set a min/max player count per map. Maps outside the range are dropped from the pool when "filter map pool by player count" is enabled.
+    type: Add
+  - message: New "crewmanifest" Toolshed commands (addto/removefrom/addplayer/removeplayer) to put players on a station's crew manifest and records mid-round.
+    type: Add
+  - message: The variable editor (VV) can now edit enum fields — type a value name, number, or comma-separated flag list — instead of showing them read-only.
+    type: Add
+  id: 11
+- author: issyman182
   version: iss14:1.7.0
   time: '2026-07-08'
   changes:
