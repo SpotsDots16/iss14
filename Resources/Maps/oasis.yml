@@ -2,10 +2,10 @@ meta:
   format: 7
   category: Map
   engineVersion: 277.0.0
-  forkId: ""
-  forkVersion: ""
-  time: 05/26/2026 23:53:10
-  entityCount: 31153
+  forkId: iss14
+  forkVersion: 1.5.0
+  time: 07/12/2026 10:59:55
+  entityCount: 31154
 maps:
 - 1
 grids:
@@ -16164,7 +16164,7 @@ entities:
       pos: -22.5,26.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -258110.02
+      secondsUntilStateChange: -258377.25
       state: Opening
     - type: DeviceLinkSource
       lastSignals:
@@ -17024,7 +17024,7 @@ entities:
       lastSignals:
         DoorStatus: True
     - type: Door
-      secondsUntilStateChange: -356938.66
+      secondsUntilStateChange: -357205.9
       state: Opening
   - uid: 6934
     components:
@@ -17036,7 +17036,7 @@ entities:
       lastSignals:
         DoorStatus: True
     - type: Door
-      secondsUntilStateChange: -356941.28
+      secondsUntilStateChange: -357208.53
       state: Opening
   - uid: 6935
     components:
@@ -17048,7 +17048,7 @@ entities:
       lastSignals:
         DoorStatus: True
     - type: Door
-      secondsUntilStateChange: -356940.12
+      secondsUntilStateChange: -357207.38
       state: Opening
   - uid: 6936
     components:
@@ -17059,7 +17059,7 @@ entities:
       lastSignals:
         DoorStatus: True
     - type: Door
-      secondsUntilStateChange: -356939.34
+      secondsUntilStateChange: -357206.6
       state: Opening
 - proto: AirlockTheatreLocked
   entities:
@@ -84094,6 +84094,14 @@ entities:
       rot: -1.5707963267948966 rad
       pos: -7.5,-33.5
       parent: 2
+- proto: ComputerPeerReview
+  entities:
+  - uid: 28553
+    components:
+    - type: Transform
+      rot: 1.5707963267948966 rad
+      pos: -18.5,32.5
+      parent: 2
 - proto: ComputerPowerMonitoring
   entities:
   - uid: 2377
@@ -101028,7 +101036,7 @@ entities:
       pos: -13.5,-1.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -348262.66
+      secondsUntilStateChange: -348529.9
     - type: DeviceNetwork
       deviceLists:
       - 18275
@@ -147149,7 +147157,7 @@ entities:
       pos: 36.5,-35.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -385094.44
+      secondsUntilStateChange: -385361.7
       state: Opening
   - uid: 5211
     components:
@@ -181774,6 +181782,10 @@ entities:
           showEnts: False
           occludes: True
           ents: []
+        DisposalUnitComponent: !type:Container
+          showEnts: False
+          occludes: True
+          ents: []
   - uid: 10199
     components:
     - type: Transform
@@ -181787,6 +181799,10 @@ entities:
           occludes: True
           ent: 24076
         disposals: !type:Container
+          showEnts: False
+          occludes: True
+          ents: []
+        DisposalUnitComponent: !type:Container
           showEnts: False
           occludes: True
           ents: []
@@ -181806,6 +181822,10 @@ entities:
           showEnts: False
           occludes: True
           ents: []
+        DisposalUnitComponent: !type:Container
+          showEnts: False
+          occludes: True
+          ents: []
   - uid: 22442
     components:
     - type: Transform
@@ -181821,6 +181841,10 @@ entities:
           showEnts: False
           occludes: True
           ents: []
+        DisposalUnitComponent: !type:Container
+          showEnts: False
+          occludes: True
+          ents: []
   - uid: 23643
     components:
     - type: Transform
@@ -181833,6 +181857,10 @@ entities:
           occludes: True
           ent: 24078
         disposals: !type:Container
+          showEnts: False
+          occludes: True
+          ents: []
+        DisposalUnitComponent: !type:Container
           showEnts: False
           occludes: True
           ents: []
@@ -181854,6 +181882,10 @@ entities:
           showEnts: False
           occludes: True
           ents: []
+        DisposalUnitComponent: !type:Container
+          showEnts: False
+          occludes: True
+          ents: []
 - proto: ToiletGoldenDirtyWater
   entities:
   - uid: 15249
@@ -181869,6 +181901,10 @@ entities:
           occludes: True
           ent: 24079
         disposals: !type:Container
+          showEnts: False
+          occludes: True
+          ents: []
+        DisposalUnitComponent: !type:Container
           showEnts: False
           occludes: True
           ents: []
@@ -204324,7 +204360,7 @@ entities:
       pos: 24.5,2.5
       parent: 21002
     - type: Door
-      secondsUntilStateChange: -730299.06
+      secondsUntilStateChange: -730566.3
       state: Opening
   - uid: 28863
     components:

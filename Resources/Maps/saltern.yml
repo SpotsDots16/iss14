@@ -2,10 +2,10 @@ meta:
   format: 7
   category: Map
   engineVersion: 277.0.0
-  forkId: ""
-  forkVersion: ""
-  time: 05/27/2026 10:20:54
-  entityCount: 11452
+  forkId: iss14
+  forkVersion: 1.5.0
+  time: 07/12/2026 11:08:44
+  entityCount: 11454
 maps:
 - 658
 grids:
@@ -6625,7 +6625,7 @@ entities:
   - uid: 7320
     components:
     - type: Transform
-      pos: 8.832731,-28.412178
+      pos: 8.907709,-28.394955
       parent: 31
 - proto: Bookshelf
   entities:
@@ -25999,6 +25999,12 @@ entities:
     - type: Transform
       pos: 7.5,20.5
       parent: 31
+  - uid: 7261
+    components:
+    - type: Transform
+      rot: 1.5707963267948966 rad
+      pos: 11.654801,-27.390657
+      parent: 31
   - uid: 7294
     components:
     - type: Transform
@@ -27938,6 +27944,14 @@ entities:
     - type: Transform
       rot: 1.5707963267948966 rad
       pos: 37.5,0.5
+      parent: 31
+- proto: ComputerPeerReview
+  entities:
+  - uid: 4910
+    components:
+    - type: Transform
+      rot: -1.5707963267948966 rad
+      pos: 12.5,-27.5
       parent: 31
 - proto: ComputerPowerMonitoring
   entities:
@@ -58300,10 +58314,11 @@ entities:
       parent: 31
 - proto: SpawnMobMouse
   entities:
-  - uid: 7296
+  - uid: 4389
     components:
     - type: Transform
-      pos: 12.5,-27.5
+      rot: 1.5707963267948966 rad
+      pos: 10.5,-27.5
       parent: 31
   - uid: 7899
     components:
@@ -61431,7 +61446,7 @@ entities:
   - uid: 7297
     components:
     - type: Transform
-      pos: 12.359465,-27.5578
+      pos: 10.482602,-27.437532
       parent: 31
 - proto: ToyRubberDuck
   entities:

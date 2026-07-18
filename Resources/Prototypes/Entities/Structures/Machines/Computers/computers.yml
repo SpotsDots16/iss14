@@ -532,6 +532,8 @@
       state: generic_panel_open
   - type: ResearchClient
   - type: AnalysisConsole
+    printoutSound:
+      path: /Audio/Machines/short_print_and_rip.ogg
   - type: DeviceList
   - type: DeviceNetwork
     deviceNetId: Wired
