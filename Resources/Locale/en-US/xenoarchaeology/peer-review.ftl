@@ -30,7 +30,7 @@ peer-review-window-publish = Publish
 peer-review-window-footer = Submitted printouts are consumed during compilation.
 
 # Artifact research printout
-artifact-report-header = SCINET XENOARCHAEOLOGICAL ANALYSIS REPORT
+artifact-report-header = XENOARCHAEOLOGICAL ANALYSIS REPORT
 artifact-report-subject = Artifact subject: {$name}
 artifact-report-node-line = Node {$id} (depth {$depth}): {$points} points
 artifact-report-total = Total research extracted: {$points} points
