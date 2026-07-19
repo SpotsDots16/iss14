@@ -6,3 +6,9 @@
   components:
   - type: ArtifactResearchPrintout
     value: 1
+
+- type: entity
+  parent: Paper
+  id: ArtifactPublicationReport
+  name: xenoarchaeological publication
+  description: A published record of station artifact research.
