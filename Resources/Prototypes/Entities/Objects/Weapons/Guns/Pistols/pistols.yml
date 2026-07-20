@@ -68,6 +68,7 @@
   - type: Appearance
   - type: StaticPrice
     price: 500
+  - type: GunshotResidueSource
 
 - type: entity
   name: viper
