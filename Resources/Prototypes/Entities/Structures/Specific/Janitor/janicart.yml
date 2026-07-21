@@ -162,7 +162,7 @@
     # Direct click insertion is disabled to preserve solution interactions.
   - type: Storage
     grid:
-    - 0,0,9,7
+    - 0,0,7,5
     maxItemSize: Large
     clickInsert: false
     whitelist:
