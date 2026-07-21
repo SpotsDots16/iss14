@@ -159,81 +159,27 @@
       visible: false
   - type: Rotatable
   - type: InteractionOutline
-  # Removing storage until OnInteractUsing logic resolved
-  #- type: Storage
-  #  popup: false
-  #  capacity: 80
-  #  blacklist: # there is exclusive item slots for that
-  #    tags:
-  #    - Mop
-  #    - TrashBag
-  #    - Bucket
-  - type: ItemSlots
-    slots:
-      mop_slot:
-        name: janitorial-trolley-slot-component-slot-name-mop
-        whitelist:
-          tags:
-          - Mop
-        insertOnInteract: false # or it conflicts with bucket logic
-        priority: 9 # Higher than bucket slot
-      plunger_slot:
-        name: janitorial-trolley-slot-component-slot-name-plunger
-        whitelist:
-          tags:
-          - Plunger
-          - GoldenPlunger
-        priority: 8
-      wetfloorsign_slot4:
-        name: janitorial-trolley-slot-component-slot-name-sign
-        whitelist:
-          tags:
-          - WetFloorSign
-        priority: 7
-      wetfloorsign_slot3:
-        name: janitorial-trolley-slot-component-slot-name-sign
-        whitelist:
-          tags:
-          - WetFloorSign
-        priority: 7
-      wetfloorsign_slot2:
-        name: janitorial-trolley-slot-component-slot-name-sign
-        whitelist:
-          tags:
-          - WetFloorSign
-        priority: 7
-      wetfloorsign_slot1:
-        name: janitorial-trolley-slot-component-slot-name-sign
-        whitelist:
-          tags:
-          - WetFloorSign
-        priority: 7
-      lightreplacer_slot:
-        name: janitorial-trolley-slot-component-slot-name-lightreplacer
-        whitelist:
-          components:
-          - LightReplacer
-        priority: 6
-      spraybottle_slot:
-        name: janitorial-trolley-slot-component-slot-name-spray
-        whitelist:
-          tags:
-          - Spray
-        insertOnInteract: false # or it conflicts with bucket logic
-        priority: 5 # Higher than bucket slot
-      bucket_slot:
-        name: janitorial-trolley-slot-component-slot-name-bucket
-        whitelist:
-          tags:
-          - Bucket
-        insertOnInteract: false # or it also conflicts with bucket logic
-        priority: 4 # Higher than trash bag slot
-      trashbag_slot:
-        name: janitorial-trolley-slot-component-slot-name-trashbag
-        whitelist:
-          tags:
-          - TrashBag
-        priority: 3 # Higher than drinking priority
+    # Direct click insertion is disabled to preserve solution interactions.
+  - type: Storage
+    grid:
+    - 0,0,9,7
+    maxItemSize: Large
+    clickInsert: false
+    whitelist:
+      tags:
+      - Mop
+      - Plunger
+      - GoldenPlunger
+      - WetFloorSign
+      - LightReplacer
+      - Spray
+      - Bucket
+      - TrashBag
+      - TrashBagBlue
+      - Soap
+      - WireBrush
+      - HolosignProjector
+      - CleanerGrenade
   - type: Fixtures
     fixtures:
       fix1:
@@ -352,17 +298,6 @@
     containers:
       storagebase: !type:Container
         ents: []
-      mop_slot: !type:ContainerSlot {}
-      trashbag_slot: !type:ContainerSlot {}
-      bucket_slot: !type:ContainerSlot {}
-      plunger_slot: !type:ContainerSlot {}
-      goldenplunger_slot: !type:ContainerSlot {}
-      wetfloorsign_slot4: !type:ContainerSlot {}
-      wetfloorsign_slot3: !type:ContainerSlot {}
-      wetfloorsign_slot2: !type:ContainerSlot {}
-      wetfloorsign_slot1: !type:ContainerSlot {}
-      lightreplacer_slot: !type:ContainerSlot {}
-      spraybottle_slot:  !type:ContainerSlot {}
   - type: GuideHelp
     guides:
     - Janitorial
