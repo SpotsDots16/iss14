@@ -25,7 +25,8 @@ peer-review-window-major = Major Publication
 peer-review-window-minor-reward = 1,000 research points
 peer-review-window-significant-reward = 5,000 research points
 peer-review-window-major-reward = 10,000 research points
-peer-review-window-requires = Requires {$count} research data
+peer-review-window-progress = {$current} / {$required} data
+peer-review-window-requires-short = Requires {$count}
 peer-review-window-publish = Publish
 peer-review-window-footer = Submitted printouts are consumed during compilation.
 
