@@ -217,6 +217,13 @@ public partial class TraumaSystem
         if (!Resolve(body, ref bodyComp))
             return;
 
+        // iss14: container-insert events also fire while replay checkpoints / initial game states are
+        // being applied, before entities are initialized. RootContainer is only assigned on component
+        // init, so it is still null then - and throwing here made the client discard every body part,
+        // which corrupted replay loading (stock engines crash in ReplayLoadManager.AddSorted).
+        if (!Initialized(body) || bodyComp.RootContainer == null!)
+            return;
+
         bool hasBrokenBones = false;
 
         var rootPart = bodyComp.RootContainer.ContainedEntity;
