@@ -1445,6 +1445,7 @@
 - type: marking
   id: HumanHairTerminal
   bodyPart: Hair
+  markingCategory: Hair # iss14: required by the classic marking prototype
   coloring:
     layers:
       terminal_headband:
