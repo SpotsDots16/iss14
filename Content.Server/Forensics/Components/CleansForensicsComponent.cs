@@ -17,5 +17,8 @@ public sealed partial class CleansForensicsComponent : Component
 
     [DataField]
     public bool CleanResidues;
+	
+	[DataField]
+    public List<LocId> ResiduesToClean = new();
 }
 

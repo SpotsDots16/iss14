@@ -174,6 +174,32 @@ namespace Content.Server.Forensics
             }
             return list;
         }
+		
+		private string FormatResidue(LocId adjective)
+		{
+			return Loc.GetString(
+			    "forensic-residue",
+				("adjective", adjective));
+		}
+		
+		Private bool CanCleanResidue(
+		    CleansForensicsComponent cleaner,
+			string residue)
+			{
+				if (!cleaner.CleanResidues)
+					return false;
+				
+				if (cleaner.ResuduesToClean.Count == 0)
+					return true;
+				
+				foreach (var adjective in cleaner.ResiduesToClean.Count == 0)
+				{
+					if (residue == FormatResidue(adjective))
+						return true;
+				}
+				return false;
+			}
+		
         private void OnAfterInteract(Entity<CleansForensicsComponent> cleanForensicsEntity, ref AfterInteractEvent args)
         {
             if (args.Handled || !args.CanReach || args.Target == null)
@@ -214,11 +240,16 @@ namespace Content.Server.Forensics
 				evidence.Fibers.Count > 0 ||
 				evidence.DNAs.Count > 0 && evidence.CanDnaBeCleaned);
 
-			var hasResidues =
-				cleaner.CleanResidues &&
-				evidence.Residues.Count > 0;
-
-			return hasStandardEvidence || hasResidues;
+			var hasResidues = false;
+			
+			foreach (var residue in evidence.Residues)
+			{
+				if (!CanCleanResidue(cleaner, residue))
+					continue;
+				
+				hasResidues = true;
+				break;
+			}
 		}
 		
 
@@ -287,8 +318,8 @@ namespace Content.Server.Forensics
                     targetComp.Residues.Add(string.IsNullOrEmpty(residue.ResidueColor) ? Loc.GetString("forensic-residue", ("adjective", residue.ResidueAdjective)) : Loc.GetString("forensic-residue-colored", ("color", residue.ResidueColor), ("adjective", residue.ResidueAdjective)));
             }
 
-            if (cleaner.CleanResidues)
-                targetComp.Residues.Clear();
+			targetComp.Residues.RemoveWhere(
+				residue => CanCleanResidue(cleaner, residue));
         }
 
         public string GenerateFingerprint()
