@@ -178,27 +178,28 @@ namespace Content.Server.Forensics
 		private string FormatResidue(LocId adjective)
 		{
 			return Loc.GetString(
-			    "forensic-residue",
+				"forensic-residue",
 				("adjective", adjective));
 		}
 		
-		Private bool CanCleanResidue(
-		    CleansForensicsComponent cleaner,
+		private bool CanCleanResidue(
+			CleansForensicsComponent cleaner,
 			string residue)
-			{
-				if (!cleaner.CleanResidues)
-					return false;
-				
-				if (cleaner.ResuduesToClean.Count == 0)
-					return true;
-				
-				foreach (var adjective in cleaner.ResiduesToClean.Count == 0)
-				{
-					if (residue == FormatResidue(adjective))
-						return true;
-				}
+		{
+			if (!cleaner.CleanResidues)
 				return false;
+
+			if (cleaner.ResiduesToClean.Count == 0)
+				return true;
+
+			foreach (var adjective in cleaner.ResiduesToClean)
+			{
+				if (residue == FormatResidue(adjective))
+					return true;
 			}
+
+			return false;
+		}
 		
         private void OnAfterInteract(Entity<CleansForensicsComponent> cleanForensicsEntity, ref AfterInteractEvent args)
         {
@@ -230,7 +231,7 @@ namespace Content.Server.Forensics
             args.Verbs.Add(verb);
         }
 		
-		private static bool HasCleanableEvidence(
+		private bool HasCleanableEvidence(
 			CleansForensicsComponent cleaner,
 			ForensicsComponent evidence)
 		{
@@ -250,6 +251,8 @@ namespace Content.Server.Forensics
 				hasResidues = true;
 				break;
 			}
+
+			return hasStandardEvidence || hasResidues;
 		}
 		
 

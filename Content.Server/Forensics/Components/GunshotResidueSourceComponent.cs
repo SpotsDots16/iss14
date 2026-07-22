@@ -8,5 +8,5 @@ namespace Content.Server.Forensics;
 public sealed partial class GunshotResidueSourceComponent : Component
 {
     [DataField]
-    public LocId ResidueAdjective = "gunpowder";
+    public LocId ResidueAdjective = "residue-gunshot";
 }
