@@ -53,6 +53,15 @@ jobs:
           path: release/SS14.Server_linux-x64.zip
           if-no-files-found: error
 
+      # Built as a side effect of --hybrid-acz. Hosted on dl.lemonsquizy.com so
+      # replay content bundles (replay.make_content_bundle) have a stable download URL.
+      - name: Upload Client Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-zip
+          path: release/SS14.Client.zip
+          if-no-files-found: error
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -62,6 +71,22 @@ jobs:
         with:
           name: server-zip
           path: ./downloaded-artifact
+
+      - name: Download Client Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: client-zip
+          path: ./downloaded-client
+
+      - name: Determine version and client hash
+        run: |
+          # Workflow triggers on release/** only, so GITHUB_REF_NAME is "release/<version>".
+          VERSION="${GITHUB_REF_NAME#release/}"
+          # build.hash must be the uppercase SHA-256 of the exact zip the launcher downloads.
+          CLIENT_HASH="$(sha256sum ./downloaded-client/SS14.Client.zip | awk '{print toupper($1)}')"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "CLIENT_HASH=$CLIENT_HASH" >> "$GITHUB_ENV"
+          echo "Version: $VERSION, client hash: $CLIENT_HASH"
 
       - name: Create SSH key file
         env:
@@ -100,12 +125,20 @@ jobs:
             "./downloaded-artifact/$ZIP_NAME" \
             "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/server/"
 
+      # nginx (dl.lemonsquizy.com) serves root /home/iss14/client, so this lands at
+      # https://dl.lemonsquizy.com/<version>/SS14.Client.zip — matching
+      # build.download_url = "https://dl.lemonsquizy.com/{FORK_VERSION}/SS14.Client.zip".
+      # Must happen before the server restarts with the new version/hash.
+      - name: Publish Client Zip for Launcher
+        run: |
+          ssh -p "$SSH_PORT" -i ssh_key "$SSH_USER@$SSH_HOST" \
+            "mkdir -p '$DEPLOY_PATH/client/$VERSION'"
+          scp -P "$SSH_PORT" -i ssh_key \
+            ./downloaded-client/SS14.Client.zip \
+            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/client/$VERSION/"
+
       - name: Finalize Deployment (Unzip, Restore & Start)
         run: |
-          # The workflow only triggers on release/** branches, so GITHUB_REF_NAME
-          # is "release/<version>". Strip the prefix to get the bare version that
-          # finalize_deploy.sh writes into build.version in server_config.toml.
-          VERSION="${GITHUB_REF_NAME#release/}"
           echo "Deploying version: $VERSION"
           ssh -p "$SSH_PORT" -i ssh_key "$SSH_USER@$SSH_HOST" \
-            "$DEPLOY_PATH/tools/finalize_deploy.sh '$VERSION'"
+            "$DEPLOY_PATH/tools/finalize_deploy.sh '$VERSION' '$CLIENT_HASH'"
