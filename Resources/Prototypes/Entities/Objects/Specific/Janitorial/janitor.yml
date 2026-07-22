@@ -341,7 +341,10 @@
     - type: Fiber
       fiberColor: fibers-white
     - type: DnaSubstanceTrace
-
+    - type: CleansForensics
+      cleanDelay: 6
+      cleanStandardEvidence: false
+      cleanResidues: true
 - type: entity
   parent: BaseItem
   id: WireBrush
