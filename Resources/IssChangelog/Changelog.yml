@@ -2,6 +2,17 @@ Name: Changelog
 Order: 0
 Entries:
 - author: issyman182
+  version: iss14:1.9.0
+  time: '2026-07-22'
+  changes:
+  - message: Updated upstream Space Station 14 to the 2026-07-21 build (431 new upstream changes merged).
+    type: Tweak
+  - message: Updated the game engine (RobustToolbox) from 277.0.0 to 283.1.0.
+    type: Tweak
+  - message: Replay fixes — round replays are now recorded as self-contained content bundles you can play straight from the launcher, and replay loading no longer breaks when a recording contains broken prototypes or missing entities.
+    type: Fix
+  id: 15
+- author: issyman182
   version: iss14:1.8.0
   time: '2026-07-18'
   changes:
