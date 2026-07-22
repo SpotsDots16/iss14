@@ -1,6 +1,8 @@
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Events;
 using Content.Shared.Destructible;
+using Content.Shared.Glue;
+using Content.Shared.Lube;
 using Content.Shared.Nutrition;
 using Content.Shared.Prototypes;
 using Content.Shared.Rejuvenate;
@@ -9,15 +11,13 @@ using Content.Shared.Body.Systems; // Shitmed Change
 using Content.Shared.StatusEffect;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.StatusEffectNew.Components;
-using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Damage.Systems;
 
 public abstract partial class SharedGodmodeSystem : EntitySystem
 {
-    [Dependency] private IPrototypeManager _protoMan = default!;
-
     [Dependency] private SharedBodySystem _bodySystem = default!; // Shitmed Change
+
 
     public override void Initialize()
     {
@@ -44,7 +44,7 @@ public abstract partial class SharedGodmodeSystem : EntitySystem
 
     private void OnBeforeStatusEffect(EntityUid uid, GodmodeComponent component, ref BeforeStatusEffectAddedEvent args)
     {
-        if (_protoMan.Index(args.Effect).HasComponent<RejuvenateRemovedStatusEffectComponent>(Factory))
+        if (ProtoMan.Index(args.Effect).HasComp<RejuvenateRemovedStatusEffectComponent>(Factory))
             args.Cancelled = true;
     }
 
@@ -65,6 +65,18 @@ public abstract partial class SharedGodmodeSystem : EntitySystem
     }
 
     private void BeforeEdible(Entity<GodmodeComponent> ent, ref IngestibleEvent args)
+    {
+        args.Cancelled = true;
+    }
+
+    [SubscribeLocalEvent]
+    private void OnGluedEffectAttemptEvent(Entity<GodmodeComponent> entity, ref GluedEffectAttemptEvent args)
+    {
+        args.Cancelled = true;
+    }
+
+    [SubscribeLocalEvent]
+    private void OnGluedEffectAttemptEvent(Entity<GodmodeComponent> entity, ref LubedEffectAttemptEvent args)
     {
         args.Cancelled = true;
     }

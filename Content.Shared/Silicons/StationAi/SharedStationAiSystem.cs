@@ -68,7 +68,6 @@ public abstract partial class SharedStationAiSystem : EntitySystem
     [Dependency] private SharedTransformSystem _xforms = default!;
     [Dependency] private SharedUserInterfaceSystem _uiSystem = default!;
     [Dependency] private StationAiVisionSystem _vision = default!;
-    [Dependency] private IPrototypeManager _protoManager = default!;
     [Dependency] private MobStateSystem _mobState = default!;
 
     // StationAiHeld is added to anything inside of an AI core.
@@ -337,13 +336,13 @@ public abstract partial class SharedStationAiSystem : EntitySystem
 
         if (cardHasAi && (coreHasAi || borgHaveMind)) // Starlight-edit
         {
-            _popup.PopupClient(Loc.GetString("intellicard-core-occupied"), args.User, args.User, PopupType.Medium);
+            _popup.PopupEntity(Loc.GetString("intellicard-core-occupied"), args.User, args.User, PopupType.Medium);
             args.Handled = true;
             return;
         }
         if (!cardHasAi && !coreHasAi && !(isBorg && borgHaveMind)) // Starlight-edit
         {
-            _popup.PopupClient(Loc.GetString("intellicard-core-empty"), args.User, args.User, PopupType.Medium);
+            _popup.PopupEntity(Loc.GetString("intellicard-core-empty"), args.User, args.User, PopupType.Medium);
             args.Handled = true;
             return;
         }

@@ -25,6 +25,13 @@
   markingLimits: MobSlimeMarkingLimits
   dollPrototype: MobSlimePersonDummy # Shitmed: part-based dummies
   skinColoration: Hues
+  defaultSoundsBySex:
+  - MaleSlime
+  - FemaleSlime
+  - MaleSlime
+  voices:
+  - MaleSlime
+  - FemaleSlime
 
 - type: speciesBaseSprites
   id: MobSlimeSprites

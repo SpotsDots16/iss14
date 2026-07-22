@@ -3,8 +3,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Content.Shared.Barks;
 using Content.Shared.CCVar;
+using Content.Shared.Chat.Prototypes; // iss14: upstream voice
 using Content.Shared.GameTicking;
 using Content.Shared.Humanoid;
+using Content.Shared.Humanoid.Markings;
 using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.Preferences.Loadouts;
 using Content.Shared.Roles;
@@ -131,12 +133,22 @@ namespace Content.Shared.Preferences
         [DataField]
         public ProtoId<BarkPrototype> BarkVoice { get; set; } = DefaultBarkVoice;
 
+        public static readonly ProtoId<EmoteSoundsPrototype> DefaultVoice = "MaleHuman";
+
+        /// <summary>
+        /// iss14: emote-sound voice ported from upstream's voice selection so the
+        /// database/preference plumbing stays compatible with upstream.
+        /// </summary>
+        [DataField]
+        public ProtoId<EmoteSoundsPrototype> Voice { get; set; } = DefaultVoice;
+
         public HumanoidCharacterProfile(
             string name,
             string flavortext,
             string species,
             int age,
             Sex sex,
+            ProtoId<EmoteSoundsPrototype> voice, // iss14: upstream voice
             Gender gender,
             HumanoidCharacterAppearance appearance,
             SpawnPriorityPreference spawnPriority,
@@ -151,6 +163,7 @@ namespace Content.Shared.Preferences
             Species = species;
             Age = age;
             Sex = sex;
+            Voice = voice; // iss14: upstream voice
             Gender = gender;
             Appearance = appearance;
             SpawnPriority = spawnPriority;
@@ -182,6 +195,7 @@ namespace Content.Shared.Preferences
                 other.Species,
                 other.Age,
                 other.Sex,
+                other.Voice, // iss14: upstream voice
                 other.Gender,
                 other.Appearance.Clone(),
                 other.SpawnPriority,
@@ -220,6 +234,128 @@ namespace Content.Shared.Preferences
                 Sex = sex.Value,
                 Appearance = HumanoidCharacterAppearance.DefaultWithSpecies(species.Value), // Shitmed: old humanoid tree's DefaultWithSpecies has no sex parameter
             };
+        }
+
+        /// <summary>
+        /// An enum defining randomizable values in character editor. (iss14: ported from upstream)
+        /// </summary>
+        [Flags]
+        public enum RandomizeCfg
+        {
+            // profile
+            None = 0,
+            Name = 1 << 0,
+            Species = 1 << 1,
+            Age = 1 << 2,
+            Sex = 1 << 3,
+            Gender = 1 << 4,
+            // appearance
+            Eyes = 1 << 5,
+            Skin = 1 << 6,
+            Markings = 1 << 7,
+        }
+
+        /// <summary>
+        /// A randomize config that covers all possible values (including appearance).
+        /// </summary>
+        public const RandomizeCfg RandomizeConfigAll =
+            RandomizeCfg.Name
+            | RandomizeCfg.Species
+            | RandomizeCfg.Age
+            | RandomizeCfg.Sex
+            | RandomizeCfg.Gender
+            | RandomizeCfg.Eyes
+            | RandomizeCfg.Skin
+            | RandomizeCfg.Markings;
+
+        /// <summary>
+        /// Picks a random species from roundstart species.
+        /// </summary>
+        public static SpeciesPrototype RandomSpecies(HashSet<string>? ignoredSpecies = null)
+        {
+            var prototypeManager = IoCManager.Resolve<IPrototypeManager>();
+            var random = IoCManager.Resolve<IRobustRandom>();
+
+            var pool = prototypeManager.EnumeratePrototypes<SpeciesPrototype>()
+                .Where(x => ignoredSpecies == null ? x.RoundStart : x.RoundStart && !ignoredSpecies.Contains(x.ID))
+                .ToArray();
+            return random.Pick(pool);
+        }
+
+        /// <summary>
+        /// Picks a random age using species.
+        /// </summary>
+        public static int RandomAge(SpeciesPrototype species)
+        {
+            var random = IoCManager.Resolve<IRobustRandom>();
+            return random.Next(species.MinAge, species.OldAge);
+        }
+
+        /// <summary>
+        /// Picks a random sex using species.
+        /// </summary>
+        public static Sex RandomSex(SpeciesPrototype species)
+        {
+            var random = IoCManager.Resolve<IRobustRandom>();
+            return random.Pick(species.Sexes);
+        }
+
+        /// <summary>
+        /// Picks a random gender using species sex.
+        /// </summary>
+        public static Gender RandomGender(Sex sex)
+        {
+            return sex switch
+            {
+                Sex.Male => Gender.Male,
+                Sex.Female => Gender.Female,
+                _ => Gender.Epicene,
+            };
+        }
+
+        /// <summary>
+        /// Generates a randomized character profile with selective randomizing.
+        /// iss14: ported from upstream, adapted to the classic appearance format
+        /// (hair is grouped under the Markings flag).
+        /// </summary>
+        public static HumanoidCharacterProfile Random(RandomizeCfg randomizeCfg, HumanoidCharacterProfile baseProfile)
+        {
+            var prototypeManager = IoCManager.Resolve<IPrototypeManager>();
+
+            var profile = new HumanoidCharacterProfile();
+            if ((randomizeCfg & RandomizeCfg.Species) != 0)
+            {
+                profile.Species = RandomSpecies().ID;
+            }
+            else
+            {
+                profile.Species = DefaultSpecies;
+                if (prototypeManager.HasIndex(baseProfile.Species))
+                    profile.Species = baseProfile.Species;
+            }
+
+            var speciesProto = prototypeManager.Index(profile.Species);
+
+            profile.Sex = (randomizeCfg & RandomizeCfg.Sex) != 0 ? RandomSex(speciesProto) : baseProfile.Sex;
+            profile.Voice = speciesProto.DefaultSoundsBySex[(int)profile.Sex];
+            profile.Gender = (randomizeCfg & RandomizeCfg.Gender) != 0 ? RandomGender(profile.Sex) : baseProfile.Gender;
+            profile.Name = (randomizeCfg & RandomizeCfg.Name) != 0 ? GetName(speciesProto.ID, profile.Gender) : baseProfile.Name;
+            profile.Age = (randomizeCfg & RandomizeCfg.Age) != 0 ? RandomAge(speciesProto) : baseProfile.Age;
+            profile.BarkVoice = baseProfile.BarkVoice; // Barks: keep the selected bark voice
+
+            var randomAppearance = HumanoidCharacterAppearance.Random(profile.Species, profile.Sex);
+            var baseAppearance = baseProfile.Appearance;
+            var markings = (randomizeCfg & RandomizeCfg.Markings) != 0;
+            profile.Appearance = new HumanoidCharacterAppearance(
+                markings ? randomAppearance.HairStyleId : baseAppearance.HairStyleId,
+                markings ? randomAppearance.HairColor : baseAppearance.HairColor,
+                markings ? randomAppearance.FacialHairStyleId : baseAppearance.FacialHairStyleId,
+                markings ? randomAppearance.FacialHairColor : baseAppearance.FacialHairColor,
+                (randomizeCfg & RandomizeCfg.Eyes) != 0 ? randomAppearance.EyeColor : baseAppearance.EyeColor,
+                (randomizeCfg & RandomizeCfg.Skin) != 0 ? randomAppearance.SkinColor : baseAppearance.SkinColor,
+                markings ? randomAppearance.Markings : new List<Marking>(baseAppearance.Markings));
+
+            return profile;
         }
 
         // TODO: This should eventually not be a visual change only.
@@ -474,6 +610,37 @@ namespace Content.Shared.Preferences
                 ("age", Age)
             );
 
+        // iss14: upstream voice
+        public HumanoidCharacterProfile WithVoice(ProtoId<EmoteSoundsPrototype> voice)
+        {
+            return new(this) { Voice = voice };
+        }
+
+        /// <summary>
+        /// Return a HumanoidCharacterProfile with only the job priorities listed in the NewCharacterJobs cvar
+        /// </summary>
+        public HumanoidCharacterProfile WithJobFromCvar(IConfigurationManager cfg)
+        {
+            // This path should run only rarely, so the cvar does not need to be locally stored
+            var jobs = new HashSet<string>(cfg.GetCVar(CCVars.NewCharacterJobs).Split(","));
+            var priority = JobPriority.High;
+            Dictionary<ProtoId<JobPrototype>, JobPriority> priorities = new();
+
+            foreach (var job in jobs)
+            {
+                // Remove whitespaces in case the input contained any
+                priorities.Add(job.Trim(), priority);
+
+                // There can be only one High priority
+                priority = JobPriority.Medium;
+            }
+
+            return new(this)
+            {
+                _jobPriorities = priorities,
+            };
+        }
+
         public bool MemberwiseEquals(HumanoidCharacterProfile other)
         {
             if (Name != other.Name) return false;
@@ -489,6 +656,7 @@ namespace Content.Shared.Preferences
             if (!Loadouts.SequenceEqual(other.Loadouts)) return false;
             if (FlavorText != other.FlavorText) return false;
             if (BarkVoice != other.BarkVoice) return false; // Barks
+            if (Voice != other.Voice) return false; // iss14: upstream voice
             return Appearance.Equals(other.Appearance);
         }
 
@@ -616,10 +784,16 @@ namespace Content.Shared.Preferences
                          .Where(prototypeManager.HasIndex)
                          .ToList();
 
+            // iss14: clamp the emote-sound voice to what the species allows
+            var voice = Voice;
+            if (!speciesPrototype.Voices.Contains(voice))
+                voice = speciesPrototype.DefaultSoundsBySex[(int)sex];
+
             Name = name;
             FlavorText = flavortext;
             Age = age;
             Sex = sex;
+            Voice = voice;
             Gender = gender;
             Appearance = appearance;
             SpawnPriority = spawnPriority;
@@ -753,6 +927,7 @@ namespace Content.Shared.Preferences
             hashCode.Add((int)SpawnPriority);
             hashCode.Add((int)PreferenceUnavailable);
             hashCode.Add(BarkVoice); // Barks
+            hashCode.Add(Voice); // iss14: upstream voice
             return hashCode.ToHashCode();
         }
 

@@ -106,10 +106,7 @@
   - type: SkeletonAccent
   - type: Actions
   - type: Vocal
-    sounds:
-      Male: Skeleton
-      Female: Skeleton
-      Unsexed: Skeleton
+    emoteSounds: Skeleton # iss14: sounds-by-sex removed upstream; set directly
   - type: Emoting
   - type: Grammar
     attributes:

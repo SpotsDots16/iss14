@@ -54,9 +54,10 @@
   components:
   - type: Organ
     onAdd:
-    - type: ActionGun
-      action: ActionDragonsBreath
-      gunProto: DragonsBreathGun
+    # iss14: ActionGun was removed upstream; the breath is a world-target spell action now.
+    - type: ActionGrant
+      actions:
+      - ActionDragonsBreath
 
 - type: entity
   parent: OrganHumanEyes

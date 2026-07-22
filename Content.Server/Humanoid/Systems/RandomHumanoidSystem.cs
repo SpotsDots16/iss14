@@ -116,7 +116,7 @@ public sealed partial class RandomHumanoidSystem : EntitySystem
 
     public EntityUid SpawnRandomHumanoid(string prototypeId, EntityCoordinates coordinates, string name)
     {
-        if (!_prototypeManager.TryIndex<RandomHumanoidSettingsPrototype>(prototypeId, out var prototype))
+        if (!ProtoMan.TryIndex<RandomHumanoidSettingsPrototype>(prototypeId, out var prototype))
             throw new ArgumentException("Could not get random humanoid settings");
 
         var profile = prototype.SpeciesWhitelist != null

@@ -6,11 +6,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: claws_l_hand
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpClawsHandRight
@@ -20,11 +15,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: claws_r_hand
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpClawsFootLeft
@@ -34,11 +24,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: claws_l_foot
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpClawsFootRight
@@ -48,11 +33,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: claws_r_foot
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 # Crest
 
@@ -65,11 +45,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: crest-leg-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsCrestArmLeft
@@ -79,11 +54,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: crest-arm-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsCrestFootLeft
@@ -93,11 +63,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: crest-foot-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsCrestHandLeft
@@ -107,11 +72,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: crest-hand-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 ## Right Side
 
@@ -123,11 +83,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: crest-leg-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsCrestArmRight
@@ -137,11 +92,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: crest-arm-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsCrestFootRight
@@ -151,11 +101,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: crest-foot-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsCrestHandRight
@@ -165,15 +110,10 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: crest-hand-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 # Fade
 
-## Left Side 
+## Left Side
 
 - type: marking
   id: VulpPointsFadeLegLeft
@@ -183,11 +123,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_fade-leg-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsFadeArmLeft
@@ -197,11 +132,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_fade-arm-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsFadeFootLeft
@@ -211,11 +141,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_fade-foot-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsFadeHandLeft
@@ -225,11 +150,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_fade-hand-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 ## Right Side
 
@@ -241,11 +161,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_fade-leg-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsFadeArmRight
@@ -255,11 +170,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_fade-arm-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsFadeFootRight
@@ -269,11 +179,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_fade-foot-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsFadeHandRight
@@ -283,11 +188,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_fade-hand-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 # Sharp
 
@@ -301,11 +201,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_sharp-leg-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsSharpArmLeft
@@ -315,11 +210,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_sharp-arm-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsSharpLongArmLeft
@@ -329,11 +219,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_sharp-arm-long-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsSharpFootLeft
@@ -343,11 +228,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_sharp-foot-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsSharpHandLeft
@@ -357,11 +237,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_sharp-hand-l
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 ## Right Side
 
@@ -373,11 +248,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_sharp-leg-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsSharpArmRight
@@ -387,11 +257,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_sharp-arm-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsSharpLongArmRight
@@ -401,11 +266,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_sharp-arm-long-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsSharpFootRight
@@ -415,11 +275,6 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_sharp-foot-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"
 
 - type: marking
   id: VulpPointsSharpHandRight
@@ -429,8 +284,3 @@
   sprites:
     - sprite: Mobs/Customization/Vulpkanin/body_markings.rsi
       state: points_sharp-hand-r
-  coloring:
-    default:
-      type:
-        !type:SimpleColoring
-          color: "#e5e3d1"

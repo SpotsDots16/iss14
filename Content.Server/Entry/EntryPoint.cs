@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Content.Server.Acz;
 using Content.Server.Administration;
 using Content.Server.Administration.Logs;
@@ -25,8 +24,6 @@ using Content.Server.ServerInfo;
 using Content.Server.ServerUpdates;
 using Content.Server.Voting.Managers;
 using Content.Shared.CCVar;
-using Content.Shared.FeedbackSystem;
-using Content.Shared.Kitchen;
 using Content.Shared.Localizations;
 using Robust.Server;
 using Robust.Server.ServerStatus;
@@ -80,7 +77,6 @@ namespace Content.Server.Entry
         [Dependency] private AutoRestartManager _autoRestart = default!; // iss14: scheduled auto-restart admin config
         [Dependency] private RoundEndAdManager _roundEndAd = default!; // iss14: round-end advertisement admin config
         [Dependency] private PlayerRateLimitManager _rateLimit = default!;
-        [Dependency] private RecipeManager _recipe = default!;
         [Dependency] private RulesManager _rules = default!;
         [Dependency] private ServerApi _serverApi = default!;
         [Dependency] private ServerInfoManager _serverInfo = default!;
@@ -169,7 +165,6 @@ namespace Content.Server.Entry
                 return;
             }
 
-            _recipe.Initialize();
             _admin.Initialize();
             _afk.Initialize();
             _rules.Initialize();

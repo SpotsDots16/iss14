@@ -23,10 +23,6 @@
   - type: TypingIndicator
     proto: vulpkanin
   - type: Vocal
-    sounds:
-      Male: MaleVulpkanin
-      Female: FemaleVulpkanin
-      Unsexed: MaleVulpkanin
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: Vulpkanin

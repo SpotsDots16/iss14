@@ -22,7 +22,6 @@ namespace Content.Shared.Medical;
 public sealed partial class VomitSystem : EntitySystem
 {
     [Dependency] private INetManager _netManager = default!;
-    [Dependency] private IPrototypeManager _proto = default!;
     [Dependency] private HungerSystem _hunger = default!;
     [Dependency] private MobStateSystem _mobState = default!;
     [Dependency] private MovementModStatusSystem _movementMod = default!;
@@ -64,7 +63,7 @@ public sealed partial class VomitSystem : EntitySystem
             return false;
 
         // Empty stomach solution into the new vomit solution
-        vomitSolution.AddSolution(sol, _proto);
+        vomitSolution.AddSolution(sol, ProtoMan);
         sol.RemoveAllSolution();
 
         // Remind the stomach that it's empty.
@@ -124,7 +123,7 @@ public sealed partial class VomitSystem : EntitySystem
             {
                 var vomitChemstreamAmount = _solutionContainer.SplitSolution(bloodStream.ChemicalSolution.Value, vomitAmount);
                 vomitChemstreamAmount.ScaleSolution(ChemMultiplier);
-                solution.AddSolution(vomitChemstreamAmount, _proto);
+                solution.AddSolution(vomitChemstreamAmount, ProtoMan);
                 vomitAmount -= (float)vomitChemstreamAmount.Volume;
             }
 

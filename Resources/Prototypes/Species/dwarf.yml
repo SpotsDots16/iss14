@@ -16,6 +16,13 @@
   markingLimits: MobHumanMarkingLimits
   dollPrototype: MobDwarfDummy # Shitmed: part-based dummies
   skinColoration: HumanToned
+  defaultSoundsBySex:
+  - UnisexDwarf
+  - FemaleDwarf
+  - UnisexDwarf
+  voices:
+  - UnisexDwarf
+  - FemaleDwarf
   # begin Goobstation: port EE height/width sliders
   sizeRatio: 1.3
   minHeight: 0.75

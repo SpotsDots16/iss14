@@ -1263,6 +1263,10 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("text")
                         .HasColumnName("species");
 
+                    b.Property<string>("Voice")
+                        .HasColumnType("text")
+                        .HasColumnName("voice");
+
                     b.HasKey("Id")
                         .HasName("PK_profile");
 

@@ -564,7 +564,8 @@ public sealed partial class NanoChatCartridgeSystem : EntitySystem
 
     private void OnUiReady(Entity<NanoChatCartridgeComponent> ent, ref CartridgeUiReadyEvent args)
     {
-        _cartridge.RegisterBackgroundProgram(args.Loader, ent);
+        // iss14: the reworked CartridgeLoader relays events to every installed program,
+        // so background registration no longer exists (or is needed).
         UpdateUI(ent, args.Loader);
     }
 

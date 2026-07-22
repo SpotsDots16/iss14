@@ -13,7 +13,6 @@ public sealed partial class GibActionSystem : EntitySystem
 {
     [Dependency] private SharedActionsSystem _actionsSystem = default!;
     [Dependency] private SharedBodySystem _bodySystem = default!;
-    [Dependency] private IPrototypeManager _protoManager = default!;
     [Dependency] private SharedPopupSystem _popupSystem = default!;
 
     public override void Initialize()
@@ -30,9 +29,8 @@ public sealed partial class GibActionSystem : EntitySystem
         if (!TryComp<MobStateComponent>(uid, out var mobState))
             return;
 
-        if (!_protoManager.TryIndex<EntityPrototype>(comp.ActionPrototype, out var actionProto))
+        if (!ProtoMan.TryIndex<EntityPrototype>(comp.ActionPrototype, out var actionProto))
             return;
-
 
         foreach (var allowedState in comp.AllowedStates)
         {
@@ -51,7 +49,7 @@ public sealed partial class GibActionSystem : EntitySystem
     private void OnGibAction(EntityUid uid, GibActionComponent comp, GibActionEvent args)
     {
         // When they use the action, gib them.
-        _popupSystem.PopupClient(Loc.GetString(comp.PopupText, ("name", uid)), uid, uid);
+        _popupSystem.PopupEntity(Loc.GetString(comp.PopupText, ("name", uid)), uid, uid);
         _bodySystem.GibBody(uid, true);
     }
 

@@ -40,10 +40,6 @@
         layer:
         - MobLayer
   - type: Vocal
-    sounds:
-      Male: UnisexDwarf
-      Female: FemaleDwarf
-      Unsexed: UnisexDwarf
   - type: Speech # iss14: Goob dwarf word-replacement accent not ported
     speechSounds: Bass
   - type: HumanoidAppearance

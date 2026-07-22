@@ -8,6 +8,13 @@
   roundStart: true
   prototype: MobTajaran
   sprites: MobTajaranSprites
+  defaultSoundsBySex:
+  - MaleTajaran
+  - FemaleTajaran
+  - MaleTajaran
+  voices:
+  - MaleTajaran
+  - FemaleTajaran
   defaultSkinTone: "#5a3f2d"
   markingLimits: MobTajaranMarkingLimits
   dollPrototype: MobTajaranDummy

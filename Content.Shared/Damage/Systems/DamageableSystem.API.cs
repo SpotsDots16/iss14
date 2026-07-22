@@ -31,7 +31,7 @@ public sealed partial class DamageableSystem
     {
         if (!_damageableQuery.Resolve(entity, ref entity.Comp, false)
             || entity.Comp.DamageModifierSetId is not { } proto
-            || !_prototypeManager.Resolve(proto, out var modifierSet)
+            || !ProtoMan.Resolve(proto, out var modifierSet)
            )
             return null;
 
@@ -214,7 +214,7 @@ public sealed partial class DamageableSystem
         foreach (var type in _vitalOnlyDamageTypes)
         {
             // iss14: TryIndex instead of Index so missing (Goob-only) damage groups don't throw.
-            if (_prototypeManager.TryIndex(type, out var groupProto))
+            if (ProtoMan.TryIndex(type, out var groupProto))
                 vitalDamage += new DamageSpecifier(groupProto, FixedPoint2.Zero);
         }
         vitalDamage.ExclusiveAdd(damage);
@@ -763,7 +763,7 @@ public sealed partial class DamageableSystem
 
         foreach (var (type, severity) in damageSpecifier.DamageDict)
         {
-            if (!_prototypeManager.TryIndex<EntityPrototype>(type, out var woundPrototype)
+            if (!ProtoMan.TryIndex<EntityPrototype>(type, out var woundPrototype)
                 || !woundPrototype.TryGetComponent<WoundComponent>(out _, _factory)
                 || severity <= 0)
                 continue;
@@ -786,7 +786,7 @@ public sealed partial class DamageableSystem
         }
 
         // Try to get the new DamageContainerPrototype
-        if (!_prototypeManager.TryIndex<DamageContainerPrototype>(newDamageContainerId, out var damageContainerPrototype))
+        if (!ProtoMan.TryIndex<DamageContainerPrototype>(newDamageContainerId, out var damageContainerPrototype))
         {
             // Return early if no DamageContainerPrototype is found
             return;
@@ -806,14 +806,14 @@ public sealed partial class DamageableSystem
 
         foreach (var groupId in damageContainerPrototype.SupportedGroups)
         {
-            var group = _prototypeManager.Index<DamageGroupPrototype>(groupId);
+            var group = ProtoMan.Index<DamageGroupPrototype>(groupId);
             foreach (var type in group.DamageTypes)
             {
                 component.Damage.DamageDict.TryAdd(type, FixedPoint2.Zero);
             }
         }
 
-        component.Damage.GetDamagePerGroup(_prototypeManager, component.DamagePerGroup);
+        component.Damage.GetDamagePerGroup(ProtoMan, component.DamagePerGroup);
         component.TotalDamage = component.Damage.GetTotal();
     }
     // Shitmed Change End
@@ -955,7 +955,7 @@ public sealed partial class DamageableSystem
     public DamageSpecifier GetPositiveDamage(Entity<DamageableComponent> ent, ProtoId<DamageGroupPrototype> group)
     {
         // No damage if no group exists...
-        if (!_prototypeManager.Resolve(group, out var groupProto))
+        if (!ProtoMan.Resolve(group, out var groupProto))
             return new DamageSpecifier();
 
         var damage = new DamageSpecifier();

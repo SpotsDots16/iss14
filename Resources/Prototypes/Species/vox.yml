@@ -31,6 +31,12 @@
   naming: First
   sexes:
   - Unsexed
+  defaultSoundsBySex:
+  - UnisexVox
+  - UnisexVox
+  - UnisexVox
+  voices:
+  - UnisexVox
 
 - type: speciesBaseSprites
   id: MobVoxSprites

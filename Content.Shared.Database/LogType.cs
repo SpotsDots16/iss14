@@ -488,4 +488,9 @@ public enum LogType
     /// Text-To-Speech backend health (e.g. the synthesis server going offline/online).
     /// </summary>
     Tts = 105,
+
+    /// <summary>
+    /// Silicon law changes.
+    /// </summary>
+    SiliconLaw = 106,
 }

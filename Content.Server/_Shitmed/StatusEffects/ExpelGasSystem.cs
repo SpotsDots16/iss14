@@ -20,7 +20,9 @@ public sealed partial class ExpelGasEffectSystem : EntitySystem
     [Dependency] private IRobustRandom _random = default!;
     [Dependency] private IPrototypeManager _proto = default!; // iss14
 
-    private static readonly ProtoId<EmotePrototype> FartEmote = "Fart"; // iss14: RA0033
+    // iss14: kept as a plain string; the Goob "Fart" emote prototype isn't ported, and a
+    // ProtoId field would (correctly) fail static prototype validation.
+    private const string FartEmote = "Fart";
 
     public override void Initialize()
     {
@@ -32,7 +34,7 @@ public sealed partial class ExpelGasEffectSystem : EntitySystem
         var gas = _random.Pick(component.PossibleGases);
         mix.AdjustMoles(gas, 60);
         // iss14: the Goob "Fart" emote prototype isn't ported to this fork; guard so the effect still works without it.
-        if (_proto.HasIndex(FartEmote))
+        if (_proto.HasIndex<EmotePrototype>(FartEmote))
             _chat.TryEmoteWithChat(uid, FartEmote);
     }
 

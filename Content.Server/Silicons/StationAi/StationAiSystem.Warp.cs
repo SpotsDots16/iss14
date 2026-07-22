@@ -16,7 +16,7 @@ namespace Content.Server.Silicons.StationAi;
 
 public sealed partial class StationAiSystem
 {
-    [Dependency] private IMapManager _map = default!;
+    [Dependency] private SharedMapSystem _map = default!; // iss14: IMapManager was removed in engine 283
     [Dependency] private SharedSuitSensorSystem _suitSensors = default!;
     [Dependency] private FollowerSystem _followerSystem = default!;
     [Dependency] private StationAiVisionSystem _aiVision = default!;

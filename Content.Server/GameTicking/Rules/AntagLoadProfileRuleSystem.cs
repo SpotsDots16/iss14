@@ -1,6 +1,6 @@
 using Content.Server.Antag;
-using Content.Server.GameTicking.Rules.Components;
 using Content.Server.Humanoid;
+using Content.Server.GameTicking.Rules.Components;
 using Content.Server.Preferences.Managers;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Prototypes;
@@ -31,19 +31,19 @@ public sealed partial class AntagLoadProfileRuleSystem : GameRuleSystem<AntagLoa
             : HumanoidCharacterProfile.RandomWithSpecies();
 
 
-        if (profile?.Species is not { } speciesId || !Proto.Resolve(speciesId, out var species))
+        if (profile?.Species is not { } speciesId || !ProtoMan.Resolve(speciesId, out var species))
         {
-            species = Proto.Index(HumanoidCharacterProfile.DefaultSpecies);
+            species = ProtoMan.Index(HumanoidCharacterProfile.DefaultSpecies);
         }
 
         if (ent.Comp.SpeciesOverride != null
             && (ent.Comp.SpeciesOverrideBlacklist?.Contains(new ProtoId<SpeciesPrototype>(species.ID)) ?? false))
         {
-            species = Proto.Index(ent.Comp.SpeciesOverride.Value);
+            species = ProtoMan.Index(ent.Comp.SpeciesOverride.Value);
         }
 
         if (ent.Comp.SpeciesHardOverride is not null) // Shitmed - Starlight Abductors
-            species = Proto.Index(ent.Comp.SpeciesHardOverride.Value); // Shitmed - Starlight Abductors
+            species = ProtoMan.Index(ent.Comp.SpeciesHardOverride.Value); // Shitmed - Starlight Abductors
 
         args.Entity = Spawn(species.Prototype, args.Coords);
         _humanoid.LoadProfile(args.Entity.Value, profile?.WithSpecies(species.ID));

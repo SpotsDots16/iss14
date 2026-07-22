@@ -19,6 +19,13 @@
   femaleFirstNames: NamesSkeletonFirst
   dollPrototype: MobSkeletonPersonDummy # Shitmed: part-based dummies
   skinColoration: TintedHues
+  defaultSoundsBySex:
+  - Skeleton
+  - Skeleton
+  - Skeleton
+  voices:
+  - Skeleton
+  - Skeleton
 
 - type: speciesBaseSprites
   id: MobSkeletonSprites

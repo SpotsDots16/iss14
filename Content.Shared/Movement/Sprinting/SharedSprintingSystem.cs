@@ -12,7 +12,7 @@
 //  - Namespaces converted from Content.Goobstation.* to the iss14 fork's upstream-style namespaces.
 //  - Flight (EinsteinEngines) and Sandevistan integrations are intentionally omitted (not present in this fork).
 //  - The StaminaModifierComponent drain-scaling Update() loop is omitted (component not present in this fork).
-//  - MobStateChangedEvent is handled by-ref and MechEntryEvent without ref to match this fork's event definitions.
+//  - MobStateChangedEvent is handled by-ref; the Goob MechEntryEvent hook became a BuckledEvent hook after the upstream vehicle-mech refactor.
 
 using System.Numerics;
 using Content.Shared.Bed.Sleep;
@@ -25,8 +25,6 @@ using Content.Shared.Damage.Events;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Gravity;
 using Content.Shared.Input;
-using Content.Shared.Mech.Components;
-using Content.Shared.Mech.EntitySystems;
 using Content.Shared.Mobs;
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Events;
@@ -67,13 +65,12 @@ public abstract partial class SharedSprintingSystem : EntitySystem
         SubscribeLocalEvent<SprinterComponent, MobStateChangedEvent>(OnMobStateChangedEvent);
         SubscribeLocalEvent<SprinterComponent, BeforeStaminaDamageEvent>(OnBeforeStaminaDamage);
         SubscribeLocalEvent<SprinterComponent, SleepStateChangedEvent>(OnSleep);
-        SubscribeLocalEvent<SprinterComponent, MechEntryEvent>(OnMechEntry);
+        SubscribeLocalEvent<SprinterComponent, BuckledEvent>(OnBuckled); // iss14: mechs are vehicles now; stop sprinting when strapped in
         SubscribeLocalEvent<SprinterComponent, ToggleWalkEvent>(OnToggleWalk);
         SubscribeLocalEvent<SprinterComponent, KnockedDownEvent>(OnSprintDisablingEvent);
         SubscribeLocalEvent<SprinterComponent, StunnedEvent>(OnSprintDisablingEvent);
         SubscribeLocalEvent<SprinterComponent, DownedEvent>(OnSprintDisablingEvent);
         SubscribeLocalEvent<CuffableComponent, SprintAttemptEvent>(OnCuffableSprintAttempt);
-        SubscribeLocalEvent<MechPilotComponent, SprintAttemptEvent>(OnMechPilotSprintAttempt);
         SubscribeLocalEvent<StandingStateComponent, SprintAttemptEvent>(OnStandingStateSprintAttempt);
         SubscribeLocalEvent<BuckleComponent, SprintAttemptEvent>(OnBuckleSprintAttempt);
         SubscribeLocalEvent<SprinterComponent, EntityZombifiedEvent>(OnZombified);
@@ -200,15 +197,6 @@ public abstract partial class SharedSprintingSystem : EntitySystem
         args.Cancel();
     }
 
-    private void OnMechPilotSprintAttempt(EntityUid uid, MechPilotComponent component, ref SprintAttemptEvent args)
-    {
-        if (!TryComp<SprinterComponent>(component.Mech, out var sprinterComponent)
-            || sprinterComponent.IsSprinting)
-            return;
-
-        args.Cancel();
-    }
-
     #endregion
 
     #region Misc.Handlers
@@ -239,7 +227,9 @@ public abstract partial class SharedSprintingSystem : EntitySystem
         ToggleSprint(uid, component, false, gracefulStop: false);
     }
 
-    private void OnMechEntry(EntityUid uid, SprinterComponent component, MechEntryEvent args)
+    // iss14: upstream removed MechPilot/MechEntryEvent (mechs use the vehicle system);
+    // stop sprinting whenever the sprinter gets buckled into anything instead.
+    private void OnBuckled(EntityUid uid, SprinterComponent component, ref BuckledEvent args)
     {
         if (!component.IsSprinting)
             return;

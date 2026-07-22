@@ -43,10 +43,6 @@
 #        sprite: _Shitmed/Mobs/Effects/burn_damage.rsi
   - type: MothAccent
   - type: Vocal
-    sounds:
-      Male: UnisexMoth
-      Female: UnisexMoth
-      Unsexed: UnisexMoth
   - type: BodyEmotes
     soundsId: MothBodyEmotes
   - type: MovementSpeedModifier

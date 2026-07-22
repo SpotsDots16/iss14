@@ -9,19 +9,19 @@ namespace Content.Shared._Shitmed.Medical.Surgery.Tools;
 
 public interface ISurgeryToolComponent
 {
-    [DataField]
+    // iss14: the [DataField] attributes were removed from these interface members after the
+    // engine 283 serialization generator update (RA0057) - implementing components declare
+    // their own [DataField]s for these properties.
     public string ToolName { get; }
 
     /// <summary>
     ///     Field intended for discardable or non-reusable tools.
     /// </summary>
-    [DataField]
     public bool? Used { get; set; }
 
     /// <summary>
     ///     Multiply the step's doafter by this value.
     ///     This is per-type so you can have something that's a good scalpel but a bad retractor.
     /// </summary>
-    [DataField]
     public float Speed { get; set; }
 }

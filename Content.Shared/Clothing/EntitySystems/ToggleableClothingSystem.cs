@@ -60,14 +60,6 @@ public sealed partial class ToggleableClothingSystem : EntitySystem
         if (!args.CanAccess || !args.CanInteract || args.Hands == null || component.ClothingUid == null || component.Container == null)
             return;
 
-        // iss14: only VerbText is a loc id; the action-name fallback is already final text,
-        // localizing it too spams "Unknown messageId" warnings.
-        var text = component.VerbText is { } verbText
-            ? Loc.GetString(verbText)
-            : (component.ActionEntity == null ? null : Name(component.ActionEntity.Value));
-        if (text == null)
-            return;
-
         if (!_inventorySystem.InSlotWithFlags(uid, component.RequiredFlags))
             return;
 
@@ -78,7 +70,7 @@ public sealed partial class ToggleableClothingSystem : EntitySystem
         var verb = new EquipmentVerb()
         {
             Icon = new SpriteSpecifier.Texture(new("/Textures/Interface/VerbIcons/outfit.svg.192dpi.png")),
-            Text = text,
+            Text = Loc.GetString(component.VerbText),
         };
 
         if (args.User == wearer)
@@ -248,8 +240,9 @@ public sealed partial class ToggleableClothingSystem : EntitySystem
             _inventorySystem.TryUnequip(user, parent, component.Slot, force: true);
         else if (_inventorySystem.TryGetSlotEntity(parent, component.Slot, out var existing))
         {
-            _popupSystem.PopupClient(Loc.GetString("toggleable-clothing-remove-first", ("entity", existing)),
-                user, user);
+            _popupSystem.PopupEntity(Loc.GetString("toggleable-clothing-remove-first", ("entity", existing)),
+                user,
+                user);
         }
         else
             _inventorySystem.TryEquip(user, parent, component.ClothingUid.Value, component.Slot, triggerHandContact: true);
@@ -286,7 +279,7 @@ public sealed partial class ToggleableClothingSystem : EntitySystem
         {
             DebugTools.Assert(Exists(component.ClothingUid), "Toggleable clothing is missing expected entity.");
             DebugTools.Assert(TryComp(component.ClothingUid, out AttachedClothingComponent? comp), "Toggleable clothing is missing an attached component");
-            DebugTools.Assert(comp?.AttachedUid == uid, "Toggleable clothing uid mismatch");
+            DebugTools.Assert(comp.AttachedUid == uid, "Toggleable clothing uid mismatch");
         }
         else
         {

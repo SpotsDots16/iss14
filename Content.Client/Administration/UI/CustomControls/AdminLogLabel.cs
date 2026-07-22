@@ -68,18 +68,19 @@ public sealed class AdminLogLabel : PanelContainer
         PanelOverride = _styleBox;
 
         var msg = new FormattedMessage();
+        var localTime = Log.Date.ToLocalTime();
 
         if (_colored)
         {
             msg.PushColor(categoryColor);
-            msg.AddText($"{Log.Date:HH:mm:ss} [{Log.Type}]: ");
+            msg.AddText($"{localTime:HH:mm:ss} [{Log.Type}]: ");
             msg.Pop();
 
             AppendBody(msg, Log.Message);
         }
         else
         {
-            msg.AddText($"{Log.Date:HH:mm:ss}: {Log.Message}");
+            msg.AddText($"{localTime:HH:mm:ss}: {Log.Message}");
         }
 
         _label.SetMessage(msg);

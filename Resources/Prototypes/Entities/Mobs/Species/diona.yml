@@ -93,10 +93,6 @@
     speechVerb: Plant
     allowedEmotes: ['Chirp']
   - type: Vocal
-    sounds:
-      Male: UnisexDiona
-      Female: UnisexDiona
-      Unsexed: UnisexDiona
   - type: TypingIndicator
     proto: diona
   - type: BodyEmotes

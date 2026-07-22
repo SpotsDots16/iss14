@@ -9,7 +9,8 @@ using Content.Server.Administration;
 using Content.Server.Mind;
 using Content.Server.Preferences.Managers;
 using Content.Server.Roles.Jobs;
-using Content.Server.StationRecords.Systems;
+using Content.Shared.StationRecords.Components;
+using Content.Shared.StationRecords.Systems;
 using Content.Shared.Access.Components;
 using Content.Shared.Administration;
 using Content.Shared.Forensics.Components;
@@ -148,8 +149,8 @@ public sealed partial class CrewManifestCommand : ToolshedCommand
         var profile = _prefs.GetPreferences(session.UserId).SelectedCharacter as HumanoidCharacterProfile
                       ?? HumanoidCharacterProfile.DefaultWithSpecies(humanoid?.Species).WithName(name);
 
-        _records.CreateGeneralRecord(station, target, name, age, species, gender, jobId.Value,
-            fingerprint?.Fingerprint, dna?.DNA, profile, records);
+        _records.CreateGeneralRecord((station, records), target, name, age, species, gender, jobId.Value,
+            fingerprint?.Fingerprint, dna?.DNA, profile);
     }
 
     private void RemoveRecord(EntityUid station, EntityUid player)
@@ -158,7 +159,7 @@ public sealed partial class CrewManifestCommand : ToolshedCommand
         if (!TryComp<StationRecordsComponent>(station, out var records))
             return;
 
-        if (_records.GetRecordByName(station, MetaData(player).EntityName, records) is not { } id)
+        if (_records.GetRecordByName((station, records), MetaData(player).EntityName) is not { } id)
             return;
 
         var key = new StationRecordKey(id, station);

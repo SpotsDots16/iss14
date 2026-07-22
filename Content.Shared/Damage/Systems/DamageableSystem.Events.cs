@@ -137,7 +137,7 @@ public sealed partial class DamageableSystem
     {
         _supportedTypesByContainer.Clear();
 
-        foreach (var proto in _prototypeManager.EnumeratePrototypes<DamageContainerPrototype>())
+        foreach (var proto in ProtoMan.EnumeratePrototypes<DamageContainerPrototype>())
         {
             var set = new HashSet<ProtoId<DamageTypePrototype>>();
             _supportedTypesByContainer[proto.ID] = set;
@@ -149,7 +149,7 @@ public sealed partial class DamageableSystem
 
             foreach (var groupId in proto.SupportedGroups)
             {
-                var group = _prototypeManager.Index(groupId);
+                var group = ProtoMan.Index(groupId);
                 foreach (var type in group.DamageTypes)
                 {
                     set.Add(type);
@@ -166,7 +166,7 @@ public sealed partial class DamageableSystem
         // Shitmed Change Start - pre-populate the damage dictionary from the damage container so
         // wound/body-part damage bookkeeping has all supported types present.
         if (ent.Comp.DamageContainerID != null &&
-            _prototypeManager.TryIndex(ent.Comp.DamageContainerID, out var damageContainerPrototype))
+            ProtoMan.TryIndex(ent.Comp.DamageContainerID, out var damageContainerPrototype))
         {
             // Initialize damage dictionary, using the types and groups from the damage
             // container prototype
@@ -177,7 +177,7 @@ public sealed partial class DamageableSystem
 
             foreach (var groupId in damageContainerPrototype.SupportedGroups)
             {
-                var group = _prototypeManager.Index(groupId);
+                var group = ProtoMan.Index(groupId);
                 foreach (var type in group.DamageTypes)
                 {
                     ent.Comp.Damage.DamageDict.TryAdd(type, FixedPoint2.Zero);
@@ -186,7 +186,7 @@ public sealed partial class DamageableSystem
         }
         // Shitmed Change End
 
-        ent.Comp.Damage.GetDamagePerGroup(_prototypeManager, ent.Comp.DamagePerGroup);
+        ent.Comp.Damage.GetDamagePerGroup(ProtoMan, ent.Comp.DamagePerGroup);
         ent.Comp.TotalDamage = ent.Comp.Damage.GetTotal();
     }
 

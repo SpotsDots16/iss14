@@ -22,10 +22,6 @@
     speechVerb: Tajaran
     allowedEmotes: [ 'Mew', 'Hiss', 'Meow', 'Growl', 'Purr', 'Trill' ]
   - type: Vocal
-    sounds:
-      Male: MaleTajaran
-      Female: FemaleTajaran
-      Unsexed: MaleTajaran
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: Tajaran

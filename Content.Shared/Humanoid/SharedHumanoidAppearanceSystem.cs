@@ -567,6 +567,10 @@ public abstract partial class SharedHumanoidAppearanceSystem : EntitySystem
         EnsureDefaultMarkings(uid, humanoid);
         SetBarkVoice(uid, profile.BarkVoice, humanoid); // Goob Station - Barks
 
+        // iss14: apply the profile's emote-sound voice (upstream voice picker); VocalSystem listens for this.
+        var voiceEv = new VoiceChangedEvent(null, profile.Voice);
+        RaiseLocalEvent(uid, ref voiceEv);
+
         humanoid.Gender = profile.Gender;
         if (TryComp<GrammarComponent>(uid, out var grammar))
         {

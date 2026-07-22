@@ -20,6 +20,7 @@ using Content.Shared.Drunk;
 using Content.Shared.Fluids;
 using Content.Shared.Forensics.Components;
 using Content.Shared.HealthExaminable;
+using Content.Shared.Metabolism;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Random.Helpers;
@@ -37,6 +38,8 @@ namespace Content.Shared.Body.Systems;
 
 public abstract partial class SharedBloodstreamSystem : EntitySystem
 {
+    public static readonly EntProtoId Bloodloss = "StatusEffectBloodloss";
+
     [Dependency] protected SharedSolutionContainerSystem SolutionContainer = default!;
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private IPrototypeManager _prototypeManager = default!;
@@ -48,6 +51,7 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
     [Dependency] private DamageableSystem _damageableSystem = default!;
     [Dependency] private SharedDrunkSystem _drunkSystem = default!;
     [Dependency] private SharedStutteringSystem _stutteringSystem = default!;
+    [Dependency] private MetabolizerSystem _metabolizer = default!;
 
     private float _bloodlossMultiplier = 4f; // Goobstation
 
@@ -346,8 +350,8 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
             // because it's burn damage that cauterized their wounds.
 
             // We'll play a special sound and popup for feedback.
-            _popup.PopupPredicted(Loc.GetString("bloodstream-component-wounds-cauterized"), ent,
-                    ent, PopupType.Medium); // only the burned entity can see this
+            // Only the burned entity can see the popup.
+            _popup.PopupEntity(Loc.GetString("bloodstream-component-wounds-cauterized"), ent, ent, PopupType.Medium);
             _audio.PlayPredicted(ent.Comp.BloodHealedSound, ent, args.Origin);
         }
     }
@@ -671,5 +675,45 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
         bloodData.Add(dnaData);
 
         return bloodData;
+    }
+
+    /// <summary>
+    /// Copies the values in <see cref="BloodstreamComponent"/> of one entity to another.
+    /// If the component isn't on the target entity, it is added.
+    /// </summary>
+    /// <param name="source">The entity who's component to use.</param>
+    /// <param name="target">The target to clone the component onto.</param>
+    public void CopyComponent(Entity<BloodstreamComponent?> source, EntityUid target)
+    {
+        if (!Resolve(source, ref source.Comp))
+            return;
+
+        // We don't create the component before adding it here.
+        // This is because it causes the initialization to get a bit fucky together with ChangeBloodReagent.
+        // The reagents won't actually change unless we do it this way.
+        // The DNA and stuff is updated by themselves anyway.
+        // BleedAmount is excluded on purpose. There is no point in cloning how much someone is bleeding at the moment.
+        var cloneComp = EnsureComp<BloodstreamComponent>(target);
+        cloneComp.UpdateInterval = source.Comp.UpdateInterval;
+        cloneComp.UpdateIntervalMultiplier = source.Comp.UpdateIntervalMultiplier;
+        cloneComp.BleedReductionAmount = source.Comp.BleedReductionAmount;
+        cloneComp.MaxBleedAmount = source.Comp.MaxBleedAmount;
+        cloneComp.BloodlossThreshold = source.Comp.BloodlossThreshold;
+        cloneComp.BloodlossDamage = new DamageSpecifier(source.Comp.BloodlossDamage);
+        cloneComp.BloodlossHealDamage = new DamageSpecifier(source.Comp.BloodlossHealDamage);
+        cloneComp.BloodRefreshAmount =  source.Comp.BloodRefreshAmount;
+        cloneComp.BleedPuddleThreshold = source.Comp.BleedPuddleThreshold;
+        cloneComp.DamageBleedModifiers = source.Comp.DamageBleedModifiers;
+        cloneComp.BloodMaxVolume = source.Comp.BloodMaxVolume; // iss14: classic bloodstream volume fields
+        cloneComp.ChemicalMaxVolume = source.Comp.ChemicalMaxVolume;
+        cloneComp.InstantBloodSound = source.Comp.InstantBloodSound;
+        cloneComp.BloodHealedSound = source.Comp.BloodHealedSound;
+        cloneComp.BloodHealedSoundThreshold = source.Comp.BloodHealedSoundThreshold;
+
+        Dirty(target, cloneComp);
+
+        // iss14: classic bloodstream tracks a single blood reagent instead of a reference solution.
+        ChangeBloodReagent((target, cloneComp), source.Comp.BloodReagent);
+        _metabolizer.UpdateMetabolicMultiplier(target);
     }
 }

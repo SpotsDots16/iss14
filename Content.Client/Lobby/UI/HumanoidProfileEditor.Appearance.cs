@@ -1,6 +1,7 @@
 using System.Linq;
 using Content.Client.UserInterface.Systems.Guidebook;
 using Content.Shared.CCVar;
+using Content.Shared.Chat.Prototypes;
 using Content.Shared.Guidebook;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Prototypes;
@@ -17,6 +18,7 @@ public sealed partial class HumanoidProfileEditor
 
     private ColorSelectorSliders _rgbSkinColorSelector;
     private List<SpeciesPrototype> _species = new();
+    private List<EmoteSoundsPrototype> _voices = new(); // iss14: upstream voice picker
     private static readonly ProtoId<GuideEntryPrototype> DefaultSpeciesGuidebook = "Species";
 
     public void UpdateSpeciesGuidebookIcon()
@@ -236,6 +238,7 @@ public sealed partial class HumanoidProfileEditor
         // In case there's species restrictions for loadouts
         RefreshLoadouts();
         UpdateSexControls(); // update sex for new species
+        UpdateVoiceControls(); // iss14: voices are per-species
         UpdateSpeciesGuidebookIcon();
         // In case there's species restrictions for bark voices
         if (_cfgManager.GetCVar(CCVars.TtsEnabled))
@@ -247,6 +250,44 @@ public sealed partial class HumanoidProfileEditor
     {
         Profile = Profile?.WithAge(newAge);
         ReloadPreview();
+    }
+
+    // iss14: upstream voice picker
+    private void UpdateVoiceControls()
+    {
+        if (Profile == null)
+            return;
+
+        VoiceButton.Clear();
+        _voices.Clear();
+
+        if (!_prototypeManager.TryIndex(Profile.Species, out var speciesPrototype))
+            return;
+
+        var availableVoices = speciesPrototype.Voices;
+
+        _voices.AddRange(availableVoices.Select(protoId => _prototypeManager.Index(protoId)));
+
+        if (_voices.All(proto => Profile?.Voice != proto.ID))
+            SetVoice(speciesPrototype.DefaultSoundsBySex[(int)Profile.Sex]);
+
+        for (var i = 0; i < _voices.Count; i++)
+        {
+            var name = Loc.GetString(_voices[i].VoiceSelectorName);
+            VoiceButton.AddItem(name, i);
+
+            if (Profile?.Voice.Equals(_voices[i].ID) == true)
+            {
+                VoiceButton.SelectId(i);
+            }
+        }
+    }
+
+    // iss14: upstream voice picker
+    private void SetVoice(ProtoId<EmoteSoundsPrototype> newVoice)
+    {
+        Profile = Profile?.WithVoice(newVoice);
+        SetDirty();
     }
 
     private void SetSex(Sex newSex)
@@ -266,7 +307,12 @@ public sealed partial class HumanoidProfileEditor
                 break;
         }
 
+        // iss14: keep the voice matching the new sex's default like upstream does
+        if (_prototypeManager.TryIndex(Profile!.Species, out var sexSpeciesProto))
+            SetVoice(sexSpeciesProto.DefaultSoundsBySex[(int)newSex]);
+
         UpdateGenderControls();
+        UpdateVoiceControls();
         Markings.SetSex(newSex);
         ReloadPreview();
     }

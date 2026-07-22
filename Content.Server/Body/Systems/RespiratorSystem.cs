@@ -451,7 +451,7 @@ public sealed partial class RespiratorSystem : EntitySystem
         float saturation = 0;
         foreach (var (id, quantity) in solution.Contents)
         {
-            var reagent = _protoMan.Index<ReagentPrototype>(id.Prototype);
+            var reagent = ProtoMan.Index<ReagentPrototype>(id.Prototype);
             if (reagent.Metabolisms == null)
                 continue;
 

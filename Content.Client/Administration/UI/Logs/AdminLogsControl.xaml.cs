@@ -77,6 +77,8 @@ public sealed partial class AdminLogsControl : Control
     /// <summary>Known player id → name, used to color player names in log lines.</summary>
     private readonly Dictionary<Guid, string> _playerNames = new();
 
+    private bool firstTimeOpened = true;
+
     public void SetCurrentRound(int round)
     {
         CurrentRound = round;
@@ -209,6 +211,22 @@ public sealed partial class AdminLogsControl : Control
             }
 
             player.Pressed = false;
+        }
+
+        UpdateLogs();
+    }
+
+    public void SelectPlayers(List<Guid> players)
+    {
+        SelectedPlayers.Clear();
+        SelectedPlayers.UnionWith(players);
+
+        foreach (var control in PlayersContainer.Children)
+        {
+            if (control is not AdminLogPlayerButton player)
+                continue;
+
+            player.Pressed = SelectedPlayers.Contains(player.Id);
         }
 
         UpdateLogs();
@@ -454,15 +472,13 @@ public sealed partial class AdminLogsControl : Control
             _playerNames[id] = name;
 
         var buttons = new SortedSet<AdminLogPlayerButton>(_adminLogPlayerButtonComparer);
-        var allSelected = true;
+        // we retrieve everything if we open this window for the first time and the selected player list is empty
+        var allSelected = firstTimeOpened && SelectedPlayers.Count == 0;
 
         foreach (var control in PlayersContainer.Children.ToArray())
         {
             if (control is not AdminLogPlayerButton player)
                 continue;
-
-            if (!SelectedPlayers.Contains(player.Id))
-                allSelected = false;
 
             if (!players.Remove(player.Id))
                 continue;
@@ -491,6 +507,8 @@ public sealed partial class AdminLogsControl : Control
         foreach (var player in buttons)
         {
             PlayersContainer.AddChild(player);
+
+            player.Pressed = SelectedPlayers.Contains(player.Id);
         }
 
         UpdateLogs();
