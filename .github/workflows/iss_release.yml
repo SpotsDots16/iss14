@@ -21,6 +21,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      # The RobustToolbox engine version actually built into this release; the deploy
+      # job embeds it into the live server_config.toml (build.engine_version).
+      engine_version: ${{ steps.engine_version.outputs.engine_version }}
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -36,6 +40,19 @@ jobs:
           cd RobustToolbox
           # --tags added: a plain --depth=1 fetch does NOT pull tags.
           git fetch --depth=1 --tags
+
+      # build.engine_version must exactly match the engine compiled into the server,
+      # so read it from the checked-out submodule rather than hardcoding it anywhere.
+      - name: Determine Engine Version
+        id: engine_version
+        run: |
+          ENGINE_VERSION="$(grep -oPm1 '(?<=<Version>)[^<]+' RobustToolbox/MSBuild/Robust.Engine.Version.props)"
+          if [ -z "$ENGINE_VERSION" ]; then
+            echo "Failed to parse engine version from Robust.Engine.Version.props" >&2
+            exit 1
+          fi
+          echo "engine_version=$ENGINE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "Engine version: $ENGINE_VERSION"
 
       - name: Install dependencies
         run: dotnet restore
@@ -65,6 +82,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    env:
+      ENGINE_VERSION: ${{ needs.build.outputs.engine_version }}
     steps:
       - name: Download Artifact
         uses: actions/download-artifact@v4
@@ -139,6 +158,8 @@ jobs:
 
       - name: Finalize Deployment (Unzip, Restore & Start)
         run: |
-          echo "Deploying version: $VERSION"
+          echo "Deploying version: $VERSION (engine $ENGINE_VERSION)"
+          # finalize_deploy.sh writes version, client hash and engine_version into the
+          # live server_config.toml before starting the server.
           ssh -p "$SSH_PORT" -i ssh_key "$SSH_USER@$SSH_HOST" \
-            "$DEPLOY_PATH/tools/finalize_deploy.sh '$VERSION' '$CLIENT_HASH'"
+            "$DEPLOY_PATH/tools/finalize_deploy.sh '$VERSION' '$CLIENT_HASH' '$ENGINE_VERSION'"
