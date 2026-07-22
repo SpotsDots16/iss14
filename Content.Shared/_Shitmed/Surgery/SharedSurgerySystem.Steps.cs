@@ -1074,7 +1074,7 @@ public abstract partial class SharedSurgerySystem
 
     private ISurgeryToolComponent? GetSurgeryComp(EntityUid tool, IComponent component)
     {
-        if (EntityManager.TryGetComponent(tool, component.GetType(), out var found) && found is ISurgeryToolComponent data)
+        if (TryComp(tool, component.GetType(), out var found) && found is ISurgeryToolComponent data)
             return data;
 
         return null;
