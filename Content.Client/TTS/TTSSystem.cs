@@ -10,6 +10,7 @@ using Robust.Client.UserInterface;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Configuration;
+using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 
@@ -24,6 +25,7 @@ namespace Content.Client.TTS;
 public sealed partial class TTSSystem : EntitySystem
 {
     [Dependency] private IConfigurationManager _cfg = default!;
+    [Dependency] private INetManager _net = default!;
     [Dependency] private IUserInterfaceManager _ui = default!;
     [Dependency] private IAudioManager _audioManager = default!;
     [Dependency] private AudioSystem _audio = default!;
@@ -62,7 +64,9 @@ public sealed partial class TTSSystem : EntitySystem
         Subs.CVar(_cfg, CCVars.TtsClientEnabled, _ => SendSuppressionState());
         Subs.CVar(_cfg, CCVars.TtsReading, _ => SendSuppressionState());
         Subs.CVar(_cfg, CCVars.TtsReadAnnouncements, _ => SendSuppressionState());
-        SendSuppressionState();
+        // iss14: the boot-time send never reached the server (client isn't connected yet at system
+        // init) - send on connect instead so the server learns the prefs of every joining player.
+        _net.Connected += (_, _) => SendSuppressionState();
 
         _chat = _ui.GetUIController<ChatUIController>();
         _chat.MessageAdded += OnChatMessage;
@@ -70,6 +74,11 @@ public sealed partial class TTSSystem : EntitySystem
 
     private void SendSuppressionState()
     {
+        // iss14: cvar callbacks also fire while disconnected (main menu, replay loading applies
+        // recorded cvars) - don't spam 'tried to send message while not connected' errors.
+        if (!_net.IsConnected)
+            return;
+
         RaiseNetworkEvent(new TtsSuppressionStateEvent(
             _cfg.GetCVar(CCVars.TtsClientEnabled),
             _cfg.GetCVar(CCVars.TtsReading),

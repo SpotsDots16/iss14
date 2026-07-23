@@ -70,7 +70,10 @@ public sealed partial class WoundSystem
         if (comp.HoldingWoundable == EntityUid.Invalid)
             return;
 
-        var parentWoundable = Comp<WoundableComponent>(comp.HoldingWoundable);
+        // iss14: don't throw during replay/initial state application - component states apply in
+        // arbitrary entity order, so the holding woundable's components may not exist yet.
+        if (!TryComp<WoundableComponent>(comp.HoldingWoundable, out var parentWoundable))
+            return;
 
         if (!TryComp<WoundableComponent>(parentWoundable.RootWoundable, out var woundableRoot))
             return;
