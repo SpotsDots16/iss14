@@ -107,6 +107,27 @@ public sealed partial class ChatSystem
     private readonly record struct SpeechObfuscationData(string Message, string WrapId, string Name, string Verb, string FontId, int FontSize);
 
     /// <summary>
+    ///     iss14: whether a spoken message is a "psps" cat call ("psps", "pspsps", "ps ps ps", ...).
+    ///     Cat ears (<see cref="AcuteHearingComponent"/>) hear these from much farther away.
+    /// </summary>
+    private static bool IsPspsCall(string message)
+    {
+        // Collapse to letters only so spacing and punctuation don't matter.
+        Span<char> letters = stackalloc char[message.Length];
+        var count = 0;
+        foreach (var c in message)
+        {
+            if (char.IsLetter(c))
+                letters[count++] = char.ToLowerInvariant(c);
+        }
+
+        return PspsRegex.IsMatch(new string(letters[..count]));
+    }
+
+    private static readonly System.Text.RegularExpressions.Regex PspsRegex =
+        new("(p+s+){2,}", System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    /// <summary>
     ///     Sends a chat message to the given players in range of the source entity.
     /// </summary>
     /// <param name="obfuscation">
@@ -115,7 +136,11 @@ public sealed partial class ChatSystem
     /// </param>
     private void SendInVoiceRange(ChatChannel channel, string message, string wrappedMessage, EntityUid source, ChatTransmitRange range, NetUserId? author = null, SpeechObfuscationData? obfuscation = null)
     {
-        foreach (var (session, data) in GetRecipients(source, VoiceRange))
+        // iss14: only spoken words benefit from acute hearing; emotes are seen and LOOC is out-of-character.
+        var audible = channel == ChatChannel.Local;
+        var isPsps = audible && IsPspsCall(message);
+
+        foreach (var (session, data) in GetRecipients(source, VoiceRange, audible, isPsps))
         {
             var entRange = MessageRangeCheck(session, data, range);
             if (entRange == MessageRangeCheckResult.Disallowed)
@@ -256,7 +281,7 @@ public sealed partial class ChatSystem
     /// <summary>
     ///     Returns list of players and ranges for all players withing some range. Also returns observers with a range of -1.
     /// </summary>
-    private Dictionary<ICommonSession, ICChatRecipientData> GetRecipients(EntityUid source, float voiceGetRange)
+    private Dictionary<ICommonSession, ICChatRecipientData> GetRecipients(EntityUid source, float voiceGetRange, bool audible = false, bool isPsps = false)
     {
         // TODO proper speech occlusion
 
@@ -278,8 +303,14 @@ public sealed partial class ChatSystem
 
             var observer = _ghostHearingQuery.HasComponent(playerEntity);
 
+            // iss14: acute hearing (cat ears) extends how far audible messages reach this listener,
+            // and "psps" calls carry even farther.
+            var listenerRange = voiceGetRange;
+            if (audible && _acuteHearingQuery.TryGetComponent(playerEntity, out var acute))
+                listenerRange = voiceGetRange * (isPsps ? acute.PspsRangeMultiplier : acute.RangeMultiplier);
+
             // even if they are a ghost hearer, in some situations we still need the range
-            if (sourceCoords.TryDistance(EntityManager, transformEntity.Coordinates, out var distance) && distance < voiceGetRange)
+            if (sourceCoords.TryDistance(EntityManager, transformEntity.Coordinates, out var distance) && distance < listenerRange)
             {
                 recipients.Add(player, new ICChatRecipientData(distance, observer));
                 continue;

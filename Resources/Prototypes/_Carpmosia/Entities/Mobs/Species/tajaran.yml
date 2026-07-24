@@ -9,6 +9,8 @@
   id: BaseMobTajaran
   name: Urist McPurr
   components:
+  # iss14: cat ears - hears speech/whispers 20% farther, and "psps" calls twice as far.
+  - type: AcuteHearing
   - type: Hunger
   - type: Thirst
   - type: Icon

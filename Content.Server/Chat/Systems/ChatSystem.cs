@@ -48,6 +48,7 @@ public sealed partial class ChatSystem : SharedChatSystem
     [Dependency] private EntityQuery<GhostHearingComponent> _ghostHearingQuery = default!;
     [Dependency] private EntityQuery<DeafComponent> _deafQuery = default!;
     [Dependency] private EntityQuery<HardOfHearingComponent> _hardOfHearingQuery = default!;
+    [Dependency] private EntityQuery<AcuteHearingComponent> _acuteHearingQuery = default!; // iss14: cat ears
 
     private bool _loocEnabled = true;
     private bool _deadLoocEnabled;

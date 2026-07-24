@@ -136,7 +136,10 @@ public sealed partial class ChatSystem
             ("message", FormattedMessage.EscapeText(obfuscatedMessage)));
 
 
-        foreach (var (session, data) in GetRecipients(source, WhisperMuffledRange))
+        // iss14: cat ears hear whispers farther, and "psps" calls farther still.
+        var isPsps = IsPspsCall(message);
+
+        foreach (var (session, data) in GetRecipients(source, WhisperMuffledRange, audible: true, isPsps: isPsps))
         {
             EntityUid listener;
 
@@ -149,9 +152,21 @@ public sealed partial class ChatSystem
 
             // Hearing impairment: the deaf hear nothing, the hard-of-hearing have a smaller clear range and can miss a whisper entirely.
             float whisperClearRange = WhisperClearRange;
+            float whisperMuffledRange = WhisperMuffledRange;
             if (!data.Observer)
             {
                 if (_deafQuery.HasComponent(listener))
+                    continue;
+
+                // iss14: acute hearing (cat ears) scales both whisper ranges up.
+                if (_acuteHearingQuery.TryGetComponent(listener, out var acute))
+                {
+                    var multiplier = isPsps ? acute.PspsRangeMultiplier : acute.RangeMultiplier;
+                    whisperClearRange *= multiplier;
+                    whisperMuffledRange *= multiplier;
+                }
+
+                if (data.Range > whisperMuffledRange)
                     continue;
 
                 if (_hardOfHearingQuery.TryGetComponent(listener, out var hardOfHearing))
@@ -165,7 +180,7 @@ public sealed partial class ChatSystem
             if (data.Range <= whisperClearRange || data.Observer)
                 _chatManager.ChatMessageToOne(ChatChannel.Whisper, message, wrappedMessage, source, false, session.Channel);
             //If listener is too far, they only hear fragments of the message
-            else if (_examineSystem.InRangeUnOccluded(source, listener, WhisperMuffledRange))
+            else if (_examineSystem.InRangeUnOccluded(source, listener, whisperMuffledRange))
                 _chatManager.ChatMessageToOne(ChatChannel.Whisper, obfuscatedMessage, wrappedobfuscatedMessage, source, false, session.Channel);
             //If listener is too far and has no line of sight, they can't identify the whisperer's identity
             else
