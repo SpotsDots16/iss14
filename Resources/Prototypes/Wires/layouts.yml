@@ -185,6 +185,14 @@
   - !type:PowerWireAction
 
 - type: wireLayout
+  id: PeerReviewConsole
+  dummyWires: 2
+  wires:
+  - !type:PowerWireAction
+  - !type:AccessWireAction
+  - !type:LogWireAction
+
+- type: wireLayout
   id: ComputerAi
   dummyWires: 2
   wires:

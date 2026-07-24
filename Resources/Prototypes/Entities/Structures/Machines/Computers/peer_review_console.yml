@@ -37,8 +37,13 @@
     interfaces:
       enum.PeerReviewConsoleUiKey.Key:
         type: PeerReviewConsoleBoundUserInterface
+      enum.WiresUiKey.Key:
+        type: WiresBoundUserInterface
   - type: Computer
     board: ComputerPeerReviewCircuitboard
+  - type: Wires
+    boardName: wires-board-name-computer
+    layoutId: PeerReviewConsole
   - type: AccessReader
     access: [["Library"]]
 
