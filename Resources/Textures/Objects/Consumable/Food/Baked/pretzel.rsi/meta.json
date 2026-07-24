@@ -1,0 +1,23 @@
+{
+    "version": 1,
+    "license": "CC-BY-SA-3.0",
+    "copyright": "Pretzels created by GitHub user RoxyyGooberr for Space Station 14 in https://github.com/issyman182/iss14/pull/10.",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "pretzel"
+        },
+        {
+            "name": "pretzel-salted"
+        },
+        {
+            "name": "pretzel-cottondough"
+        },
+        {
+            "name": "pretzel-cottondough-salted"
+        }
+    ]
+}
