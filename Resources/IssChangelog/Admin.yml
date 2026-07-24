@@ -3,6 +3,15 @@ Order: 3
 AdminOnly: true
 Entries:
 - author: issyman182
+  version: iss14:1.8.2
+  time: '2026-07-25'
+  changes:
+  - message: Antag play time requirements are now configurable — the role requirement editor (roletimereqs) has a new "Antagonists" group where every selectable antag's requirements can be edited, reset and saved in profiles just like jobs. Changes apply live, persist across restarts and update the lobby antag locks for all players.
+    type: Add
+  - message: The role times panel (roletimes <username>) now has an "Antagonists" section showing each antag's requirements and whether that player currently meets them — works for offline players too.
+    type: Add
+  id: 12
+- author: issyman182
   version: iss14:1.8.0
   time: '2026-07-18'
   changes:

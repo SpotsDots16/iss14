@@ -2,7 +2,26 @@ Name: Changelog
 Order: 0
 Entries:
 - author: issyman182
-  version: iss14:1.9.0
+  version: iss14:1.8.2
+  time: '2026-07-25'
+  changes:
+  - message: Gunshot residue — firing a gun (except energy weapons) leaves residue behind, detectable with the forensic scanner. A rag wipes it away, so clean up after your crimes. (by RoxyyGooberr)
+    type: Add
+  - message: New pretzel snacks, in regular and moth-friendly variants. (by RoxyyGooberr)
+    type: Add
+  - message: Peer Review Console upgrades — a reworked UI and a publication system with minor, significant and major tiers via the Station Library Research Publication Service. The console can now also be hacked through its wire panel, and the Head of Personnel gained Library access. (by SpotsDots16)
+    type: Tweak
+  - message: Tajaran cat ears actually work — they hear speech and whispers 20% farther than other species, and "psps" calls carry twice as far, whispered or not.
+    type: Add
+  - message: The Insurgency no longer shows up at the start of every secret round. Instead, the insurgent ship can rarely arrive mid-round (40+ minutes in, 10+ players, at most once per round) — its 1-4 slots are offered to ghosts as ghost roles, so nobody gets pulled out of their character.
+    type: Tweak
+  - message: OOC chat is now disabled while the round is running and comes back automatically at round end.
+    type: Tweak
+  - message: Antag selection now rolls before job assignment — you can prioritize command roles and still roll antag. If you win the antag roll, you spawn in a non-command job that round instead; if not, you get your command role as usual.
+    type: Tweak
+  id: 16
+- author: issyman182
+  version: iss14:1.8.1
   time: '2026-07-22'
   changes:
   - message: Updated upstream Space Station 14 to the 2026-07-21 build (431 new upstream changes merged).
