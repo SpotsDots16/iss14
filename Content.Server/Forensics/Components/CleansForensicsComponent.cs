@@ -11,4 +11,14 @@ public sealed partial class CleansForensicsComponent : Component
     /// </summary>
     [DataField]
     public float CleanDelay = 12.0f;
+	// Stuff below made by brodiesodie
+	[DataField]
+    public bool CleanStandardEvidence = true;
+
+    [DataField]
+    public bool CleanResidues;
+	
+	[DataField]
+    public List<LocId> ResiduesToClean = new();
 }
+

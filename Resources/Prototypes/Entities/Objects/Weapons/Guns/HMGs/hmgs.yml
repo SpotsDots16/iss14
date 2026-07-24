@@ -25,6 +25,7 @@
   - type: StaticPrice
     price: 500
   # No chamber because HMG may want its own
+  - type: GunshotResidueSource
 
 - type: entity
   name: minigun

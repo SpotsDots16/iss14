@@ -44,7 +44,7 @@ namespace Content.Server.Forensics
             SubscribeLocalEvent<ForensicsComponent, GibbedBeforeDeletionEvent>(OnBeingGibbed);
             SubscribeLocalEvent<ForensicsComponent, MeleeHitEvent>(OnMeleeHit);
             SubscribeLocalEvent<ForensicsComponent, GotRehydratedEvent>(OnRehydrated);
-            SubscribeLocalEvent<CleansForensicsComponent, AfterInteractEvent>(OnAfterInteract, after: new[] { typeof(AbsorbentSystem) });
+            SubscribeLocalEvent<CleansForensicsComponent, AfterInteractEvent>(OnAfterInteract, before: new[] { typeof(AbsorbentSystem) });
             SubscribeLocalEvent<ForensicsComponent, CleanForensicsDoAfterEvent>(OnCleanForensicsDoAfter);
             SubscribeLocalEvent<DnaComponent, TransferDnaEvent>(OnTransferDnaEvent);
             SubscribeLocalEvent<DnaSubstanceTraceComponent, SolutionChangedEvent>(OnSolutionChanged);
@@ -174,6 +174,33 @@ namespace Content.Server.Forensics
             }
             return list;
         }
+		
+		private string FormatResidue(LocId adjective)
+		{
+			return Loc.GetString(
+				"forensic-residue",
+				("adjective", adjective));
+		}
+		
+		private bool CanCleanResidue(
+			CleansForensicsComponent cleaner,
+			string residue)
+		{
+			if (!cleaner.CleanResidues)
+				return false;
+
+			if (cleaner.ResiduesToClean.Count == 0)
+				return true;
+
+			foreach (var adjective in cleaner.ResiduesToClean)
+			{
+				if (residue == FormatResidue(adjective))
+					return true;
+			}
+
+			return false;
+		}
+		
         private void OnAfterInteract(Entity<CleansForensicsComponent> cleanForensicsEntity, ref AfterInteractEvent args)
         {
             if (args.Handled || !args.CanReach || args.Target == null)
@@ -203,6 +230,31 @@ namespace Content.Server.Forensics
 
             args.Verbs.Add(verb);
         }
+		
+		private bool HasCleanableEvidence(
+			CleansForensicsComponent cleaner,
+			ForensicsComponent evidence)
+		{
+			var hasStandardEvidence =
+				cleaner.CleanStandardEvidence &&
+				(evidence.Fingerprints.Count > 0 ||
+				evidence.Fibers.Count > 0 ||
+				evidence.DNAs.Count > 0 && evidence.CanDnaBeCleaned);
+
+			var hasResidues = false;
+			
+			foreach (var residue in evidence.Residues)
+			{
+				if (!CanCleanResidue(cleaner, residue))
+					continue;
+				
+				hasResidues = true;
+				break;
+			}
+
+			return hasStandardEvidence || hasResidues;
+		}
+		
 
         /// <summary>
         ///     Attempts to clean the given item with the given CleansForensics entity.
@@ -219,33 +271,27 @@ namespace Content.Server.Forensics
                 return false;
             }
 
-            var totalPrintsAndFibers = forensicsComp.Fingerprints.Count + forensicsComp.Fibers.Count;
-            var hasRemovableDNA = forensicsComp.DNAs.Count > 0 && forensicsComp.CanDnaBeCleaned;
-
-            if (hasRemovableDNA || totalPrintsAndFibers > 0)
-            {
-                var cleanDelay = cleanForensicsEntity.Comp.CleanDelay;
-                var doAfterArgs = new DoAfterArgs(EntityManager, user, cleanDelay, new CleanForensicsDoAfterEvent(), cleanForensicsEntity, target: target, used: cleanForensicsEntity)
-                {
-                    NeedHand = true,
-                    BreakOnDamage = true,
-                    BreakOnMove = true,
-                    MovementThreshold = 0.01f,
-                    DistanceThreshold = forensicsComp.CleanDistance,
-                };
-
-                _doAfterSystem.TryStartDoAfter(doAfterArgs);
-
-                _popupSystem.PopupEntity(Loc.GetString("forensics-cleaning", ("target", Identity.Entity(target, EntityManager))), user, user);
-
-                return true;
-            }
-            else
+            if (!HasCleanableEvidence(cleanForensicsEntity.Comp, forensicsComp))
             {
                 _popupSystem.PopupEntity(Loc.GetString("forensics-cleaning-cannot-clean", ("target", Identity.Entity(target, EntityManager))), user, user, PopupType.MediumCaution);
                 return false;
             }
 
+            var cleanDelay = cleanForensicsEntity.Comp.CleanDelay;
+            var doAfterArgs = new DoAfterArgs(EntityManager, user, cleanDelay, new CleanForensicsDoAfterEvent(), cleanForensicsEntity, target: target, used: cleanForensicsEntity)
+            {
+                NeedHand = true,
+                BreakOnDamage = true,
+                BreakOnMove = true,
+                MovementThreshold = 0.01f,
+                DistanceThreshold = forensicsComp.CleanDistance,
+            };
+
+            _doAfterSystem.TryStartDoAfter(doAfterArgs);
+
+            _popupSystem.PopupEntity(Loc.GetString("forensics-cleaning", ("target", Identity.Entity(target, EntityManager))), user, user);
+
+            return true;
         }
 
         private void OnCleanForensicsDoAfter(EntityUid uid, ForensicsComponent component, CleanForensicsDoAfterEvent args)
@@ -256,18 +302,27 @@ namespace Content.Server.Forensics
             if (!TryComp<ForensicsComponent>(args.Target, out var targetComp))
                 return;
 
-            targetComp.Fibers = new();
-            targetComp.Fingerprints = new();
+            if (!TryComp<CleansForensicsComponent>(args.Used, out var cleaner))
+                return;
 
-            if (targetComp.CanDnaBeCleaned)
-                targetComp.DNAs = new();
+            if (cleaner.CleanStandardEvidence)
+            {
+                targetComp.Fibers = new();
+                targetComp.Fingerprints = new();
 
-            // leave behind evidence it was cleaned
-            if (TryComp<FiberComponent>(args.Used, out var fiber))
-                targetComp.Fibers.Add(string.IsNullOrEmpty(fiber.FiberColor) ? Loc.GetString("forensic-fibers", ("material", fiber.FiberMaterial)) : Loc.GetString("forensic-fibers-colored", ("color", fiber.FiberColor), ("material", fiber.FiberMaterial)));
+                if (targetComp.CanDnaBeCleaned)
+                    targetComp.DNAs = new();
 
-            if (TryComp<ResidueComponent>(args.Used, out var residue))
-                targetComp.Residues.Add(string.IsNullOrEmpty(residue.ResidueColor) ? Loc.GetString("forensic-residue", ("adjective", residue.ResidueAdjective)) : Loc.GetString("forensic-residue-colored", ("color", residue.ResidueColor), ("adjective", residue.ResidueAdjective)));
+                // leave behind evidence it was cleaned
+                if (TryComp<FiberComponent>(args.Used, out var fiber))
+                    targetComp.Fibers.Add(string.IsNullOrEmpty(fiber.FiberColor) ? Loc.GetString("forensic-fibers", ("material", fiber.FiberMaterial)) : Loc.GetString("forensic-fibers-colored", ("color", fiber.FiberColor), ("material", fiber.FiberMaterial)));
+
+                if (TryComp<ResidueComponent>(args.Used, out var residue))
+                    targetComp.Residues.Add(string.IsNullOrEmpty(residue.ResidueColor) ? Loc.GetString("forensic-residue", ("adjective", residue.ResidueAdjective)) : Loc.GetString("forensic-residue-colored", ("color", residue.ResidueColor), ("adjective", residue.ResidueAdjective)));
+            }
+
+			targetComp.Residues.RemoveWhere(
+				residue => CanCleanResidue(cleaner, residue));
         }
 
         public string GenerateFingerprint()

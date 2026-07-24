@@ -58,6 +58,7 @@
       gun_chamber: !type:ContainerSlot
   - type: StaticPrice
     price: 500
+  - type: GunshotResidueSource
 
 - type: entity
   name: Atreides
