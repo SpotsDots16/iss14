@@ -42,11 +42,22 @@ public struct RoleTimeInfo(
     string? requirement,
     string? departmentName,
     string departmentColor,
-    int departmentWeight)
+    int departmentWeight,
+    bool editable = true,
+    bool? metRequirements = null)
 {
     public string Tracker = tracker;
     public string DisplayName = displayName;
     public TimeSpan Time = time;
+
+    /// <summary>False for informational rows with no backing tracker (e.g. antag requirement rows).</summary>
+    public bool Editable = editable;
+
+    /// <summary>
+    /// For antag rows: whether the target player currently meets the requirements
+    /// (null when not applicable / not computable).
+    /// </summary>
+    public bool? MetRequirements = metRequirements;
 
     /// <summary>Pre-formatted "Requires: ..." text, or null if the role has no time requirements.</summary>
     public string? Requirement = requirement;

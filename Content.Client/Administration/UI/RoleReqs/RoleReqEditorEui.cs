@@ -16,11 +16,11 @@ public sealed class RoleReqEditorEui : BaseEui
 
         _window.OnSetTimers += v => SendMessage(new RoleReqSetTimersEnabledMessage(v));
         _window.OnSetOverrides += v => SendMessage(new RoleReqSetOverridesEnabledMessage(v));
-        _window.OnEditTime += (job, idx, time) => SendMessage(new RoleReqEditTimeMessage(job, idx, time));
-        _window.OnSetInverted += (job, idx, inv) => SendMessage(new RoleReqSetInvertedMessage(job, idx, inv));
-        _window.OnRemove += (job, idx) => SendMessage(new RoleReqRemoveMessage(job, idx));
-        _window.OnAdd += (job, kind, target, time, inv) => SendMessage(new RoleReqAddMessage(job, kind, target, time, inv));
-        _window.OnResetJob += job => SendMessage(new RoleReqResetJobMessage(job));
+        _window.OnEditTime += (job, isAntag, idx, time) => SendMessage(new RoleReqEditTimeMessage(job, idx, time, isAntag));
+        _window.OnSetInverted += (job, isAntag, idx, inv) => SendMessage(new RoleReqSetInvertedMessage(job, idx, inv, isAntag));
+        _window.OnRemove += (job, isAntag, idx) => SendMessage(new RoleReqRemoveMessage(job, idx, isAntag));
+        _window.OnAdd += (job, isAntag, kind, target, time, inv) => SendMessage(new RoleReqAddMessage(job, kind, target, time, inv, isAntag));
+        _window.OnResetJob += (job, isAntag) => SendMessage(new RoleReqResetJobMessage(job, isAntag));
         _window.OnSaveProfile += name => SendMessage(new RoleReqSaveProfileMessage(name));
         _window.OnLoadProfile += name => SendMessage(new RoleReqLoadProfileMessage(name));
         _window.OnDeleteProfile += name => SendMessage(new RoleReqDeleteProfileMessage(name));

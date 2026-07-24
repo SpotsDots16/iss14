@@ -53,6 +53,9 @@ public sealed partial class RoleReqEditorEui : BaseEui
 
     private RoleReqEditorState _state = new(false, true, true, new(), new());
 
+    /// <summary>Header color for the antag pseudo-department group.</summary>
+    private const string AntagGroupColor = "#d82f2f";
+
     public void BuildState()
     {
         if (!CanView())
@@ -105,6 +108,33 @@ public sealed partial class RoleReqEditorEui : BaseEui
         }
 
         jobInfos.Sort((a, b) => string.Compare(a.JobName, b.JobName, StringComparison.OrdinalIgnoreCase));
+
+        // Antag roles get their own pseudo-department group at the bottom of the list.
+        var antagInfos = new List<RoleReqJobInfo>();
+        foreach (var antag in _proto.EnumeratePrototypes<AntagPrototype>())
+        {
+            // Only player-selectable antags (matching the lobby), plus anything already overridden.
+            if (!antag.SetPreference && !_overrides.IsOverridden(antag.ID, isAntag: true))
+                continue;
+
+            var entries = new List<RoleReqEntry>();
+            var reqs = _overrides.GetEffectiveRequirements(antag);
+            for (var i = 0; i < reqs.Count; i++)
+                entries.Add(BuildEntry(i, reqs[i], trackerToJobName));
+
+            antagInfos.Add(new RoleReqJobInfo(
+                antag.ID,
+                Loc.GetString(antag.Name),
+                _overrides.IsOverridden(antag.ID, isAntag: true),
+                Loc.GetString("role-req-editor-antag-group"),
+                AntagGroupColor,
+                int.MinValue + 1,
+                entries,
+                isAntag: true));
+        }
+
+        antagInfos.Sort((a, b) => string.Compare(a.JobName, b.JobName, StringComparison.OrdinalIgnoreCase));
+        jobInfos.AddRange(antagInfos);
 
         _state = new RoleReqEditorState(
             CanEdit(),
@@ -166,20 +196,20 @@ public sealed partial class RoleReqEditorEui : BaseEui
                 _overrides.SetOverridesEnabled(m.Value);
                 break;
             case RoleReqEditTimeMessage m:
-                _overrides.EditTime(m.JobId, m.Index, m.Time);
+                _overrides.EditTime(m.JobId, m.Index, m.Time, m.IsAntag);
                 break;
             case RoleReqSetInvertedMessage m:
-                _overrides.SetInverted(m.JobId, m.Index, m.Inverted);
+                _overrides.SetInverted(m.JobId, m.Index, m.Inverted, m.IsAntag);
                 break;
             case RoleReqRemoveMessage m:
-                _overrides.Remove(m.JobId, m.Index);
+                _overrides.Remove(m.JobId, m.Index, m.IsAntag);
                 break;
             case RoleReqAddMessage m:
                 if (IsValidTarget(m.Kind, m.Target))
-                    _overrides.Add(m.JobId, m.Kind, m.Target, m.Time, m.Inverted);
+                    _overrides.Add(m.JobId, m.Kind, m.Target, m.Time, m.Inverted, m.IsAntag);
                 break;
             case RoleReqResetJobMessage m:
-                _overrides.ResetJob(m.JobId);
+                _overrides.ResetJob(m.JobId, m.IsAntag);
                 break;
             case RoleReqSaveProfileMessage m:
                 _overrides.SaveProfile(m.Name);

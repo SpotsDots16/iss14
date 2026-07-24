@@ -55,10 +55,14 @@ public struct RoleReqJobInfo(
     string? departmentName,
     string departmentColor,
     int departmentWeight,
-    List<RoleReqEntry> requirements)
+    List<RoleReqEntry> requirements,
+    bool isAntag = false)
 {
     public string JobId = jobId;
     public string JobName = jobName;
+
+    /// <summary>True when this entry is an antag role rather than a station job.</summary>
+    public bool IsAntag = isAntag;
 
     /// <summary>True if this job currently has a custom override (vs. its YAML defaults).</summary>
     public bool Overridden = overridden;
@@ -105,33 +109,37 @@ public sealed class RoleReqSetOverridesEnabledMessage(bool value) : EuiMessageBa
 }
 
 [Serializable, NetSerializable]
-public sealed class RoleReqEditTimeMessage(string jobId, int index, TimeSpan time) : EuiMessageBase
+public sealed class RoleReqEditTimeMessage(string jobId, int index, TimeSpan time, bool isAntag = false) : EuiMessageBase
 {
     public readonly string JobId = jobId;
+    public readonly bool IsAntag = isAntag;
     public readonly int Index = index;
     public readonly TimeSpan Time = time;
 }
 
 [Serializable, NetSerializable]
-public sealed class RoleReqSetInvertedMessage(string jobId, int index, bool inverted) : EuiMessageBase
+public sealed class RoleReqSetInvertedMessage(string jobId, int index, bool inverted, bool isAntag = false) : EuiMessageBase
 {
     public readonly string JobId = jobId;
+    public readonly bool IsAntag = isAntag;
     public readonly int Index = index;
     public readonly bool Inverted = inverted;
 }
 
 [Serializable, NetSerializable]
-public sealed class RoleReqRemoveMessage(string jobId, int index) : EuiMessageBase
+public sealed class RoleReqRemoveMessage(string jobId, int index, bool isAntag = false) : EuiMessageBase
 {
     public readonly string JobId = jobId;
+    public readonly bool IsAntag = isAntag;
     public readonly int Index = index;
 }
 
 [Serializable, NetSerializable]
-public sealed class RoleReqAddMessage(string jobId, RoleReqKind kind, string target, TimeSpan time, bool inverted)
+public sealed class RoleReqAddMessage(string jobId, RoleReqKind kind, string target, TimeSpan time, bool inverted, bool isAntag = false)
     : EuiMessageBase
 {
     public readonly string JobId = jobId;
+    public readonly bool IsAntag = isAntag;
     public readonly RoleReqKind Kind = kind;
     public readonly string Target = target;
     public readonly TimeSpan Time = time;
@@ -139,9 +147,10 @@ public sealed class RoleReqAddMessage(string jobId, RoleReqKind kind, string tar
 }
 
 [Serializable, NetSerializable]
-public sealed class RoleReqResetJobMessage(string jobId) : EuiMessageBase
+public sealed class RoleReqResetJobMessage(string jobId, bool isAntag = false) : EuiMessageBase
 {
     public readonly string JobId = jobId;
+    public readonly bool IsAntag = isAntag;
 }
 
 [Serializable, NetSerializable]

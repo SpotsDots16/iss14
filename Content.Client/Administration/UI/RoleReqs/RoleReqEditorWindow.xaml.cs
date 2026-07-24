@@ -20,11 +20,12 @@ public sealed partial class RoleReqEditorWindow : FancyWindow
 
     public event Action<bool>? OnSetTimers;
     public event Action<bool>? OnSetOverrides;
-    public event Action<string, int, TimeSpan>? OnEditTime;
-    public event Action<string, int, bool>? OnSetInverted;
-    public event Action<string, int>? OnRemove;
-    public event Action<string, RoleReqKind, string, TimeSpan, bool>? OnAdd;
-    public event Action<string>? OnResetJob;
+    // The bool in these events is "is antag role" - antags share the editor with jobs.
+    public event Action<string, bool, int, TimeSpan>? OnEditTime;
+    public event Action<string, bool, int, bool>? OnSetInverted;
+    public event Action<string, bool, int>? OnRemove;
+    public event Action<string, bool, RoleReqKind, string, TimeSpan, bool>? OnAdd;
+    public event Action<string, bool>? OnResetJob;
     public event Action<string>? OnSaveProfile;
     public event Action<string>? OnLoadProfile;
     public event Action<string>? OnDeleteProfile;
@@ -144,19 +145,22 @@ public sealed partial class RoleReqEditorWindow : FancyWindow
             foreach (var jobInfo in group)
             {
                 var jobId = jobInfo.JobId;
-                var control = new RoleReqJobControl(jobInfo, state.CanEdit, _expandedJobs.Contains(jobId),
+                var isAntag = jobInfo.IsAntag;
+                // Antag ids can collide with job ids, so the expand-memory key is prefixed.
+                var expandKey = isAntag ? "antag:" + jobId : jobId;
+                var control = new RoleReqJobControl(jobInfo, state.CanEdit, _expandedJobs.Contains(expandKey),
                     _roleOptions, _deptOptions);
-                control.OnEditTime += (idx, t) => OnEditTime?.Invoke(jobId, idx, t);
-                control.OnSetInverted += (idx, inv) => OnSetInverted?.Invoke(jobId, idx, inv);
-                control.OnRemove += idx => OnRemove?.Invoke(jobId, idx);
-                control.OnAdd += (kind, target, t, inv) => OnAdd?.Invoke(jobId, kind, target, t, inv);
-                control.OnReset += () => OnResetJob?.Invoke(jobId);
+                control.OnEditTime += (idx, t) => OnEditTime?.Invoke(jobId, isAntag, idx, t);
+                control.OnSetInverted += (idx, inv) => OnSetInverted?.Invoke(jobId, isAntag, idx, inv);
+                control.OnRemove += idx => OnRemove?.Invoke(jobId, isAntag, idx);
+                control.OnAdd += (kind, target, t, inv) => OnAdd?.Invoke(jobId, isAntag, kind, target, t, inv);
+                control.OnReset += () => OnResetJob?.Invoke(jobId, isAntag);
                 control.OnExpandChanged += expanded =>
                 {
                     if (expanded)
-                        _expandedJobs.Add(jobId);
+                        _expandedJobs.Add(expandKey);
                     else
-                        _expandedJobs.Remove(jobId);
+                        _expandedJobs.Remove(expandKey);
                 };
                 JobsContainer.AddChild(control);
                 jobs.Add(control);

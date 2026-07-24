@@ -64,6 +64,27 @@ public sealed class RoleTimeRow : BoxContainer
             nameBox.AddChild(req);
         }
 
+        AddChild(nameBox);
+
+        // Informational rows (antag requirements) have no backing tracker: no time edit,
+        // just whether the player currently qualifies.
+        if (!info.Editable)
+        {
+            _edit = new LineEdit { Visible = false };
+
+            if (info.MetRequirements is { } met)
+            {
+                AddChild(new Label
+                {
+                    Text = Loc.GetString(met ? "role-times-antag-met" : "role-times-antag-unmet"),
+                    FontColorOverride = met ? Color.FromHex("#3fc47a") : Color.FromHex("#d63c3c"),
+                    VerticalAlignment = VAlignment.Center,
+                });
+            }
+
+            return;
+        }
+
         _edit = new LineEdit
         {
             Text = Format(info.Time),
@@ -84,7 +105,6 @@ public sealed class RoleTimeRow : BoxContainer
                 OnSet?.Invoke(ts);
         };
 
-        AddChild(nameBox);
         AddChild(_edit);
         AddChild(button);
     }

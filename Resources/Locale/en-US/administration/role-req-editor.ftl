@@ -24,3 +24,4 @@ role-req-editor-kind-overall = Overall
 role-req-editor-kind-role = Role
 role-req-editor-kind-department = Department
 role-req-editor-other = { $type } (read-only)
+role-req-editor-antag-group = Antagonists

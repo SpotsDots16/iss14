@@ -36,12 +36,18 @@ public abstract partial class SharedRoleSystem : EntitySystem
     /// </summary>
     private IReadOnlyDictionary<string, HashSet<JobRequirement>>? _runtimeJobOverride;
 
+    /// <summary>Runtime, admin-editable requirement override keyed by antag id. See <see cref="_runtimeJobOverride"/>.</summary>
+    private IReadOnlyDictionary<string, HashSet<JobRequirement>>? _runtimeAntagOverride;
+
     /// <summary>
-    /// Installs (or clears, when null) the runtime job requirement override. See <see cref="_runtimeJobOverride"/>.
+    /// Installs (or clears, when null) the runtime job/antag requirement overrides. See <see cref="_runtimeJobOverride"/>.
     /// </summary>
-    public void SetRuntimeRequirementOverride(IReadOnlyDictionary<string, HashSet<JobRequirement>>? jobs)
+    public void SetRuntimeRequirementOverride(
+        IReadOnlyDictionary<string, HashSet<JobRequirement>>? jobs,
+        IReadOnlyDictionary<string, HashSet<JobRequirement>>? antags = null)
     {
         _runtimeJobOverride = jobs;
+        _runtimeAntagOverride = antags;
     }
 
     public override void Initialize()
@@ -715,6 +721,12 @@ public abstract partial class SharedRoleSystem : EntitySystem
         return job.Requirements;
     }
 
+    /// <inheritdoc cref="GetDefaultRequirements(JobPrototype)"/>
+    public HashSet<JobRequirement>? GetDefaultRequirements(AntagPrototype antag)
+    {
+        return antag.Requirements;
+    }
+
     public HashSet<JobRequirement>? GetRoleRequirements(JobPrototype job)
     {
         if (_runtimeJobOverride != null && _runtimeJobOverride.TryGetValue(job.ID, out var runtimeReq))
@@ -730,6 +742,9 @@ public abstract partial class SharedRoleSystem : EntitySystem
     /// <inheritdoc cref="GetRoleRequirements(JobPrototype)"/>
     public HashSet<JobRequirement>? GetRoleRequirements(AntagPrototype antag)
     {
+        if (_runtimeAntagOverride != null && _runtimeAntagOverride.TryGetValue(antag.ID, out var runtimeReq))
+            return runtimeReq;
+
         if (_requirementOverride != null && _requirementOverride.Antags.TryGetValue(antag.ID, out var req))
             return req;
 

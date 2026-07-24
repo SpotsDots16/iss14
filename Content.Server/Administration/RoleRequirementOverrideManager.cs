@@ -49,6 +49,9 @@ public sealed partial class RoleRequirementOverrideManager
     private bool _roleTimers = true;
     private bool _hasPersistedRoleTimers;
     private readonly Dictionary<string, List<JobRequirement>> _jobs = new();
+    private readonly Dictionary<string, List<JobRequirement>> _antags = new();
+
+    private Dictionary<string, List<JobRequirement>> Roles(bool isAntag) => isAntag ? _antags : _jobs;
 
     public bool OverridesEnabled => _enabled;
     public bool RoleTimersEnabled => _cfg.GetCVar(CCVars.GameRoleTimers);
@@ -81,7 +84,7 @@ public sealed partial class RoleRequirementOverrideManager
 
     #region Queries
 
-    public bool IsOverridden(string jobId) => _jobs.ContainsKey(jobId);
+    public bool IsOverridden(string jobId, bool isAntag = false) => Roles(isAntag).ContainsKey(jobId);
 
     /// <summary>The effective requirements for a job: the override if one exists, otherwise the defaults.</summary>
     public IReadOnlyList<JobRequirement> GetEffectiveRequirements(JobPrototype job)
@@ -96,6 +99,22 @@ public sealed partial class RoleRequirementOverrideManager
     {
         var roleSystem = _entity.System<SharedRoleSystem>();
         var reqs = roleSystem.GetRoleRequirements(job);
+        return reqs == null ? new List<JobRequirement>() : reqs.ToList();
+    }
+
+    /// <summary>The effective requirements for an antag: the override if one exists, otherwise the defaults.</summary>
+    public IReadOnlyList<JobRequirement> GetEffectiveRequirements(AntagPrototype antag)
+    {
+        if (_antags.TryGetValue(antag.ID, out var list))
+            return list;
+
+        return DefaultRequirements(antag);
+    }
+
+    private List<JobRequirement> DefaultRequirements(AntagPrototype antag)
+    {
+        var roleSystem = _entity.System<SharedRoleSystem>();
+        var reqs = roleSystem.GetRoleRequirements(antag);
         return reqs == null ? new List<JobRequirement>() : reqs.ToList();
     }
 
@@ -122,23 +141,34 @@ public sealed partial class RoleRequirementOverrideManager
 
     #region Editing
 
-    /// <summary>Snapshots a job's current effective requirements into the override so it can be edited.</summary>
-    private List<JobRequirement> EnsureOverridden(string jobId)
+    /// <summary>Snapshots a role's current effective requirements into the override so it can be edited.</summary>
+    private List<JobRequirement> EnsureOverridden(string jobId, bool isAntag)
     {
-        if (_jobs.TryGetValue(jobId, out var existing))
+        var dict = Roles(isAntag);
+        if (dict.TryGetValue(jobId, out var existing))
             return existing;
 
-        var list = _proto.TryIndex<JobPrototype>(jobId, out var job)
-            ? Clone(DefaultRequirements(job))
-            : new List<JobRequirement>();
+        List<JobRequirement> list;
+        if (isAntag)
+        {
+            list = _proto.TryIndex<AntagPrototype>(jobId, out var antag)
+                ? Clone(DefaultRequirements(antag))
+                : new List<JobRequirement>();
+        }
+        else
+        {
+            list = _proto.TryIndex<JobPrototype>(jobId, out var job)
+                ? Clone(DefaultRequirements(job))
+                : new List<JobRequirement>();
+        }
 
-        _jobs[jobId] = list;
+        dict[jobId] = list;
         return list;
     }
 
-    public void EditTime(string jobId, int index, TimeSpan time)
+    public void EditTime(string jobId, int index, TimeSpan time, bool isAntag = false)
     {
-        var list = EnsureOverridden(jobId);
+        var list = EnsureOverridden(jobId, isAntag);
         if (index < 0 || index >= list.Count)
             return;
 
@@ -154,9 +184,9 @@ public sealed partial class RoleRequirementOverrideManager
         Save();
     }
 
-    public void SetInverted(string jobId, int index, bool inverted)
+    public void SetInverted(string jobId, int index, bool inverted, bool isAntag = false)
     {
-        var list = EnsureOverridden(jobId);
+        var list = EnsureOverridden(jobId, isAntag);
         if (index < 0 || index >= list.Count)
             return;
 
@@ -165,9 +195,9 @@ public sealed partial class RoleRequirementOverrideManager
         Save();
     }
 
-    public void Remove(string jobId, int index)
+    public void Remove(string jobId, int index, bool isAntag = false)
     {
-        var list = EnsureOverridden(jobId);
+        var list = EnsureOverridden(jobId, isAntag);
         if (index < 0 || index >= list.Count)
             return;
 
@@ -176,7 +206,7 @@ public sealed partial class RoleRequirementOverrideManager
         Save();
     }
 
-    public void Add(string jobId, RoleReqKind kind, string target, TimeSpan time, bool inverted)
+    public void Add(string jobId, RoleReqKind kind, string target, TimeSpan time, bool inverted, bool isAntag = false)
     {
         JobRequirement? req = kind switch
         {
@@ -189,15 +219,15 @@ public sealed partial class RoleRequirementOverrideManager
         if (req == null)
             return;
 
-        EnsureOverridden(jobId).Add(req);
+        EnsureOverridden(jobId, isAntag).Add(req);
         Apply();
         Save();
     }
 
-    /// <summary>Reverts a job back to its default (YAML) requirements.</summary>
-    public void ResetJob(string jobId)
+    /// <summary>Reverts a role back to its default (YAML) requirements.</summary>
+    public void ResetJob(string jobId, bool isAntag = false)
     {
-        if (_jobs.Remove(jobId))
+        if (Roles(isAntag).Remove(jobId))
         {
             Apply();
             Save();
@@ -214,8 +244,9 @@ public sealed partial class RoleRequirementOverrideManager
 
         if (_enabled)
         {
-            var applied = _jobs.ToDictionary(kv => kv.Key, kv => kv.Value.ToHashSet());
-            roleSystem.SetRuntimeRequirementOverride(applied);
+            var appliedJobs = _jobs.ToDictionary(kv => kv.Key, kv => kv.Value.ToHashSet());
+            var appliedAntags = _antags.ToDictionary(kv => kv.Key, kv => kv.Value.ToHashSet());
+            roleSystem.SetRuntimeRequirementOverride(appliedJobs, appliedAntags);
         }
         else
         {
@@ -247,7 +278,7 @@ public sealed partial class RoleRequirementOverrideManager
 
         try
         {
-            return RoleRequirementDto.Serialize(JobsToDto());
+            return RoleRequirementDto.Serialize(RolesToDto(_jobs), RolesToDto(_antags));
         }
         catch (Exception e)
         {
@@ -324,7 +355,13 @@ public sealed partial class RoleRequirementOverrideManager
             _jobs[jobId.Id] = Clone(reqs?.ToList() ?? new List<JobRequirement>());
         }
 
-        _sawmill.Info($"Imported {proto.Jobs.Count} job overrides from prototype '{id}'.");
+        _antags.Clear();
+        foreach (var (antagId, reqs) in proto.Antags)
+        {
+            _antags[antagId.Id] = Clone(reqs?.ToList() ?? new List<JobRequirement>());
+        }
+
+        _sawmill.Info($"Imported {proto.Jobs.Count} job and {proto.Antags.Count} antag overrides from prototype '{id}'.");
         Apply();
         Save();
     }
@@ -347,7 +384,8 @@ public sealed partial class RoleRequirementOverrideManager
         _enabled = data.Enabled;
         _roleTimers = data.RoleTimers;
         _hasPersistedRoleTimers = true;
-        JobsFromDto(data.Jobs);
+        RolesFromDto(_jobs, data.Jobs);
+        RolesFromDto(_antags, data.Antags);
     }
 
     /// <summary>Applies a loaded data set as the live override and persists it as the active set.</summary>
@@ -356,7 +394,8 @@ public sealed partial class RoleRequirementOverrideManager
         _enabled = data.Enabled;
         _roleTimers = data.RoleTimers;
         _hasPersistedRoleTimers = true;
-        JobsFromDto(data.Jobs);
+        RolesFromDto(_jobs, data.Jobs);
+        RolesFromDto(_antags, data.Antags);
         _cfg.SetCVar(CCVars.GameRoleTimers, _roleTimers);
         Apply();
         Save();
@@ -364,13 +403,13 @@ public sealed partial class RoleRequirementOverrideManager
 
     private PersistData CurrentData()
     {
-        return new PersistData { Enabled = _enabled, RoleTimers = _roleTimers, Jobs = JobsToDto() };
+        return new PersistData { Enabled = _enabled, RoleTimers = _roleTimers, Jobs = RolesToDto(_jobs), Antags = RolesToDto(_antags) };
     }
 
-    private Dictionary<string, List<RoleRequirementDto>> JobsToDto()
+    private static Dictionary<string, List<RoleRequirementDto>> RolesToDto(Dictionary<string, List<JobRequirement>> roles)
     {
         var result = new Dictionary<string, List<RoleRequirementDto>>();
-        foreach (var (id, reqs) in _jobs)
+        foreach (var (id, reqs) in roles)
         {
             var list = new List<RoleRequirementDto>(reqs.Count);
             foreach (var req in reqs)
@@ -385,9 +424,9 @@ public sealed partial class RoleRequirementOverrideManager
         return result;
     }
 
-    private void JobsFromDto(Dictionary<string, List<RoleRequirementDto>> dtos)
+    private static void RolesFromDto(Dictionary<string, List<JobRequirement>> roles, Dictionary<string, List<RoleRequirementDto>> dtos)
     {
-        _jobs.Clear();
+        roles.Clear();
         foreach (var (id, dtoList) in dtos)
         {
             var list = new List<JobRequirement>(dtoList.Count);
@@ -397,7 +436,7 @@ public sealed partial class RoleRequirementOverrideManager
                     list.Add(req);
             }
 
-            _jobs[id] = list;
+            roles[id] = list;
         }
     }
 
@@ -466,5 +505,6 @@ public sealed partial class RoleRequirementOverrideManager
         public bool Enabled { get; set; } = true;
         public bool RoleTimers { get; set; } = true;
         public Dictionary<string, List<RoleRequirementDto>> Jobs { get; set; } = new();
+        public Dictionary<string, List<RoleRequirementDto>> Antags { get; set; } = new();
     }
 }

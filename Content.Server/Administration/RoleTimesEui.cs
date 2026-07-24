@@ -35,6 +35,9 @@ public sealed partial class RoleTimesEui : BaseEui
 #pragma warning restore IDE0044
 
     private readonly LocatedPlayerData _target;
+
+    /// <summary>Header color for the antag pseudo-department group.</summary>
+    private const string AntagGroupColor = "#d82f2f";
     private bool _online;
     private List<RoleTimeInfo> _roles = [];
 
@@ -154,6 +157,22 @@ public sealed partial class RoleTimesEui : BaseEui
                 deptName, deptColor, deptWeight));
         }
 
+        // Antag roles: informational rows (no tracker to edit) showing the requirements and
+        // whether this player's current times satisfy them.
+        var antagGroupName = Loc.GetString("role-times-antag-group");
+        foreach (var antag in _proto.EnumeratePrototypes<AntagPrototype>())
+        {
+            if (!antag.SetPreference)
+                continue;
+
+            var reqs = roleSystem.GetRoleRequirements(antag);
+            var summary = SummarizeRequirements(reqs, trackerToJob);
+            var met = EvaluateRequirements(reqs, times);
+
+            roles.Add(new RoleTimeInfo("", Loc.GetString(antag.Name), TimeSpan.Zero, summary,
+                antagGroupName, AntagGroupColor, int.MinValue + 1, editable: false, metRequirements: met));
+        }
+
         roles.Sort((a, b) => string.Compare(a.DisplayName, b.DisplayName, StringComparison.OrdinalIgnoreCase));
         _roles = roles;
         StateDirty();
@@ -195,6 +214,58 @@ public sealed partial class RoleTimesEui : BaseEui
         }
 
         return parts.Count == 0 ? null : Loc.GetString("role-times-requires", ("reqs", string.Join(", ", parts)));
+    }
+
+    /// <summary>
+    /// Evaluates time-based requirements against the player's tracker times. Returns null when there
+    /// are no requirements we can evaluate. Non-time requirement types (whitelist etc.) are ignored.
+    /// </summary>
+    private bool? EvaluateRequirements(HashSet<JobRequirement>? requirements, Dictionary<string, TimeSpan> times)
+    {
+        if (requirements == null || requirements.Count == 0)
+            return true;
+
+        bool? met = null;
+        foreach (var req in requirements)
+        {
+            bool satisfied;
+            switch (req)
+            {
+                case OverallPlaytimeRequirement overall:
+                    satisfied = times.GetValueOrDefault(PlayTimeTrackingShared.TrackerOverall) >= overall.Time;
+                    break;
+
+                case RoleTimeRequirement role:
+                    satisfied = times.GetValueOrDefault(role.Role) >= role.Time;
+                    break;
+
+                case DepartmentTimeRequirement dept:
+                {
+                    var total = TimeSpan.Zero;
+                    if (_proto.TryIndex(dept.Department, out var deptProto))
+                    {
+                        foreach (var jobId in deptProto.Roles)
+                        {
+                            if (_proto.TryIndex(jobId, out var deptJob) && !string.IsNullOrEmpty(deptJob.PlayTimeTracker))
+                                total += times.GetValueOrDefault(deptJob.PlayTimeTracker);
+                        }
+                    }
+
+                    satisfied = total >= dept.Time;
+                    break;
+                }
+
+                default:
+                    continue; // Not a time requirement; can't evaluate here.
+            }
+
+            if (req.Inverted)
+                satisfied = !satisfied;
+
+            met = (met ?? true) && satisfied;
+        }
+
+        return met ?? true;
     }
 
     public override void HandleMessage(EuiMessageBase msg)

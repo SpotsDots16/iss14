@@ -59,12 +59,23 @@ public sealed class RoleRequirementDto
     // stays within the client's type-check sandbox (System.Text.Json is not allowed there). Job ids, kinds and
     // targets are all alphanumeric prototype ids, so space delimiting is safe.
 
-    public static string Serialize(Dictionary<string, List<RoleRequirementDto>> jobs)
+    public static string Serialize(
+        Dictionary<string, List<RoleRequirementDto>> jobs,
+        Dictionary<string, List<RoleRequirementDto>>? antags = null)
     {
         var sb = new StringBuilder();
-        foreach (var (jobId, list) in jobs)
+        AppendRoles(sb, "JOB ", jobs);
+        if (antags != null)
+            AppendRoles(sb, "ANTAG ", antags);
+
+        return sb.ToString();
+    }
+
+    private static void AppendRoles(StringBuilder sb, string prefix, Dictionary<string, List<RoleRequirementDto>> roles)
+    {
+        foreach (var (roleId, list) in roles)
         {
-            sb.Append("JOB ").Append(jobId).Append('\n');
+            sb.Append(prefix).Append(roleId).Append('\n');
             foreach (var dto in list)
             {
                 sb.Append("REQ ")
@@ -74,13 +85,12 @@ public sealed class RoleRequirementDto
                     .Append(dto.Inverted ? '1' : '0').Append('\n');
             }
         }
-
-        return sb.ToString();
     }
 
-    public static Dictionary<string, List<RoleRequirementDto>> Deserialize(string data)
+    public static (Dictionary<string, List<RoleRequirementDto>> Jobs, Dictionary<string, List<RoleRequirementDto>> Antags) Deserialize(string data)
     {
-        var result = new Dictionary<string, List<RoleRequirementDto>>();
+        var jobs = new Dictionary<string, List<RoleRequirementDto>>();
+        var antags = new Dictionary<string, List<RoleRequirementDto>>();
         List<RoleRequirementDto>? current = null;
 
         foreach (var line in data.Split('\n'))
@@ -88,7 +98,12 @@ public sealed class RoleRequirementDto
             if (line.StartsWith("JOB "))
             {
                 current = new List<RoleRequirementDto>();
-                result[line[4..]] = current;
+                jobs[line[4..]] = current;
+            }
+            else if (line.StartsWith("ANTAG "))
+            {
+                current = new List<RoleRequirementDto>();
+                antags[line[6..]] = current;
             }
             else if (line.StartsWith("REQ ") && current != null)
             {
@@ -107,6 +122,6 @@ public sealed class RoleRequirementDto
             }
         }
 
-        return result;
+        return (jobs, antags);
     }
 }

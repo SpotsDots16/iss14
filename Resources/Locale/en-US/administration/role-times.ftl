@@ -23,3 +23,6 @@ role-times-req-role = {$time} as {$role}
 role-times-req-role-inverted = under {$time} as {$role}
 role-times-req-department = {$time} in {$department}
 role-times-req-department-inverted = under {$time} in {$department}
+role-times-antag-group = Antagonists
+role-times-antag-met = meets requirements
+role-times-antag-unmet = requirements not met

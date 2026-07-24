@@ -123,37 +123,43 @@ public sealed partial class JobRequirementsManager : ISharedPlaytimeManager
         if (!_entManager.TrySystem<SharedRoleSystem>(out var roleSystem))
             return;
 
-        roleSystem.SetRuntimeRequirementOverride(ParseOverride(_roleRequirementOverrideData));
+        var (jobs, antags) = ParseOverride(_roleRequirementOverrideData);
+        roleSystem.SetRuntimeRequirementOverride(jobs, antags);
     }
 
-    private IReadOnlyDictionary<string, HashSet<JobRequirement>>? ParseOverride(string data)
+    private (IReadOnlyDictionary<string, HashSet<JobRequirement>>? Jobs, IReadOnlyDictionary<string, HashSet<JobRequirement>>? Antags) ParseOverride(string data)
     {
         if (string.IsNullOrWhiteSpace(data))
-            return null;
+            return (null, null);
 
         try
         {
-            var dtos = RoleRequirementDto.Deserialize(data);
-            var result = new Dictionary<string, HashSet<JobRequirement>>();
-            foreach (var (id, list) in dtos)
-            {
-                var set = new HashSet<JobRequirement>();
-                foreach (var dto in list)
-                {
-                    if (dto.ToRequirement() is { } req)
-                        set.Add(req);
-                }
-
-                result[id] = set;
-            }
-
-            return result;
+            var (jobDtos, antagDtos) = RoleRequirementDto.Deserialize(data);
+            return (DtosToSets(jobDtos), DtosToSets(antagDtos));
         }
         catch (Exception e)
         {
             _sawmill.Error($"Failed to parse replicated role requirement override: {e}");
-            return null;
+            return (null, null);
         }
+    }
+
+    private static Dictionary<string, HashSet<JobRequirement>> DtosToSets(Dictionary<string, List<RoleRequirementDto>> dtos)
+    {
+        var result = new Dictionary<string, HashSet<JobRequirement>>();
+        foreach (var (id, list) in dtos)
+        {
+            var set = new HashSet<JobRequirement>();
+            foreach (var dto in list)
+            {
+                if (dto.ToRequirement() is { } req)
+                    set.Add(req);
+            }
+
+            result[id] = set;
+        }
+
+        return result;
     }
 
     /// <summary>
