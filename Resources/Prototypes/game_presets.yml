@@ -121,7 +121,8 @@
   showInVote: true
   description: secret-description
   rules:
-    - Insurgency # Trauma
+    # iss14: Insurgency no longer rides along at round start; it can appear as a rare
+    # midround event instead (InsurgencyMidRoundSpawn) or be added manually by admins.
     - Secret
 
 - type: gamePreset

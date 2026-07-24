@@ -58,3 +58,29 @@
   components:
   - type: LoadMapRule
     gridPath: /Maps/_Trauma/Shuttles/tide_insurgents.yml
+
+# iss14: rare midround variant. Instead of picking players at round start, the insurgent
+# ship arrives midround and its slots are offered to ghosts as ghost roles (LoneOps-style,
+# via the InsurgentGhost specifier's spawnerPrototype). At most once per round.
+- type: entity
+  parent: BaseInsurgencyRule
+  id: InsurgencyMidRoundSpawn
+  components:
+  - type: StationEvent
+    earliestStart: 40
+    weight: 2
+    minimumPlayers: 10
+    reoccurrenceDelay: 60
+    maxOccurrences: 1
+    duration: null
+    occursDuringRoundEnd: false
+  - type: AntagSelection
+    selectionTime: Never
+    agentName: insurgent-round-end-agent-name
+    antags:
+    - !type:LinearAntagCount
+      proto: InsurgentGhost
+      range:
+        min: 1
+        max: 4
+      playerRatio: 10

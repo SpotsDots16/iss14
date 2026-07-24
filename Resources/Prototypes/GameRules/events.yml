@@ -45,6 +45,7 @@
     - id: ZombieOutbreak
     - id: LoneOpsSpawn
     - id: WizardSpawn
+    - id: InsurgencyMidRoundSpawn # Trauma (iss14: rare midround insurgent ship)
     - !type:NestedSelector
       tableId: DerelictBorgEventTable
 

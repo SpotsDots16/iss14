@@ -24,6 +24,13 @@
   - type: RandomHumanoidAppearance
     randomizeName: true
 
+# iss14: ghost-role-only variant for the midround event - never picks living crew,
+# always materializes ghost role spawners on the insurgent ship (like LoneOp).
+- type: antagSpecifier
+  parent: Insurgent
+  id: InsurgentGhost
+  pickPlayer: false
+
 - type: startingGear
   id: Insurgent
   equipment:
